@@ -7,8 +7,9 @@ An unofficial REST API for scraping anime information from anichin.cafe. This se
 -   Fetch featured anime from the homepage slider.
 -   Get lists of the latest and most popular anime updates.
 -   Search for anime by title with paginated results.
+-   Browse the genre directory and retrieve paginated series lists for a selected genre.
 -   Retrieve comprehensive details for a specific anime series, including synopsis, genres, and a full episode list.
--   Fetch specific episode information, including video embed URLs and download links.
+-   Fetch specific episode information, including all available video embed URLs and download links.
 -   Browse ongoing and completed anime series.
 -   Get the weekly anime release schedule.
 
@@ -78,12 +79,22 @@ The API provides several endpoints to access scraped data. All successful respon
     -   `page` (optional): The page number to retrieve. Defaults to `1`.
     > `http://localhost:2504/latest?page=2`
 
+-   **`GET /genres`**
+    Fetches the available Anichin genre list.
+    > `http://localhost:2504/genres`
+
+-   **`GET /genres/:genre`**
+    Fetches anime series for a selected genre. Supports pagination.
+    -   `genre` (required): The genre slug, for example `action`.
+    -   `page` (optional): The page number to retrieve. Defaults to `1`.
+    > `http://localhost:2504/genres/action?page=2`
+
 -   **`GET /detail/:slug`**
     Fetches detailed information for a specific anime series using its slug.
     > `http://localhost:2504/detail/boruto-naruto-next-generations`
 
 -   **`GET /episode/:slug`**
-    Fetches details for a specific episode, including embed and download links.
+    Fetches details for a specific episode, including all available embeds and download links.
     > `http://localhost:2504/episode/boruto-episode-293-end`
 
 -   **`GET /search`**

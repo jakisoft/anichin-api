@@ -37,6 +37,26 @@ app.get('/popular', async (req, res) => {
   }
 });
 
+
+app.get('/genres', async (req, res) => {
+  try {
+    const data = await ani.genres();
+    res.json({ status: true, data });
+  } catch (e) {
+    res.status(500).json({ status: false, message: e.message });
+  }
+});
+
+app.get('/genres/:genre', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page || '1');
+    const data = await ani.genre(req.params.genre, page);
+    res.json({ status: true, data });
+  } catch (e) {
+    res.status(500).json({ status: false, message: e.message });
+  }
+});
+
 app.get('/latest', async (req, res) => {
   try {
     const page = parseInt(req.query.page || '1');
