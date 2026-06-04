@@ -86,20 +86,34 @@
         .copy-icon-swap.is-copied [data-copy-state="check"] {
             display: inline-flex;
         }
+        .code-tab {
+            margin: 0;
+        }
         .code-line {
-            display: grid;
-            grid-template-columns: 2.75rem minmax(0, 1fr);
-            gap: 1rem;
-            min-height: 1.45rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            min-height: 1.5rem;
+            line-height: 1.5rem;
         }
         .code-line-number {
+            width: 1.75rem;
             color: #6e7681;
             text-align: right;
             user-select: none;
+            flex: 0 0 1.75rem;
         }
         .code-line-content {
-            min-width: 0;
+            min-width: max-content;
             white-space: pre;
+        }
+        .method-badge {
+            background: #a0c4ff;
+            color: #1e1e1e;
+        }
+        .github-mark {
+            background: #24292f;
+            color: #ffffff;
         }
         .gh-dark {
             background-color: #0d1117;
@@ -122,16 +136,16 @@
 </head>
 <body class="text-saweria-dark antialiased min-h-screen">
 
-    <div id="loading-screen" class="fixed inset-0 bg-saweria-bg flex flex-col items-center justify-center z-50 transition-all duration-700">
-        <div class="relative flex flex-col items-center gap-6">
-            <div class="w-20 h-20 bg-saweria-yellow border-4 border-saweria-dark rounded-full flex items-center justify-center shadow-[4px_4px_0px_0px_#1e1e1e]">
-                <svg viewBox="0 0 24 24" class="w-10 h-10 loader-spin text-saweria-dark" fill="none" stroke="currentColor" stroke-width="3">
+    <div id="loading-screen" class="fixed inset-0 min-h-dvh bg-saweria-bg grid place-items-center z-50 transition-all duration-700 px-5 py-8">
+        <div class="relative w-full max-w-[18rem] sm:max-w-sm flex flex-col items-center gap-5 sm:gap-6 text-center">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-saweria-yellow border-4 border-saweria-dark rounded-full flex items-center justify-center shadow-[4px_4px_0px_0px_#1e1e1e]">
+                <svg viewBox="0 0 24 24" class="w-8 h-8 sm:w-10 sm:h-10 loader-spin text-saweria-dark" fill="none" stroke="currentColor" stroke-width="3">
                     <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
                 </svg>
             </div>
-            <div class="text-center">
-                <h3 class="text-lg font-extrabold tracking-tight uppercase">ANICHIN API</h3>
-                <p id="loading-text" class="text-xs text-saweria-gray font-mono mt-1">Menyiapkan Berkas...</p>
+            <div>
+                <h3 class="text-base sm:text-lg font-extrabold tracking-tight uppercase">ANICHIN API</h3>
+                <p id="loading-text" class="text-[11px] sm:text-xs text-saweria-gray font-mono mt-1 break-words">Menyiapkan Berkas...</p>
             </div>
         </div>
     </div>
@@ -155,39 +169,15 @@
                     <i data-lucide="eye" class="w-4 h-4 text-saweria-gray"></i>
                     <span id="github-stars-nav">Fetching...</span>
                 </div>
-                <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="neo-btn rounded-full border-4 border-saweria-dark bg-white px-4 py-2 text-xs sm:text-sm font-extrabold flex items-center gap-2">
-                    <i data-lucide="github" class="w-4 h-4"></i>
+                <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="neo-btn github-mark rounded-full border-4 border-saweria-dark px-4 py-2 text-xs sm:text-sm font-extrabold flex items-center gap-2">
+                    <i data-lucide="github" class="w-4 h-4 fill-white"></i>
                     <span>GitHub</span>
                 </a>
             </div>
         </nav>
 
-        <header class="grid lg:grid-cols-[0.92fr_1.08fr] gap-8 lg:gap-12 items-stretch py-4 md:py-8">
-            <div class="neo-card bg-white border-4 border-saweria-dark rounded-[2rem] p-6 sm:p-8 flex flex-col justify-between gap-8" data-aos="fade-up">
-                <div class="space-y-5">
-                    <div class="inline-flex h-16 w-16 items-center justify-center rounded-2xl border-4 border-saweria-dark bg-saweria-yellow shadow-[4px_4px_0_#1e1e1e]">
-                        <i data-lucide="terminal-square" class="w-8 h-8"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-saweria-gray font-extrabold uppercase tracking-[0.2em]">Anichin API</p>
-                        <h1 class="mt-3 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-saweria-dark leading-[0.95]">
-                            Dokumentasi endpoint & sandbox uji respons.
-                        </h1>
-                    </div>
-                </div>
-                <div class="grid sm:grid-cols-2 gap-3">
-                    <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="neo-btn rounded-3xl bg-saweria-yellow border-4 border-saweria-dark text-saweria-dark font-extrabold px-6 py-4 flex items-center justify-center gap-3 text-sm">
-                        <i data-lucide="star" class="w-5 h-5 fill-saweria-dark"></i>
-                        <span>Star repo</span>
-                    </a>
-                    <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="neo-btn rounded-3xl bg-white border-4 border-saweria-dark text-saweria-dark font-extrabold px-6 py-4 flex items-center justify-center gap-3 text-sm">
-                        <i data-lucide="github" class="w-5 h-5"></i>
-                        <span>GitHub</span>
-                    </a>
-                </div>
-            </div>
-
-            <aside class="neo-card bg-white border-4 border-saweria-dark rounded-[2rem] p-6 sm:p-8 space-y-6 relative overflow-hidden" data-aos="fade-left">
+        <header class="py-4 md:py-8">
+            <aside class="neo-card bg-white border-4 border-saweria-dark rounded-[2rem] p-6 sm:p-8 space-y-6 relative overflow-hidden max-w-4xl" data-aos="fade-up">
                 <div class="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-saweria-yellow/50 blur-2xl"></div>
                 <div class="relative flex items-center gap-4">
                     <div class="h-16 w-16 rounded-2xl border-4 border-saweria-dark bg-saweria-yellow flex items-center justify-center shadow-[4px_4px_0_#1e1e1e]">
@@ -212,7 +202,7 @@
                     </div>
                 </div>
                 <div class="relative border-4 border-saweria-dark rounded-3xl bg-saweria-dark text-white p-5 font-mono text-xs leading-relaxed">
-                    <p><span class="text-saweria-yellow">GET</span> <span class="select-all">/latest?page=1</span></p>
+                    <p><span class="text-[#79c0ff]">GET</span> <span class="select-all">/latest?page=1</span></p>
                     <p class="text-slate-400 mt-2">Pilih endpoint di galeri untuk generate snippet dan simulasi respons.</p>
                 </div>
             </aside>
@@ -271,7 +261,7 @@
             <section class="bg-white border-4 border-saweria-dark rounded-3xl p-5 sm:p-6 space-y-4 shadow-[4px_4px_0px_0px_#1e1e1e]">
                 <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                     <div class="space-y-2 min-w-0">
-                        <span class="inline-flex text-[10px] bg-saweria-yellow text-saweria-dark px-3 py-1 rounded-full font-mono font-extrabold border-2 border-saweria-dark">GET METHOD</span>
+                        <span class="inline-flex text-[10px] method-badge px-3 py-1 rounded-full font-mono font-extrabold border-2 border-saweria-dark">GET METHOD</span>
                         <p id="drawer-desc" class="text-sm text-saweria-gray font-semibold leading-relaxed"></p>
                     </div>
                     <div id="drawer-param-summary" class="hidden shrink-0 rounded-full border-2 border-saweria-dark bg-saweria-light px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider"></div>
@@ -291,22 +281,31 @@
             </div>
 
             <section class="space-y-3">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white px-4 py-3 border-4 border-saweria-dark rounded-3xl shadow-[4px_4px_0px_0px_#1e1e1e]">
+                <div class="bg-white px-4 py-3 border-4 border-saweria-dark rounded-3xl shadow-[4px_4px_0px_0px_#1e1e1e]">
                     <div class="flex gap-2 overflow-x-auto">
-                        <button id="tab-curl" onclick="switchLanguage('curl')" class="rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all bg-saweria-dark text-white">cURL</button>
-                        <button id="tab-nodejs" onclick="switchLanguage('nodejs')" class="rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all text-saweria-gray hover:text-saweria-dark">JavaScript</button>
-                        <button id="tab-python" onclick="switchLanguage('python')" class="rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all text-saweria-gray hover:text-saweria-dark">Python</button>
+                        <button id="tab-curl" onclick="switchLanguage('curl')" class="rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 bg-[#1f883d] text-white border-2 border-saweria-dark">
+                            <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+                            <span>cURL</span>
+                        </button>
+                        <button id="tab-nodejs" onclick="switchLanguage('nodejs')" class="rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 bg-[#fff8c5] text-[#9a6700] border-2 border-[#f0d36a] hover:border-saweria-dark">
+                            <span class="font-black tracking-tight">JS</span>
+                            <span>JavaScript</span>
+                        </button>
+                        <button id="tab-python" onclick="switchLanguage('python')" class="rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 bg-[#ddf4ff] text-[#0969da] border-2 border-[#54aeef] hover:border-saweria-dark">
+                            <i data-lucide="braces" class="w-3.5 h-3.5"></i>
+                            <span>Python</span>
+                        </button>
                     </div>
-                    <button id="copy-btn-content" onclick="copyCodeSnippet()" class="copy-icon-swap rounded-full border-2 border-saweria-dark bg-saweria-yellow px-3 py-1.5 text-saweria-dark hover:bg-saweria-light transition-colors flex items-center gap-1 text-[10px] font-mono font-bold w-fit">
-                        <span data-copy-state="copy" class="items-center gap-1 inline-flex"><i data-lucide="copy" class="w-3.5 h-3.5"></i><span>Copy</span></span>
-                        <span data-copy-state="check" class="items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i><span>Copied</span></span>
-                    </button>
                 </div>
 
-                <div class="bg-saweria-dark p-4 sm:p-5 border-4 border-saweria-dark rounded-3xl text-xs font-mono leading-relaxed text-slate-300 shadow-[4px_4px_0px_0px_#1e1e1e] overflow-x-auto">
-                    <pre id="code-curl" class="code-tab text-[#e6edf3]"></pre>
-                    <pre id="code-nodejs" class="code-tab text-[#e6edf3] hidden"></pre>
-                    <pre id="code-python" class="code-tab text-[#e6edf3] hidden"></pre>
+                <div class="relative bg-saweria-dark p-4 sm:p-5 border-4 border-saweria-dark rounded-3xl text-xs font-mono leading-relaxed text-slate-300 shadow-[4px_4px_0px_0px_#1e1e1e] overflow-x-auto">
+                    <button id="copy-btn-content" onclick="copyCodeSnippet()" class="copy-icon-swap absolute top-3 right-3 z-10 rounded-full border border-slate-700 bg-slate-900/95 px-3 py-1.5 text-slate-200 hover:text-white hover:border-slate-500 transition-colors flex items-center gap-1 text-[10px] font-mono font-bold w-fit">
+                        <span data-copy-state="copy" class="items-center gap-1 inline-flex"><i data-lucide="copy" class="w-3.5 h-3.5"></i><span>Copy</span></span>
+                        <span data-copy-state="check" class="items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span>Copied</span></span>
+                    </button>
+                    <pre id="code-curl" class="code-tab pt-8 text-[#e6edf3]"></pre>
+                    <pre id="code-nodejs" class="code-tab pt-8 text-[#e6edf3] hidden"></pre>
+                    <pre id="code-python" class="code-tab pt-8 text-[#e6edf3] hidden"></pre>
                 </div>
             </section>
 
@@ -571,7 +570,7 @@
                         <div class="h-16 w-16 ${accentColor} border-4 border-saweria-dark rounded-2xl flex items-center justify-center shadow-[4px_4px_0_#1e1e1e]">
                             <i data-lucide="${iconNames[i % iconNames.length]}" class="w-8 h-8"></i>
                         </div>
-                        <span class="inline-flex bg-saweria-yellow text-saweria-dark border-4 border-saweria-dark rounded-full px-4 py-1.5 text-[10px] font-extrabold tracking-wider font-mono uppercase">
+                        <span class="inline-flex method-badge border-4 border-saweria-dark rounded-full px-4 py-1.5 text-[10px] font-extrabold tracking-wider font-mono uppercase">
                             ${ep.method}
                         </span>
                     </div>
@@ -730,17 +729,13 @@
         }
 
         function renderCodeLines(code, highlighter) {
-            return code.split('\n').map((line, index) => `
-                <span class="code-line">
-                    <span class="code-line-number">${index + 1}</span>
-                    <code class="code-line-content">${highlighter(line)}</code>
-                </span>
-            `).join('');
+            return code.split('\n').map((line, index) => `<span class="code-line"><span class="code-line-number">${index + 1}</span><code class="code-line-content">${highlighter(line)}</code></span>`).join('');
         }
 
         function highlightCurl(code) {
             return highlightByRules(code, [
-                { test: token => token === 'curl', className: 'text-[#ff7b72] font-bold' },
+                { test: token => token === 'curl', className: 'text-[#7ee787] font-bold' },
+                { test: token => token === 'GET', className: 'text-[#79c0ff] font-bold' },
                 { test: token => /^-[A-Za-z]+$/.test(token), className: 'text-[#79c0ff]' },
                 { test: token => /^['"]/.test(token), className: 'text-[#a5d6ff]' }
             ]);
@@ -764,6 +759,16 @@
             ]);
         }
 
+        function getLanguageTabClass(lang, isActive) {
+            const base = "rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 border-2";
+            const styles = {
+                curl: isActive ? "bg-[#1f883d] text-white border-saweria-dark" : "bg-[#dafbe1] text-[#1f883d] border-[#7ee787] hover:border-saweria-dark",
+                nodejs: isActive ? "bg-[#f7df1e] text-saweria-dark border-saweria-dark" : "bg-[#fff8c5] text-[#9a6700] border-[#f0d36a] hover:border-saweria-dark",
+                python: isActive ? "bg-[#0969da] text-white border-saweria-dark" : "bg-[#ddf4ff] text-[#0969da] border-[#54aeef] hover:border-saweria-dark"
+            };
+            return `${base} ${styles[lang]}`;
+        }
+
         function switchLanguage(lang) {
             activeLanguage = lang;
             
@@ -777,11 +782,7 @@
 
             ['curl', 'nodejs', 'python'].forEach(l => {
                 const btn = document.getElementById(`tab-${l}`);
-                if (l === lang) {
-                    btn.className = "rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all bg-saweria-dark text-white";
-                } else {
-                    btn.className = "rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all text-saweria-gray hover:text-saweria-dark";
-                }
+                btn.className = getLanguageTabClass(l, l === lang);
             });
         }
 
