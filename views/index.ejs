@@ -39,6 +39,8 @@
     <style>
         body {
             background-color: #fbf9f4;
+            background-image: radial-gradient(rgba(30, 30, 30, 0.10) 1px, transparent 1px);
+            background-size: 18px 18px;
         }
         ::-webkit-scrollbar {
             width: 8px;
@@ -67,6 +69,22 @@
         .neo-card:hover {
             transform: translate(-2px, -2px);
             box-shadow: 7px 7px 0px 0px #1e1e1e;
+        }
+        .pill-shadow {
+            box-shadow: 4px 5px 0px 0px #1e1e1e;
+        }
+        .hero-mark {
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .copy-icon-swap [data-copy-state="check"] {
+            display: none;
+        }
+        .copy-icon-swap.is-copied [data-copy-state="copy"] {
+            display: none;
+        }
+        .copy-icon-swap.is-copied [data-copy-state="check"] {
+            display: inline-flex;
         }
         .gh-dark {
             background-color: #0d1117;
@@ -103,7 +121,7 @@
         </div>
     </div>
 
-    <div id="toast" class="fixed top-6 right-6 z-50 transform translate-y-[-20px] opacity-0 transition-all duration-300 pointer-events-none bg-white border-4 border-saweria-dark text-saweria-dark px-5 py-4 rounded-none shadow-[4px_4px_0px_0px_#1e1e1e] flex items-center gap-3">
+    <div id="toast" class="fixed top-6 right-6 z-[70] transform translate-y-[-20px] opacity-0 transition-all duration-300 pointer-events-none bg-white border-4 border-saweria-dark text-saweria-dark px-5 py-4 rounded-2xl shadow-[4px_4px_0px_0px_#1e1e1e] flex items-center gap-3">
         <div class="p-1 bg-saweria-yellow border-2 border-saweria-dark">
             <i data-lucide="bell" class="w-5 h-5"></i>
         </div>
@@ -113,90 +131,97 @@
         </div>
     </div>
 
-    <div class="max-w-5xl mx-auto px-4 py-8 md:py-12 space-y-8">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 py-6 md:py-10 space-y-14">
         
-        <header class="neo-card bg-white border-4 border-saweria-dark p-6 sm:p-10 relative overflow-hidden animate-[fade-in_1s_ease_out]">
-            <div class="absolute right-0 top-0 w-32 h-32 bg-saweria-yellow/10 rounded-full blur-3xl pointer-events-none"></div>
-            
-            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-                <div class="space-y-4">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-saweria-yellow border-2 border-saweria-dark font-extrabold text-[10px] uppercase">
-                        <i data-lucide="check" class="w-3.5 h-3.5"></i>
-                        <span>Verified API Creator</span>
-                    </div>
-                    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-saweria-dark leading-none">
-                        anichin-api
+        <nav class="flex items-center justify-between gap-4 border-b-4 border-saweria-dark bg-saweria-bg/95 backdrop-blur px-1 pb-5">
+            <a href="#" class="text-2xl sm:text-3xl font-extrabold tracking-tight text-saweria-dark">Anichin<span class="text-[#ff6f61]">.</span>API</a>
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div class="hidden sm:flex items-center gap-2 rounded-full border-4 border-saweria-dark bg-white px-4 py-2 text-xs font-extrabold pill-shadow">
+                    <i data-lucide="eye" class="w-4 h-4 text-saweria-gray"></i>
+                    <span id="github-stars">Fetching...</span>
+                </div>
+                <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="neo-btn rounded-full border-4 border-saweria-dark bg-white px-4 py-2 text-xs sm:text-sm font-extrabold flex items-center gap-2">
+                    <i data-lucide="github" class="w-4 h-4"></i>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </nav>
+
+        <header class="grid lg:grid-cols-[1.08fr_0.92fr] gap-10 lg:gap-14 items-center py-4 md:py-8">
+            <div class="space-y-7" data-aos="fade-up">
+                <div class="inline-flex items-center gap-2 px-6 py-2 bg-saweria-yellow border-4 border-saweria-dark rounded-full pill-shadow font-extrabold text-xs uppercase tracking-[0.2em]">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    <span>Free Donghua Scraper API</span>
+                </div>
+                <div class="space-y-5">
+                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-saweria-dark leading-[0.95]">
+                        Ready-to-use <span class="hero-mark bg-[#ff746b] px-2">Anichin API</span> for your next project.
                     </h1>
-                    <p class="text-saweria-gray text-xs sm:text-sm font-semibold max-w-xl leading-relaxed">
-                        Free Donghua Scraper API — Portal data ekstraksi instan untuk platform anime Anichin. Sangat mudah digunakan, open-source, dan siap pakai.
+                    <p class="text-xl sm:text-2xl text-saweria-gray font-medium leading-relaxed max-w-3xl">
+                        Browse endpoints, salin snippet integrasi, uji respons JSON, lalu pakai data Donghua dari Anichin tanpa ribet.
                     </p>
                 </div>
-                
-                <div class="w-full md:w-auto bg-saweria-light border-4 border-saweria-dark p-5 flex flex-col gap-4 shrink-0 min-w-[280px]">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2.5 bg-saweria-yellow border-2 border-saweria-dark text-saweria-dark">
-                            <i data-lucide="github" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <span class="block text-[9px] text-saweria-gray font-mono font-bold uppercase">Repository</span>
-                            <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="text-xs font-extrabold hover:underline flex items-center gap-1">
-                                <span>jakisoft/anichin-api</span>
-                                <i data-lucide="external-link" class="w-3 h-3"></i>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-2 bg-white border-2 border-saweria-dark p-2 text-center">
-                        <div class="space-y-0.5">
-                            <span class="block text-[8px] text-saweria-gray uppercase tracking-wider font-extrabold">Stars</span>
-                            <span id="github-stars" class="text-xs font-extrabold font-mono">Fetching...</span>
-                        </div>
-                        <div class="space-y-0.5 border-l-2 border-saweria-dark">
-                            <span class="block text-[8px] text-saweria-gray uppercase tracking-wider font-extrabold">Forks</span>
-                            <span id="github-forks" class="text-xs font-extrabold font-mono">Fetching...</span>
-                        </div>
-                    </div>
+                <div class="grid sm:grid-cols-2 gap-4 max-w-4xl">
+                    <button onclick="document.getElementById('gallery-section').scrollIntoView({ behavior: 'smooth' })" class="neo-btn rounded-3xl bg-saweria-dark border-4 border-saweria-dark text-white font-extrabold px-6 py-5 flex items-center justify-center gap-3 text-base">
+                        <span>Browse endpoints</span>
+                        <i data-lucide="arrow-down" class="w-5 h-5"></i>
+                    </button>
+                    <a href="https://github.com/jakisoft/anichin-api/fork" target="_blank" class="neo-btn rounded-3xl bg-[#ff746b] border-4 border-saweria-dark text-saweria-dark font-extrabold px-6 py-5 flex items-center justify-center gap-3 text-base">
+                        <i data-lucide="heart" class="w-5 h-5 fill-saweria-dark"></i>
+                        <span>Support project</span>
+                    </a>
+                </div>
+            </div>
 
-                    <div class="grid grid-cols-2 gap-2">
-                        <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="neo-btn flex items-center justify-center gap-1.5 bg-white border-2 border-saweria-dark text-saweria-dark font-extrabold text-[11px] py-2">
-                            <i data-lucide="star" class="w-3.5 h-3.5 text-saweria-yellow fill-saweria-yellow"></i>
-                            <span>Star Repo</span>
-                        </a>
-                        <a href="https://github.com/jakisoft/anichin-api/fork" target="_blank" class="neo-btn flex items-center justify-center gap-1.5 bg-saweria-yellow border-2 border-saweria-dark text-saweria-dark font-extrabold text-[11px] py-2">
-                            <i data-lucide="git-fork" class="w-3.5 h-3.5"></i>
-                            <span>Fork</span>
+            <aside class="neo-card bg-white border-4 border-saweria-dark rounded-[2rem] p-6 sm:p-8 space-y-6 relative overflow-hidden" data-aos="fade-left">
+                <div class="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-saweria-yellow/50 blur-2xl"></div>
+                <div class="relative flex items-center gap-4">
+                    <div class="h-16 w-16 rounded-2xl border-4 border-saweria-dark bg-saweria-yellow flex items-center justify-center shadow-[4px_4px_0_#1e1e1e]">
+                        <i data-lucide="wrench" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-saweria-gray font-extrabold uppercase tracking-widest">Repository</p>
+                        <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="font-extrabold text-lg hover:underline inline-flex items-center gap-1">
+                            jakisoft/anichin-api
+                            <i data-lucide="external-link" class="w-4 h-4"></i>
                         </a>
                     </div>
                 </div>
-            </div>
+                <div class="relative grid grid-cols-2 gap-3">
+                    <div class="border-4 border-saweria-dark rounded-2xl p-4 bg-saweria-light">
+                        <span class="block text-[10px] text-saweria-gray uppercase tracking-wider font-extrabold">Forks</span>
+                        <span id="github-forks" class="text-2xl font-extrabold font-mono">Fetching...</span>
+                    </div>
+                    <div class="border-4 border-saweria-dark rounded-2xl p-4 bg-saweria-light">
+                        <span class="block text-[10px] text-saweria-gray uppercase tracking-wider font-extrabold">Host Aktif</span>
+                        <span id="host-indicator" class="block text-xs font-extrabold font-mono truncate select-all mt-2"></span>
+                    </div>
+                </div>
+                <div class="relative border-4 border-saweria-dark rounded-3xl bg-saweria-dark text-white p-5 font-mono text-xs leading-relaxed">
+                    <p><span class="text-saweria-yellow">GET</span> <span class="select-all">/latest?page=1</span></p>
+                    <p class="text-slate-400 mt-2">Gunakan sandbox pada tiap card untuk generate cURL, JavaScript, dan Python.</p>
+                </div>
+            </aside>
         </header>
 
-        <main class="space-y-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div class="space-y-1">
-                    <h2 class="text-lg font-extrabold text-saweria-dark flex items-center gap-2">
-                        <i data-lucide="terminal" class="w-5 h-5 text-saweria-yellow"></i>
-                        <span>Anichin Endpoints List</span>
-                    </h2>
-                    <p class="text-xs text-saweria-gray font-semibold">Gunakan daftar rute api di bawah ini untuk mengambil respons data secara instan.</p>
+        <main id="gallery-section" class="space-y-8">
+            <div class="space-y-5">
+                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-saweria-dark tracking-tight">Browse the gallery</h2>
+                <div class="flex gap-3 overflow-x-auto pb-2">
+                    <button onclick="filterEndpoints('')" class="category-pill bg-saweria-yellow border-4 border-saweria-dark rounded-full px-6 py-3 text-xs font-extrabold uppercase tracking-wider pill-shadow shrink-0">All <span class="ml-2 bg-white/70 rounded-full px-2 py-1" id="total-endpoints">0</span></button>
+                    <button onclick="filterEndpoints('detail')" class="category-pill bg-white border-4 border-saweria-dark rounded-full px-6 py-3 text-xs font-extrabold uppercase tracking-wider shrink-0">Detail</button>
+                    <button onclick="filterEndpoints('genre')" class="category-pill bg-white border-4 border-saweria-dark rounded-full px-6 py-3 text-xs font-extrabold uppercase tracking-wider shrink-0">Genre</button>
+                    <button onclick="filterEndpoints('episode')" class="category-pill bg-white border-4 border-saweria-dark rounded-full px-6 py-3 text-xs font-extrabold uppercase tracking-wider shrink-0">Episode</button>
+                    <button onclick="filterEndpoints('search')" class="category-pill bg-white border-4 border-saweria-dark rounded-full px-6 py-3 text-xs font-extrabold uppercase tracking-wider shrink-0">Search</button>
                 </div>
-                
-                <div class="flex flex-wrap items-center gap-3">
-                    <div class="bg-white border-2 border-saweria-dark px-3.5 py-2 text-xs flex items-center gap-2 font-bold text-saweria-dark">
-                        <i data-lucide="globe" class="w-4 h-4 text-saweria-yellow"></i>
-                        <span class="text-[10px] text-saweria-gray">Host Aktif:</span>
-                        <span id="host-indicator" class="font-mono text-[11px] select-all"></span>
-                    </div>
-                    <div class="relative">
-                        <i data-lucide="search" class="w-4 h-4 text-saweria-dark absolute left-3 top-1/2 -translate-y-1/2"></i>
-                        <input type="text" id="api-search" oninput="filterEndpoints(this.value)" placeholder="Cari rute API..." class="bg-white border-2 border-saweria-dark rounded-none pl-9 pr-4 py-2 text-xs focus:outline-none focus:bg-saweria-light font-extrabold text-saweria-dark">
-                    </div>
+                <div class="relative max-w-4xl">
+                    <i data-lucide="search" class="w-6 h-6 text-saweria-gray absolute left-5 top-1/2 -translate-y-1/2"></i>
+                    <input type="text" id="api-search" oninput="filterEndpoints(this.value)" placeholder="Search endpoints..." class="w-full bg-white border-4 border-saweria-dark rounded-2xl pl-14 pr-5 py-5 text-base focus:outline-none focus:bg-saweria-light font-semibold text-saweria-dark">
                 </div>
             </div>
 
-            <div id="endpoints-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            <div id="endpoints-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"></div>
         </main>
-        
         <footer class="py-6 border-t-2 border-saweria-dark text-center text-xs text-saweria-gray flex flex-col sm:flex-row justify-between items-center gap-3 font-semibold">
             <p>&copy; 2026 Anichin Scraper Hub. Berkas Berlisensi MIT.</p>
             <div class="flex gap-4">
@@ -247,9 +272,9 @@
                         <button id="tab-nodejs" onclick="switchLanguage('nodejs')" class="text-[10px] font-mono font-bold px-2.5 py-1 transition-all text-saweria-gray hover:text-saweria-dark">JavaScript</button>
                         <button id="tab-python" onclick="switchLanguage('python')" class="text-[10px] font-mono font-bold px-2.5 py-1 transition-all text-saweria-gray hover:text-saweria-dark">Python</button>
                     </div>
-                    <button id="copy-btn-content" onclick="copyCodeSnippet()" class="text-saweria-dark hover:text-saweria-gray transition-colors flex items-center gap-1 text-[10px] font-mono font-bold">
-                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                        <span>Copy</span>
+                    <button id="copy-btn-content" onclick="copyCodeSnippet()" class="copy-icon-swap text-saweria-dark hover:text-saweria-gray transition-colors flex items-center gap-1 text-[10px] font-mono font-bold">
+                        <span data-copy-state="copy" class="items-center gap-1 inline-flex"><i data-lucide="copy" class="w-3.5 h-3.5"></i><span>Copy</span></span>
+                        <span data-copy-state="check" class="items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i><span>Copied</span></span>
                     </button>
                 </div>
 
@@ -500,50 +525,56 @@
         function renderEndpoints() {
             const container = document.getElementById('endpoints-list');
             container.innerHTML = "";
+            document.getElementById('total-endpoints').innerText = apiData.length;
 
             apiData.forEach((ep, i) => {
-                const card = document.createElement('div');
-                const assignedPastelColor = pastelColors[i % pastelColors.length];
-                card.className = `neo-card ${assignedPastelColor} border-4 border-saweria-dark p-6 flex flex-col justify-between relative`;
-                
+                const card = document.createElement('article');
+                const accentColor = pastelColors[i % pastelColors.length];
+                const iconNames = ['wrench', 'sparkles', 'clock', 'tags', 'folder-search', 'badge-info', 'play-square', 'search', 'calendar-days'];
+                const paramText = ep.params.length > 0 ? `${ep.params.length} params` : 'no params';
+                card.className = 'neo-card bg-white border-4 border-saweria-dark rounded-[2rem] p-6 sm:p-8 flex flex-col min-h-[360px] relative overflow-hidden';
                 card.setAttribute('data-aos', 'fade-up');
-                card.setAttribute('data-aos-delay', `${(i % 3) * 100}`);
-
-                let paramIndicator = "";
-                if (ep.params.length > 0) {
-                    paramIndicator = `
-                        <span class="inline-flex items-center gap-1 bg-white border-2 border-saweria-dark px-2 py-0.5 text-[10px] font-bold font-mono">
-                            <i data-lucide="sliders" class="w-3 h-3"></i>
-                            <span>${ep.params.length} Params</span>
-                        </span>
-                    `;
-                }
+                card.setAttribute('data-aos-delay', `${(i % 3) * 90}`);
 
                 card.innerHTML = `
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between gap-2 border-b-2 border-saweria-dark pb-3">
-                            <div class="flex items-center gap-2">
-                                <h3 class="font-extrabold text-base text-saweria-dark tracking-tight leading-none">${ep.title}</h3>
-                                ${paramIndicator}
-                            </div>
-                            <span class="bg-white text-saweria-dark border-2 border-saweria-dark px-2.5 py-0.5 text-[9px] font-extrabold tracking-wider font-mono">
+                    <div class="flex items-start justify-between gap-4">
+                        <div class="h-16 w-16 ${accentColor} border-4 border-saweria-dark rounded-2xl flex items-center justify-center shadow-[4px_4px_0_#1e1e1e]">
+                            <i data-lucide="${iconNames[i % iconNames.length]}" class="w-8 h-8"></i>
+                        </div>
+                        <div class="text-right space-y-2">
+                            <span class="inline-flex bg-saweria-yellow text-saweria-dark border-4 border-saweria-dark rounded-full px-4 py-1.5 text-[10px] font-extrabold tracking-wider font-mono uppercase">
                                 ${ep.method}
                             </span>
-                        </div>
-                        
-                        <p class="text-xs text-saweria-dark font-semibold leading-relaxed min-h-[40px]">${ep.description}</p>
-                        
-                        <div class="bg-white border-2 border-saweria-dark p-2.5 font-mono text-[11px] text-saweria-dark overflow-x-auto whitespace-nowrap scrollbar-none">
-                            ${ep.path}
+                            <div class="flex justify-end items-center gap-1 text-[11px] text-saweria-gray font-bold">
+                                <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                                <span>${paramText}</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="mt-6 flex justify-end">
-                        <button onclick="openSandboxDrawer(${i})" class="neo-btn flex items-center justify-center gap-1 bg-saweria-yellow border-2 border-saweria-dark text-saweria-dark font-extrabold text-[11px] px-3.5 py-2 select-none">
-                            <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
-                            <span>Buka Konsol Uji</span>
-                        </button>
+                    <div class="mt-8 space-y-4 flex-1">
+                        <div>
+                            <h3 class="font-extrabold text-2xl text-saweria-dark tracking-tight leading-tight">${ep.title}</h3>
+                            <p class="font-mono text-sm text-saweria-gray mt-2 select-all">${ep.path}</p>
+                        </div>
+                        <p class="text-sm text-saweria-gray font-semibold leading-relaxed">${ep.description}</p>
                     </div>
+
+                    <div class="grid grid-cols-2 gap-4 border-t-2 border-saweria-dark pt-5 mt-7">
+                        <div>
+                            <span class="block text-[10px] text-saweria-gray font-extrabold uppercase tracking-widest">Tags</span>
+                            <span class="block mt-2 text-sm font-extrabold">${ep.params.length ? 'Dynamic' : 'Static'}</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-saweria-gray font-extrabold uppercase tracking-widest">Lang</span>
+                            <span class="block mt-2 text-sm font-extrabold font-mono">json</span>
+                        </div>
+                    </div>
+
+                    <button onclick="openSandboxDrawer(${i})" class="neo-btn mt-7 w-full rounded-2xl flex items-center justify-center gap-3 bg-saweria-dark border-4 border-saweria-dark text-white font-extrabold text-base px-5 py-4 select-none">
+                        <span>Buka konsol uji</span>
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
                 `;
                 container.appendChild(card);
             });
@@ -648,30 +679,52 @@
             document.getElementById('code-python').innerHTML = highlightPython(pythonCode);
         }
 
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function highlightByRules(code, rules) {
+            const tokenRegex = /('(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*"|\b[a-zA-Z_][\w]*\b|-[A-Za-z]+|\.[a-zA-Z_][\w]*)/g;
+            let cursor = 0;
+            let html = '';
+            for (const match of code.matchAll(tokenRegex)) {
+                html += escapeHtml(code.slice(cursor, match.index));
+                const token = match[0];
+                const rule = rules.find(item => item.test(token));
+                html += rule ? `<span class="${rule.className}">${escapeHtml(token)}</span>` : escapeHtml(token);
+                cursor = match.index + token.length;
+            }
+            html += escapeHtml(code.slice(cursor));
+            return html;
+        }
+
         function highlightCurl(code) {
-            return code
-                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                .replace(/\b(curl)\b/g, '<span class="text-[#ff7b72] font-bold">$1</span>')
-                .replace(/(-X|-H)/g, '<span class="text-[#79c0ff]">$1</span>')
-                .replace(/(".*?")/g, '<span class="text-[#a5d6ff]">$1</span>');
+            return highlightByRules(code, [
+                { test: token => token === 'curl', className: 'text-[#ff7b72] font-bold' },
+                { test: token => /^-[A-Za-z]+$/.test(token), className: 'text-[#79c0ff]' },
+                { test: token => /^['"]/.test(token), className: 'text-[#a5d6ff]' }
+            ]);
         }
 
         function highlightJS(code) {
-            return code
-                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                .replace(/\b(import|from|const|require|let)\b/g, '<span class="text-[#ff7b72] font-bold">$1</span>')
-                .replace(/('.*?'|".*?")/g, '<span class="text-[#a5d6ff]">$1</span>')
-                .replace(/\b(console|axios)\b/g, '<span class="text-[#79c0ff]">$1</span>')
-                .replace(/\b(log|error|get)\b/g, '<span class="text-[#d2a8ff]">$1</span>');
+            return highlightByRules(code, [
+                { test: token => /^(import|from|const|require|let|then|catch)$/.test(token), className: 'text-[#ff7b72] font-bold' },
+                { test: token => /^['"]/.test(token), className: 'text-[#a5d6ff]' },
+                { test: token => /^(console|axios|res|err)$/.test(token), className: 'text-[#79c0ff]' },
+                { test: token => /^\.(log|error|get|data)$/.test(token), className: 'text-[#d2a8ff]' }
+            ]);
         }
 
         function highlightPython(code) {
-            return code
-                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                .replace(/\b(import|print)\b/g, '<span class="text-[#ff7b72] font-bold">$1</span>')
-                .replace(/(".*?")/g, '<span class="text-[#a5d6ff]">$1</span>')
-                .replace(/\b(requests|response)\b/g, '<span class="text-[#79c0ff]">$1</span>')
-                .replace(/\.(get|json)\b/g, '.<span class="text-[#d2a8ff]">$1</span>');
+            return highlightByRules(code, [
+                { test: token => /^(import|print)$/.test(token), className: 'text-[#ff7b72] font-bold' },
+                { test: token => /^['"]/.test(token), className: 'text-[#a5d6ff]' },
+                { test: token => /^(requests|response|url)$/.test(token), className: 'text-[#79c0ff]' },
+                { test: token => /^\.(get|json)$/.test(token), className: 'text-[#d2a8ff]' }
+            ]);
         }
 
         function switchLanguage(lang) {
@@ -695,18 +748,32 @@
             });
         }
 
-        function copyCodeSnippet() {
+        async function copyCodeSnippet() {
             const activePre = document.getElementById(`code-${activeLanguage}`);
-            const textToCopy = activePre.innerText;
+            const textToCopy = activePre.textContent;
+            const copyButton = document.getElementById('copy-btn-content');
 
-            const textarea = document.createElement("textarea");
-            textarea.value = textToCopy;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand("copy");
-            document.body.removeChild(textarea);
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(textToCopy);
+                } else {
+                    const textarea = document.createElement("textarea");
+                    textarea.value = textToCopy;
+                    textarea.style.position = 'fixed';
+                    textarea.style.opacity = '0';
+                    document.body.appendChild(textarea);
+                    textarea.focus();
+                    textarea.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(textarea);
+                }
 
-            showToastNotification("Copied", "Snippet integrasi kode berhasil disimpan ke clipboard.");
+                copyButton.classList.add('is-copied');
+                showToastNotification("Copied", "Snippet integrasi kode berhasil disimpan ke clipboard.");
+                setTimeout(() => copyButton.classList.remove('is-copied'), 1400);
+            } catch (error) {
+                showToastNotification("Copy gagal", "Browser tidak mengizinkan akses clipboard.");
+            }
         }
 
         function showToastNotification(title, message) {
