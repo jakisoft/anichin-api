@@ -20,6 +20,85 @@ class Anichin {
     return res.data
   }
 
+
+  _parseSeriesList($, selector = ".bixbox .listupd article.bs") {
+    const items = []
+
+    $(selector).each((i, el) => {
+      const a = $(el).find("a").first()
+      const href = a.attr("href") || null
+      const title = a.find("h2").text().trim() || a.attr("title") || null
+      const image = a.find("img").attr("src") || null
+
+      const ep = a.find(".epx").text().trim() || null
+      const type = a.find(".typez").text().trim() || null
+      let status = a.find(".status").text().trim()
+      if (!status) status = a.find(".sb").text().trim() || null
+      const description = a.attr("title") || null
+
+      items.push({ title, href, image, ep, type, status, description })
+    })
+
+    return items
+  }
+
+  _parsePagination($) {
+    let next_page = null
+    let prev_page = null
+    let current_page = null
+    let total_pages = null
+
+    $(".pagination .current, .wp-pagenavi .current, .nav-links .current").each((i, el) => {
+      const num = parseInt($(el).text().trim(), 10)
+      if (!Number.isNaN(num)) current_page = num
+    })
+
+    $(".pagination a, .wp-pagenavi a, .nav-links a, .hpage a").each((i, el) => {
+      const text = $(el).text().replace(/\s+/g, " ").trim().toLowerCase()
+      const href = $(el).attr("href") || null
+      const pageNum = parseInt(text, 10)
+
+      if (text.includes("next")) next_page = href
+      if (text.includes("prev")) prev_page = href
+      if (!Number.isNaN(pageNum)) total_pages = Math.max(total_pages || 0, pageNum)
+    })
+
+    return { next_page, prev_page, current_page, total_pages }
+  }
+
+  _normalizeEmbedSource(value) {
+    if (!value) return null
+
+    let source = String(value).trim()
+    if (!source || source === "#") return null
+
+    const iframeMatch = source.match(/<iframe[^>]+src=["']([^"']+)["']/i)
+    if (iframeMatch) source = iframeMatch[1]
+
+    if (/^[A-Za-z0-9+/=]+$/.test(source) && source.length > 20) {
+      try {
+        const decoded = Buffer.from(source, "base64").toString("utf8")
+        const decodedIframe = decoded.match(/<iframe[^>]+src=["']([^"']+)["']/i)
+        if (decodedIframe) source = decodedIframe[1]
+        else if (/^https?:\/\//.test(decoded.trim())) source = decoded.trim()
+      } catch (e) {
+        // Ignore invalid base64-like values and keep the original source.
+      }
+    }
+
+    return source || null
+  }
+
+  _pushUniqueEmbed(embeds, item) {
+    const src = this._normalizeEmbedSource(item.src)
+    if (!src || embeds.some((embed) => embed.src === src)) return
+
+    embeds.push({
+      name: item.name || null,
+      src,
+    })
+  }
+
   async SwipperSlide() {
     const html = await this._get("/")
     const $ = cheerio.load(html)
@@ -73,6 +152,38 @@ class Anichin {
       })
 
     return list
+  }
+
+
+  async genres() {
+    const html = await this._get("/")
+    const $ = cheerio.load(html)
+    const items = []
+
+    $("ul.genre li a").each((i, el) => {
+      const a = $(el)
+      const name = a.text().replace(/\s+/g, " ").trim()
+      const href = a.attr("href") || null
+      const slug = href ? href.replace(/\/?$/, "").split("/").filter(Boolean).pop() : null
+
+      if (name) items.push({ name, slug, href })
+    })
+
+    return items
+  }
+
+  async genre(genreSlug, page = 1) {
+    const slug = String(genreSlug || "").replace(/^\/+|\/+$/g, "")
+    const path = page > 1 ? `/genres/${slug}/page/${page}/` : `/genres/${slug}/`
+
+    const html = await this._get(path)
+    const $ = cheerio.load(html)
+
+    const title = $(".bixbox .releases h1 span").first().text().trim() || $(".releases h1 span").first().text().trim() || slug
+    const items = this._parseSeriesList($, ".bixbox .listupd article.bs")
+    const pagination = this._parsePagination($)
+
+    return { genre: title, slug, page, items, pagination }
   }
 
   async latest(page = 1) {
@@ -167,7 +278,24 @@ class Anichin {
 
     const img = $(".megavid .tb img").attr("src") || $(".thumb img").attr("src") || null
 
-    const embedSrc = $("#pembed iframe").attr("src") || $("#embed_holder iframe").attr("src") || null
+    const embeds = []
+    $("#pembed iframe, #embed_holder iframe, .player iframe, .player-embed iframe, .megavid iframe, iframe").each((i, el) => {
+      const src = $(el).attr("src") || $(el).attr("data-src")
+      const name = $(el).closest(".server, .mirror, .player, .player-embed").find(".name, strong, span").first().text().replace(/\s+/g, " ").trim() || null
+      this._pushUniqueEmbed(embeds, { name, src })
+    })
+
+    const embedAttributes = ["data-video", "data-src", "data-embed", "data-url", "data-iframe", "value"]
+    $(".mirror a, .mirror button, .mirror li, .mirroroption, .server a, .server button, .servers a, .servers button, .player a, .player button, select option").each((i, el) => {
+      const node = $(el)
+      const name = node.text().replace(/\s+/g, " ").trim() || node.attr("data-name") || node.attr("title") || null
+
+      embedAttributes.forEach((attr) => {
+        this._pushUniqueEmbed(embeds, { name, src: node.attr(attr) })
+      })
+    })
+
+    const embedSrc = embeds[0]?.src || null
 
     const download = []
     $(".soraurlx").each((i, el) => {
@@ -198,7 +326,7 @@ class Anichin {
       allEpisodes: $(".naveps .nvsc a").attr("href") || null,
     }
 
-    return { title, episode: epNum, img, embedSrc, download, related, nav }
+    return { title, episode: epNum, img, embedSrc, embeds, download, related, nav }
   }
 
   async search(query, page = 1) {

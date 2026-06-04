@@ -166,6 +166,25 @@
                     example: `${base}/latest?page=1`
                 },
                 {
+                    title: "Daftar Genres",
+                    description: "Mengambil daftar genre yang tersedia di Anichin.",
+                    method: "GET",
+                    path: "/genres",
+                    params: [],
+                    example: `${base}/genres`
+                },
+                {
+                    title: "Detail Genre",
+                    description: "Mengambil daftar donghua berdasarkan genre dengan pagination.",
+                    method: "GET",
+                    path: "/genres/:genre?page=1",
+                    params: [
+                        { name: "genre", type: "string", required: true, desc: "Slug genre (contoh: action)" },
+                        { name: "page", type: "number", required: false, desc: "Halaman data. Default: 1" }
+                    ],
+                    example: `${base}/genres/action?page=1`
+                },
+                {
                     title: "Detail Donghua",
                     description: "Mengambil detail lengkap donghua.",
                     method: "GET",
@@ -177,7 +196,7 @@
                 },
                 {
                     title: "Episode Player",
-                    description: "Mengambil data video player.",
+                    description: "Mengambil data video player beserta semua embed yang tersedia.",
                     method: "GET",
                     path: "/episode/:slug",
                     params: [
