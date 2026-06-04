@@ -86,6 +86,21 @@
         .copy-icon-swap.is-copied [data-copy-state="check"] {
             display: inline-flex;
         }
+        .code-line {
+            display: grid;
+            grid-template-columns: 2.75rem minmax(0, 1fr);
+            gap: 1rem;
+            min-height: 1.45rem;
+        }
+        .code-line-number {
+            color: #6e7681;
+            text-align: right;
+            user-select: none;
+        }
+        .code-line-content {
+            min-width: 0;
+            white-space: pre;
+        }
         .gh-dark {
             background-color: #0d1117;
             color: #c9d1d9;
@@ -138,7 +153,7 @@
             <div class="flex items-center gap-2 sm:gap-3">
                 <div class="hidden sm:flex items-center gap-2 rounded-full border-4 border-saweria-dark bg-white px-4 py-2 text-xs font-extrabold pill-shadow">
                     <i data-lucide="eye" class="w-4 h-4 text-saweria-gray"></i>
-                    <span id="github-stars">Fetching...</span>
+                    <span id="github-stars-nav">Fetching...</span>
                 </div>
                 <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="neo-btn rounded-full border-4 border-saweria-dark bg-white px-4 py-2 text-xs sm:text-sm font-extrabold flex items-center gap-2">
                     <i data-lucide="github" class="w-4 h-4"></i>
@@ -147,28 +162,27 @@
             </div>
         </nav>
 
-        <header class="grid lg:grid-cols-[1.08fr_0.92fr] gap-10 lg:gap-14 items-center py-4 md:py-8">
-            <div class="space-y-7" data-aos="fade-up">
-                <div class="inline-flex items-center gap-2 px-6 py-2 bg-saweria-yellow border-4 border-saweria-dark rounded-full pill-shadow font-extrabold text-xs uppercase tracking-[0.2em]">
-                    <i data-lucide="sparkles" class="w-4 h-4"></i>
-                    <span>Free Donghua Scraper API</span>
-                </div>
+        <header class="grid lg:grid-cols-[0.92fr_1.08fr] gap-8 lg:gap-12 items-stretch py-4 md:py-8">
+            <div class="neo-card bg-white border-4 border-saweria-dark rounded-[2rem] p-6 sm:p-8 flex flex-col justify-between gap-8" data-aos="fade-up">
                 <div class="space-y-5">
-                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-saweria-dark leading-[0.95]">
-                        Ready-to-use <span class="hero-mark bg-[#ff746b] px-2">Anichin API</span> for your next project.
-                    </h1>
-                    <p class="text-xl sm:text-2xl text-saweria-gray font-medium leading-relaxed max-w-3xl">
-                        Browse endpoints, salin snippet integrasi, uji respons JSON, lalu pakai data Donghua dari Anichin tanpa ribet.
-                    </p>
+                    <div class="inline-flex h-16 w-16 items-center justify-center rounded-2xl border-4 border-saweria-dark bg-saweria-yellow shadow-[4px_4px_0_#1e1e1e]">
+                        <i data-lucide="terminal-square" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-saweria-gray font-extrabold uppercase tracking-[0.2em]">Anichin API</p>
+                        <h1 class="mt-3 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-saweria-dark leading-[0.95]">
+                            Dokumentasi endpoint & sandbox uji respons.
+                        </h1>
+                    </div>
                 </div>
-                <div class="grid sm:grid-cols-2 gap-4 max-w-4xl">
-                    <button onclick="document.getElementById('gallery-section').scrollIntoView({ behavior: 'smooth' })" class="neo-btn rounded-3xl bg-saweria-dark border-4 border-saweria-dark text-white font-extrabold px-6 py-5 flex items-center justify-center gap-3 text-base">
-                        <span>Browse endpoints</span>
-                        <i data-lucide="arrow-down" class="w-5 h-5"></i>
-                    </button>
-                    <a href="https://github.com/jakisoft/anichin-api/fork" target="_blank" class="neo-btn rounded-3xl bg-[#ff746b] border-4 border-saweria-dark text-saweria-dark font-extrabold px-6 py-5 flex items-center justify-center gap-3 text-base">
-                        <i data-lucide="heart" class="w-5 h-5 fill-saweria-dark"></i>
-                        <span>Support project</span>
+                <div class="grid sm:grid-cols-2 gap-3">
+                    <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="neo-btn rounded-3xl bg-saweria-yellow border-4 border-saweria-dark text-saweria-dark font-extrabold px-6 py-4 flex items-center justify-center gap-3 text-sm">
+                        <i data-lucide="star" class="w-5 h-5 fill-saweria-dark"></i>
+                        <span>Star repo</span>
+                    </a>
+                    <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="neo-btn rounded-3xl bg-white border-4 border-saweria-dark text-saweria-dark font-extrabold px-6 py-4 flex items-center justify-center gap-3 text-sm">
+                        <i data-lucide="github" class="w-5 h-5"></i>
+                        <span>GitHub</span>
                     </a>
                 </div>
             </div>
@@ -189,8 +203,8 @@
                 </div>
                 <div class="relative grid grid-cols-2 gap-3">
                     <div class="border-4 border-saweria-dark rounded-2xl p-4 bg-saweria-light">
-                        <span class="block text-[10px] text-saweria-gray uppercase tracking-wider font-extrabold">Forks</span>
-                        <span id="github-forks" class="text-2xl font-extrabold font-mono">Fetching...</span>
+                        <span class="block text-[10px] text-saweria-gray uppercase tracking-wider font-extrabold">Stars</span>
+                        <span id="github-stars" class="text-2xl font-extrabold font-mono">Fetching...</span>
                     </div>
                     <div class="border-4 border-saweria-dark rounded-2xl p-4 bg-saweria-light">
                         <span class="block text-[10px] text-saweria-gray uppercase tracking-wider font-extrabold">Host Aktif</span>
@@ -199,24 +213,27 @@
                 </div>
                 <div class="relative border-4 border-saweria-dark rounded-3xl bg-saweria-dark text-white p-5 font-mono text-xs leading-relaxed">
                     <p><span class="text-saweria-yellow">GET</span> <span class="select-all">/latest?page=1</span></p>
-                    <p class="text-slate-400 mt-2">Gunakan sandbox pada tiap card untuk generate cURL, JavaScript, dan Python.</p>
+                    <p class="text-slate-400 mt-2">Pilih endpoint di galeri untuk generate snippet dan simulasi respons.</p>
                 </div>
             </aside>
         </header>
 
         <main id="gallery-section" class="space-y-8">
             <div class="space-y-5">
-                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-saweria-dark tracking-tight">Browse the gallery</h2>
-                <div class="flex gap-3 overflow-x-auto pb-2">
-                    <button onclick="filterEndpoints('')" class="category-pill bg-saweria-yellow border-4 border-saweria-dark rounded-full px-6 py-3 text-xs font-extrabold uppercase tracking-wider pill-shadow shrink-0">All <span class="ml-2 bg-white/70 rounded-full px-2 py-1" id="total-endpoints">0</span></button>
-                    <button onclick="filterEndpoints('detail')" class="category-pill bg-white border-4 border-saweria-dark rounded-full px-6 py-3 text-xs font-extrabold uppercase tracking-wider shrink-0">Detail</button>
-                    <button onclick="filterEndpoints('genre')" class="category-pill bg-white border-4 border-saweria-dark rounded-full px-6 py-3 text-xs font-extrabold uppercase tracking-wider shrink-0">Genre</button>
-                    <button onclick="filterEndpoints('episode')" class="category-pill bg-white border-4 border-saweria-dark rounded-full px-6 py-3 text-xs font-extrabold uppercase tracking-wider shrink-0">Episode</button>
-                    <button onclick="filterEndpoints('search')" class="category-pill bg-white border-4 border-saweria-dark rounded-full px-6 py-3 text-xs font-extrabold uppercase tracking-wider shrink-0">Search</button>
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+                    <div>
+                        <p class="text-xs text-saweria-gray font-extrabold uppercase tracking-[0.2em]">Endpoint Gallery</p>
+                        <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-saweria-dark tracking-tight">Daftar API</h2>
+                    </div>
+                    <div class="inline-flex w-fit items-center gap-2 rounded-full border-4 border-saweria-dark bg-saweria-yellow px-5 py-2 text-xs font-extrabold pill-shadow">
+                        <i data-lucide="layers" class="w-4 h-4"></i>
+                        <span id="total-endpoints">0</span>
+                        <span>endpoint</span>
+                    </div>
                 </div>
                 <div class="relative max-w-4xl">
                     <i data-lucide="search" class="w-6 h-6 text-saweria-gray absolute left-5 top-1/2 -translate-y-1/2"></i>
-                    <input type="text" id="api-search" oninput="filterEndpoints(this.value)" placeholder="Search endpoints..." class="w-full bg-white border-4 border-saweria-dark rounded-2xl pl-14 pr-5 py-5 text-base focus:outline-none focus:bg-saweria-light font-semibold text-saweria-dark">
+                    <input type="text" id="api-search" oninput="filterEndpoints(this.value)" placeholder="Cari endpoint..." class="w-full bg-white border-4 border-saweria-dark rounded-2xl pl-14 pr-5 py-5 text-base focus:outline-none focus:bg-saweria-light font-semibold text-saweria-dark">
                 </div>
             </div>
 
@@ -234,77 +251,85 @@
         </footer>
     </div>
 
-    <div id="sandbox-drawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-xl bg-saweria-bg text-saweria-dark shadow-[-6px_0px_0px_0px_#1e1e1e] transform translate-x-full transition-transform duration-300 ease-in-out border-l-4 border-saweria-dark flex flex-col">
-        <div class="bg-saweria-yellow px-6 py-5 border-b-4 border-saweria-dark flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <i data-lucide="terminal" class="w-5 h-5"></i>
-                <h3 id="drawer-title" class="text-sm font-extrabold tracking-tight uppercase">Console Sandbox</h3>
+    <div id="sandbox-drawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-3xl bg-saweria-bg text-saweria-dark shadow-[-8px_0px_0px_0px_#1e1e1e] transform translate-x-full transition-transform duration-300 ease-in-out border-l-4 border-saweria-dark rounded-l-[2rem] flex flex-col overflow-hidden">
+        <div class="bg-saweria-yellow px-6 sm:px-8 py-5 border-b-4 border-saweria-dark flex items-center justify-between">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="h-11 w-11 rounded-2xl border-2 border-saweria-dark bg-white flex items-center justify-center shrink-0">
+                    <i data-lucide="terminal" class="w-5 h-5"></i>
+                </div>
+                <div class="min-w-0">
+                    <p class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-saweria-gray">Console Sandbox</p>
+                    <h3 id="drawer-title" class="text-lg sm:text-2xl font-extrabold tracking-tight truncate">Console Sandbox</h3>
+                </div>
             </div>
-            <button onclick="closeSandboxDrawer()" class="p-1 border-2 border-saweria-dark bg-white text-saweria-dark hover:bg-saweria-light transition-colors">
+            <button onclick="closeSandboxDrawer()" class="h-11 w-11 rounded-2xl border-2 border-saweria-dark bg-white text-saweria-dark hover:bg-saweria-light transition-colors flex items-center justify-center shrink-0">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
 
-        <div class="flex-1 p-6 space-y-6 overflow-y-auto">
-            <div class="space-y-2">
-                <div class="flex items-center gap-2">
-                    <span class="text-[10px] bg-white text-saweria-dark px-2.5 py-0.5 rounded-none font-mono font-extrabold border-2 border-saweria-dark">GET METHOD</span>
+        <div class="flex-1 p-5 sm:p-8 space-y-7 overflow-y-auto">
+            <section class="bg-white border-4 border-saweria-dark rounded-3xl p-5 sm:p-6 space-y-4 shadow-[4px_4px_0px_0px_#1e1e1e]">
+                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                    <div class="space-y-2 min-w-0">
+                        <span class="inline-flex text-[10px] bg-saweria-yellow text-saweria-dark px-3 py-1 rounded-full font-mono font-extrabold border-2 border-saweria-dark">GET METHOD</span>
+                        <p id="drawer-desc" class="text-sm text-saweria-gray font-semibold leading-relaxed"></p>
+                    </div>
+                    <div id="drawer-param-summary" class="hidden shrink-0 rounded-full border-2 border-saweria-dark bg-saweria-light px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider"></div>
                 </div>
-                <p id="drawer-desc" class="text-xs text-saweria-gray font-semibold leading-relaxed"></p>
-                <div class="bg-white border-2 border-saweria-dark p-3 font-mono text-[11px] text-saweria-dark overflow-x-auto whitespace-nowrap scrollbar-none flex items-center justify-between gap-2">
+                <div class="bg-saweria-light border-2 border-saweria-dark rounded-2xl p-4 font-mono text-xs text-saweria-dark overflow-x-auto whitespace-nowrap scrollbar-none flex items-center justify-between gap-2">
                     <span id="drawer-path-preview" class="select-all"></span>
-                    <i data-lucide="link" class="w-3.5 h-3.5 text-saweria-gray shrink-0"></i>
+                    <i data-lucide="link" class="w-4 h-4 text-saweria-gray shrink-0"></i>
                 </div>
-            </div>
+            </section>
 
             <div id="drawer-params-container" class="space-y-3 hidden">
-                <h4 class="text-xs font-extrabold text-saweria-dark flex items-center gap-1.5 uppercase">
-                    <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                <h4 class="text-xs font-extrabold text-saweria-dark flex items-center gap-1.5 uppercase tracking-wider">
+                    <i data-lucide="sliders" class="w-4 h-4"></i>
                     <span>Parameter Kueri</span>
                 </h4>
-                <div id="drawer-params-form" class="grid grid-cols-1 gap-3 text-xs bg-white p-4 border-2 border-saweria-dark"></div>
+                <div id="drawer-params-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-white p-4 border-4 border-saweria-dark rounded-3xl shadow-[4px_4px_0px_0px_#1e1e1e]"></div>
             </div>
 
-            <div class="space-y-2">
-                <div class="flex justify-between items-center bg-white px-4 py-1.5 border-2 border-saweria-dark">
-                    <div class="flex gap-1">
-                        <button id="tab-curl" onclick="switchLanguage('curl')" class="text-[10px] font-mono font-bold px-2.5 py-1 transition-all bg-saweria-dark text-white">cURL</button>
-                        <button id="tab-nodejs" onclick="switchLanguage('nodejs')" class="text-[10px] font-mono font-bold px-2.5 py-1 transition-all text-saweria-gray hover:text-saweria-dark">JavaScript</button>
-                        <button id="tab-python" onclick="switchLanguage('python')" class="text-[10px] font-mono font-bold px-2.5 py-1 transition-all text-saweria-gray hover:text-saweria-dark">Python</button>
+            <section class="space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white px-4 py-3 border-4 border-saweria-dark rounded-3xl shadow-[4px_4px_0px_0px_#1e1e1e]">
+                    <div class="flex gap-2 overflow-x-auto">
+                        <button id="tab-curl" onclick="switchLanguage('curl')" class="rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all bg-saweria-dark text-white">cURL</button>
+                        <button id="tab-nodejs" onclick="switchLanguage('nodejs')" class="rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all text-saweria-gray hover:text-saweria-dark">JavaScript</button>
+                        <button id="tab-python" onclick="switchLanguage('python')" class="rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all text-saweria-gray hover:text-saweria-dark">Python</button>
                     </div>
-                    <button id="copy-btn-content" onclick="copyCodeSnippet()" class="copy-icon-swap text-saweria-dark hover:text-saweria-gray transition-colors flex items-center gap-1 text-[10px] font-mono font-bold">
+                    <button id="copy-btn-content" onclick="copyCodeSnippet()" class="copy-icon-swap rounded-full border-2 border-saweria-dark bg-saweria-yellow px-3 py-1.5 text-saweria-dark hover:bg-saweria-light transition-colors flex items-center gap-1 text-[10px] font-mono font-bold w-fit">
                         <span data-copy-state="copy" class="items-center gap-1 inline-flex"><i data-lucide="copy" class="w-3.5 h-3.5"></i><span>Copy</span></span>
                         <span data-copy-state="check" class="items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i><span>Copied</span></span>
                     </button>
                 </div>
 
-                <div class="bg-saweria-dark p-4 border-2 border-saweria-dark text-[11px] font-mono leading-relaxed text-slate-300">
-                    <pre id="code-curl" class="code-tab text-[#e6edf3] overflow-x-auto"></pre>
-                    <pre id="code-nodejs" class="code-tab text-[#e6edf3] hidden overflow-x-auto"></pre>
-                    <pre id="code-python" class="code-tab text-[#e6edf3] hidden overflow-x-auto"></pre>
+                <div class="bg-saweria-dark p-4 sm:p-5 border-4 border-saweria-dark rounded-3xl text-xs font-mono leading-relaxed text-slate-300 shadow-[4px_4px_0px_0px_#1e1e1e] overflow-x-auto">
+                    <pre id="code-curl" class="code-tab text-[#e6edf3]"></pre>
+                    <pre id="code-nodejs" class="code-tab text-[#e6edf3] hidden"></pre>
+                    <pre id="code-python" class="code-tab text-[#e6edf3] hidden"></pre>
                 </div>
-            </div>
+            </section>
 
-            <div class="bg-white border-2 border-saweria-dark p-4 space-y-4 shadow-[3px_3px_0px_0px_#1e1e1e]">
-                <div class="flex items-center justify-between">
+            <section class="bg-white border-4 border-saweria-dark rounded-3xl p-5 sm:p-6 space-y-4 shadow-[4px_4px_0px_0px_#1e1e1e]">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                        <h4 class="text-xs font-extrabold text-saweria-dark uppercase">Sandbox Client Simulator</h4>
-                        <p class="text-[10px] text-saweria-gray font-semibold">Uji fungsionalitas respons API</p>
+                        <h4 class="text-sm font-extrabold text-saweria-dark uppercase">Sandbox Client Simulator</h4>
+                        <p class="text-xs text-saweria-gray font-semibold">Uji fungsionalitas respons API</p>
                     </div>
-                    <button onclick="executeSandboxRequest()" class="neo-btn bg-saweria-yellow border-2 border-saweria-dark text-saweria-dark font-extrabold text-[11px] px-3.5 py-2 flex items-center gap-1.5 select-none">
-                        <i data-lucide="play" class="w-3.5 h-3.5"></i>
+                    <button onclick="executeSandboxRequest()" class="neo-btn rounded-2xl bg-saweria-yellow border-2 border-saweria-dark text-saweria-dark font-extrabold text-xs px-4 py-3 flex items-center justify-center gap-1.5 select-none">
+                        <i data-lucide="play" class="w-4 h-4"></i>
                         <span>Kirim Request</span>
                     </button>
                 </div>
 
-                <div class="gh-dark border-2 border-saweria-dark p-4 font-mono text-[11px] relative">
-                    <div class="absolute top-2 right-2 flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2 py-0.5 rounded">
+                <div class="gh-dark border-4 border-saweria-dark rounded-3xl p-5 font-mono text-xs relative overflow-hidden">
+                    <div class="absolute top-3 right-3 flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2 py-0.5 rounded-full">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                         <span class="text-[9px] text-slate-400 font-bold">HTTP 200 OK</span>
                     </div>
-                    <pre id="json-output" class="overflow-y-auto max-h-[250px] leading-relaxed select-all">// Klik "Kirim Request" untuk melihat output...</pre>
+                    <pre id="json-output" class="overflow-y-auto max-h-[360px] pt-8 leading-relaxed select-all">// Klik "Kirim Request" untuk melihat output...</pre>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 
@@ -499,6 +524,7 @@
 
         let activeEndpointIndex = 0;
         let activeLanguage = 'curl';
+        let codeSnippets = { curl: '', nodejs: '', python: '' };
 
         document.getElementById('host-indicator').innerText = currentHost;
 
@@ -507,8 +533,7 @@
                 const response = await fetch('https://api.github.com/repos/jakisoft/anichin-api');
                 if (response.ok) {
                     const data = await response.json();
-                    document.getElementById('github-stars').innerText = `${data.stargazers_count.toLocaleString()} Stars`;
-                    document.getElementById('github-forks').innerText = `${data.forks_count.toLocaleString()} Forks`;
+                    updateGithubStars(`${data.stargazers_count.toLocaleString()} Stars`);
                 } else {
                     useFallbackGithubStats();
                 }
@@ -517,9 +542,14 @@
             }
         }
 
+        function updateGithubStars(value) {
+            document.querySelectorAll('#github-stars, #github-stars-nav').forEach(element => {
+                element.innerText = value;
+            });
+        }
+
         function useFallbackGithubStats() {
-            document.getElementById('github-stars').innerText = "142 Stars";
-            document.getElementById('github-forks').innerText = "38 Forks";
+            updateGithubStars("142 Stars");
         }
 
         function renderEndpoints() {
@@ -531,8 +561,8 @@
                 const card = document.createElement('article');
                 const accentColor = pastelColors[i % pastelColors.length];
                 const iconNames = ['wrench', 'sparkles', 'clock', 'tags', 'folder-search', 'badge-info', 'play-square', 'search', 'calendar-days'];
-                const paramText = ep.params.length > 0 ? `${ep.params.length} params` : 'no params';
-                card.className = 'neo-card bg-white border-4 border-saweria-dark rounded-[2rem] p-6 sm:p-8 flex flex-col min-h-[360px] relative overflow-hidden';
+                const paramText = ep.params.length > 0 ? `${ep.params.length} parameter` : 'tanpa parameter';
+                card.className = 'neo-card bg-white border-4 border-saweria-dark rounded-[2rem] p-6 sm:p-8 flex flex-col min-h-[340px] relative overflow-hidden';
                 card.setAttribute('data-aos', 'fade-up');
                 card.setAttribute('data-aos-delay', `${(i % 3) * 90}`);
 
@@ -541,15 +571,9 @@
                         <div class="h-16 w-16 ${accentColor} border-4 border-saweria-dark rounded-2xl flex items-center justify-center shadow-[4px_4px_0_#1e1e1e]">
                             <i data-lucide="${iconNames[i % iconNames.length]}" class="w-8 h-8"></i>
                         </div>
-                        <div class="text-right space-y-2">
-                            <span class="inline-flex bg-saweria-yellow text-saweria-dark border-4 border-saweria-dark rounded-full px-4 py-1.5 text-[10px] font-extrabold tracking-wider font-mono uppercase">
-                                ${ep.method}
-                            </span>
-                            <div class="flex justify-end items-center gap-1 text-[11px] text-saweria-gray font-bold">
-                                <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
-                                <span>${paramText}</span>
-                            </div>
-                        </div>
+                        <span class="inline-flex bg-saweria-yellow text-saweria-dark border-4 border-saweria-dark rounded-full px-4 py-1.5 text-[10px] font-extrabold tracking-wider font-mono uppercase">
+                            ${ep.method}
+                        </span>
                     </div>
 
                     <div class="mt-8 space-y-4 flex-1">
@@ -560,18 +584,14 @@
                         <p class="text-sm text-saweria-gray font-semibold leading-relaxed">${ep.description}</p>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4 border-t-2 border-saweria-dark pt-5 mt-7">
-                        <div>
-                            <span class="block text-[10px] text-saweria-gray font-extrabold uppercase tracking-widest">Tags</span>
-                            <span class="block mt-2 text-sm font-extrabold">${ep.params.length ? 'Dynamic' : 'Static'}</span>
-                        </div>
-                        <div>
-                            <span class="block text-[10px] text-saweria-gray font-extrabold uppercase tracking-widest">Lang</span>
-                            <span class="block mt-2 text-sm font-extrabold font-mono">json</span>
-                        </div>
+                    <div class="mt-7 flex items-center justify-between gap-3 border-t-2 border-saweria-dark pt-5">
+                        <span class="inline-flex items-center gap-1.5 rounded-full border-2 border-saweria-dark bg-saweria-light px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider">
+                            <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                            <span>${paramText}</span>
+                        </span>
                     </div>
 
-                    <button onclick="openSandboxDrawer(${i})" class="neo-btn mt-7 w-full rounded-2xl flex items-center justify-center gap-3 bg-saweria-dark border-4 border-saweria-dark text-white font-extrabold text-base px-5 py-4 select-none">
+                    <button onclick="openSandboxDrawer(${i})" class="neo-btn mt-5 w-full rounded-2xl flex items-center justify-center gap-3 bg-saweria-dark border-4 border-saweria-dark text-white font-extrabold text-base px-5 py-4 select-none">
                         <span>Buka konsol uji</span>
                         <i data-lucide="arrow-right" class="w-5 h-5"></i>
                     </button>
@@ -604,17 +624,20 @@
 
             const paramsContainer = document.getElementById('drawer-params-container');
             const paramsForm = document.getElementById('drawer-params-form');
+            const paramSummary = document.getElementById('drawer-param-summary');
+            paramSummary.innerText = ep.params.length > 0 ? `${ep.params.length} parameter` : 'tanpa parameter';
+            paramSummary.classList.remove('hidden');
             
             if (ep.params.length > 0) {
                 paramsContainer.classList.remove('hidden');
                 paramsForm.innerHTML = ep.params.map(p => `
-                    <div class="space-y-1.5">
-                        <div class="flex justify-between font-mono text-[10px]">
+                    <div class="space-y-2 rounded-2xl border-2 border-saweria-dark bg-saweria-light p-3">
+                        <div class="flex justify-between gap-3 font-mono text-[10px]">
                             <span class="text-saweria-dark font-extrabold">${p.name} <span class="text-saweria-gray">(${p.type})</span></span>
                             <span class="${p.required ? 'text-red-500 font-extrabold' : 'text-saweria-gray'}">${p.required ? 'Harus diisi' : 'Opsional'}</span>
                         </div>
-                        <input type="text" id="sandbox-input-${p.name}" value="${p.default || ''}" oninput="updateInteractivePayloads()" class="w-full bg-white border-2 border-saweria-dark px-3 py-2 text-xs text-saweria-dark font-mono focus:outline-none focus:bg-saweria-light">
-                        <p class="text-[9px] text-saweria-gray font-semibold">${p.desc}</p>
+                        <input type="text" id="sandbox-input-${p.name}" value="${p.default || ''}" oninput="updateInteractivePayloads()" class="w-full rounded-xl bg-white border-2 border-saweria-dark px-3 py-2 text-xs text-saweria-dark font-mono focus:outline-none focus:bg-saweria-bg">
+                        <p class="text-[10px] text-saweria-gray font-semibold">${p.desc}</p>
                     </div>
                 `).join('');
             } else {
@@ -670,13 +693,18 @@
             const fullRequestUrl = `${currentHost}${activePath}`;
             document.getElementById('drawer-path-preview').innerText = activePath;
 
-            const curlCode = `curl -X GET "${fullRequestUrl}" \\\n  -H "Accept: application/json"`;
-            const jsCode = `import axios from 'axios';\n\naxios.get('${fullRequestUrl}')\n  .then(res => console.log(res.data))\n  .catch(err => console.error(err));`;
-            const pythonCode = `import requests\n\nurl = "${fullRequestUrl}"\nresponse = requests.get(url)\nprint(response.json())`;
+            codeSnippets = {
+                curl: [
+                    `curl -X GET "${fullRequestUrl}" \\`,
+                    `  -H "Accept: application/json"`
+                ].join('\n'),
+                nodejs: `import axios from 'axios';\n\naxios.get('${fullRequestUrl}')\n  .then(res => console.log(res.data))\n  .catch(err => console.error(err));`,
+                python: `import requests\n\nurl = "${fullRequestUrl}"\nresponse = requests.get(url)\nprint(response.json())`
+            };
 
-            document.getElementById('code-curl').innerHTML = highlightCurl(curlCode);
-            document.getElementById('code-nodejs').innerHTML = highlightJS(jsCode);
-            document.getElementById('code-python').innerHTML = highlightPython(pythonCode);
+            document.getElementById('code-curl').innerHTML = renderCodeLines(codeSnippets.curl, highlightCurl);
+            document.getElementById('code-nodejs').innerHTML = renderCodeLines(codeSnippets.nodejs, highlightJS);
+            document.getElementById('code-python').innerHTML = renderCodeLines(codeSnippets.python, highlightPython);
         }
 
         function escapeHtml(value) {
@@ -699,6 +727,15 @@
             }
             html += escapeHtml(code.slice(cursor));
             return html;
+        }
+
+        function renderCodeLines(code, highlighter) {
+            return code.split('\n').map((line, index) => `
+                <span class="code-line">
+                    <span class="code-line-number">${index + 1}</span>
+                    <code class="code-line-content">${highlighter(line)}</code>
+                </span>
+            `).join('');
         }
 
         function highlightCurl(code) {
@@ -741,16 +778,15 @@
             ['curl', 'nodejs', 'python'].forEach(l => {
                 const btn = document.getElementById(`tab-${l}`);
                 if (l === lang) {
-                    btn.className = "text-[10px] font-mono font-bold px-2.5 py-1 transition-all bg-saweria-dark text-white";
+                    btn.className = "rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all bg-saweria-dark text-white";
                 } else {
-                    btn.className = "text-[10px] font-mono font-bold px-2.5 py-1 transition-all text-saweria-gray hover:text-saweria-dark";
+                    btn.className = "rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all text-saweria-gray hover:text-saweria-dark";
                 }
             });
         }
 
         async function copyCodeSnippet() {
-            const activePre = document.getElementById(`code-${activeLanguage}`);
-            const textToCopy = activePre.textContent;
+            const textToCopy = codeSnippets[activeLanguage];
             const copyButton = document.getElementById('copy-btn-content');
 
             try {
@@ -795,7 +831,7 @@
             const outputBox = document.getElementById('json-output');
 
             outputBox.innerText = "// Mengirim permintaan GET ke " + currentHost + "...";
-            outputBox.className = "text-slate-500 animate-pulse";
+            outputBox.className = "overflow-y-auto max-h-[360px] pt-8 leading-relaxed select-all text-slate-500 animate-pulse";
 
             setTimeout(() => {
                 let dynamicMock = JSON.parse(JSON.stringify(ep.mockResponse));
@@ -810,7 +846,7 @@
 
                 const styledHtml = formatGitHubDarkJSON(dynamicMock);
                 outputBox.innerHTML = styledHtml;
-                outputBox.className = "gh-dark overflow-y-auto max-h-[250px] leading-relaxed";
+                outputBox.className = "overflow-y-auto max-h-[360px] pt-8 leading-relaxed select-all";
                 
                 showToastNotification("Koneksi Berhasil", "Menerima metadata rute dengan kode status 200 OK.");
             }, 900);
