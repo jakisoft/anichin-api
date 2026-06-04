@@ -109,6 +109,21 @@
             top: 0.75rem;
             right: 0.75rem;
         }
+        .code-window-dots {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+        .code-window-dot {
+            width: 0.72rem;
+            height: 0.72rem;
+            border-radius: 999px;
+            border: 1px solid rgba(30, 30, 30, 0.55);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 1px 1px 0 rgba(0, 0, 0, 0.45);
+        }
         .code-line {
             display: table-row;
             min-height: 1.5rem;
@@ -387,14 +402,19 @@
                 </div>
 
                 <div class="relative bg-saweria-dark p-4 sm:p-5 border-4 border-saweria-dark rounded-3xl text-xs font-mono leading-relaxed text-slate-300 shadow-[4px_4px_0px_0px_#1e1e1e]">
+                    <div class="code-window-dots" aria-hidden="true">
+                        <span class="code-window-dot bg-[#ff5f57]"></span>
+                        <span class="code-window-dot bg-[#ffbd2e]"></span>
+                        <span class="code-window-dot bg-[#28c840]"></span>
+                    </div>
                     <button id="copy-btn-content" onclick="copyCodeSnippet()" class="copy-icon-swap code-copy-button z-10 rounded-full border border-slate-700 bg-slate-900/95 px-3 py-1.5 text-slate-200 hover:text-white hover:border-slate-500 transition-colors flex items-center gap-1 text-[10px] font-mono font-bold w-fit">
                         <span data-copy-state="copy" class="items-center gap-1 inline-flex"><i data-lucide="copy" class="w-3.5 h-3.5"></i><span>Copy</span></span>
                         <span data-copy-state="check" class="items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span>Copied</span></span>
                     </button>
                     <div class="code-scroll overflow-x-auto">
-                        <pre id="code-curl" class="code-tab pt-8 text-[#e6edf3]"></pre>
-                        <pre id="code-nodejs" class="code-tab pt-8 text-[#e6edf3] hidden"></pre>
-                        <pre id="code-python" class="code-tab pt-8 text-[#e6edf3] hidden"></pre>
+                        <pre id="code-curl" class="code-tab pt-10 text-[#e6edf3]"></pre>
+                        <pre id="code-nodejs" class="code-tab pt-10 text-[#e6edf3] hidden"></pre>
+                        <pre id="code-python" class="code-tab pt-10 text-[#e6edf3] hidden"></pre>
                     </div>
                 </div>
             </section>
@@ -412,12 +432,12 @@
                 </div>
 
                 <div class="gh-dark border-4 border-saweria-dark rounded-3xl p-5 font-mono text-xs relative overflow-hidden">
-                    <div class="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div id="response-speed" class="response-meta inline-flex w-fit items-center gap-2 rounded-full border border-slate-700 px-3 py-1.5 text-[10px] font-bold">
+                    <div class="mb-4 flex flex-row items-center justify-between gap-3">
+                        <div id="response-speed" class="response-meta inline-flex min-w-0 items-center gap-2 rounded-full border border-slate-700 px-3 py-1.5 text-[10px] font-bold">
                             <i data-lucide="timer" class="w-3.5 h-3.5 text-[#faae2b]"></i>
                             <span>Response time: —</span>
                         </div>
-                        <button id="copy-btn-response" onclick="copyResponseOutput()" class="copy-icon-swap rounded-full border border-slate-700 bg-slate-900/95 px-3 py-1.5 text-slate-200 hover:text-white hover:border-slate-500 transition-colors flex items-center gap-1 text-[10px] font-mono font-bold w-fit">
+                        <button id="copy-btn-response" onclick="copyResponseOutput()" class="copy-icon-swap rounded-full border border-slate-700 bg-slate-900/95 px-3 py-1.5 text-slate-200 hover:text-white hover:border-slate-500 transition-colors flex shrink-0 items-center gap-1 text-[10px] font-mono font-bold w-fit">
                             <span data-copy-state="copy" class="items-center gap-1 inline-flex"><i data-lucide="copy" class="w-3.5 h-3.5"></i><span>Copy</span></span>
                             <span data-copy-state="check" class="items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span>Copied</span></span>
                         </button>
@@ -789,7 +809,7 @@
                     `  -H "Accept: application/json"`
                 ].join('\n'),
                 nodejs: `import axios from 'axios';\n\naxios.get('${fullRequestUrl}')\n  .then(res => console.log(res.data))\n  .catch(err => console.error(err));`,
-                python: `import requests\n\nurl = "${fullRequestUrl}"\nresponse = requests.get(url)\nprint(response.json())`
+                python: `import json\nimport requests\n\nurl = "${fullRequestUrl}"\nheaders = {\n    "Accept": "application/json",\n}\n\nwith requests.Session() as session:\n    response = session.get(\n        url,\n        headers=headers,\n        timeout=30,\n    )\n    response.raise_for_status()\n\n    data = response.json()\n    print(json.dumps(data, indent=2, ensure_ascii=False))`
             };
 
             document.getElementById('code-curl').innerHTML = renderCodeLines(codeSnippets.curl, highlightCurl);
@@ -846,10 +866,10 @@
 
         function highlightPython(code) {
             return highlightByRules(code, [
-                { test: token => /^(import|print)$/.test(token), className: 'text-[#ff7b72] font-bold' },
+                { test: token => /^(import|with|as|print)$/.test(token), className: 'text-[#ff7b72] font-bold' },
                 { test: token => /^['"]/.test(token), className: 'text-[#a5d6ff]' },
-                { test: token => /^(json|requests|response|url|headers|timeout|indent|ensure_ascii)$/.test(token), className: 'text-[#79c0ff]' },
-                { test: token => /^\.(get|json|dumps|raise_for_status)$/.test(token), className: 'text-[#d2a8ff]' }
+                { test: token => /^(json|requests|session|response|data|url|headers|timeout|indent|ensure_ascii)$/.test(token), className: 'text-[#79c0ff]' },
+                { test: token => /^\.(Session|get|json|dumps|raise_for_status)$/.test(token), className: 'text-[#d2a8ff]' }
             ]);
         }
 
