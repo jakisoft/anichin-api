@@ -38,6 +38,9 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             background-color: #fbf9f4;
             background-image: radial-gradient(rgba(30, 30, 30, 0.10) 1px, transparent 1px);
@@ -88,7 +91,15 @@
             display: inline-flex;
         }
         .code-tab {
+            display: table;
             margin: 0;
+            min-width: 100%;
+            width: max-content;
+            border-collapse: separate;
+            border-spacing: 0 0.1rem;
+        }
+        .code-tab.hidden {
+            display: none;
         }
         .code-scroll {
             scrollbar-gutter: stable;
@@ -99,33 +110,79 @@
             right: 0.75rem;
         }
         .code-line {
-            display: grid;
-            grid-template-columns: 1.75rem max-content;
-            column-gap: 0.75rem;
-            align-items: start;
+            display: table-row;
             min-height: 1.5rem;
             line-height: 1.5rem;
         }
         .code-line-number {
+            display: table-cell;
+            width: 1.75rem;
             color: #6e7681;
             text-align: right;
             user-select: none;
+            vertical-align: top;
         }
         .code-line-content {
+            display: table-cell;
             min-width: max-content;
+            padding-left: 0.75rem;
             white-space: pre;
+            vertical-align: top;
         }
         .method-badge {
             background: #a0c4ff;
             color: #1e1e1e;
         }
-        .github-mark {
+        .github-mark,
+        .language-tab {
             background: linear-gradient(135deg, #0d1117 0%, #24292f 55%, #57606a 100%);
             color: #ffffff;
         }
+        .language-tab {
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 2px 2px 0 #1e1e1e;
+            opacity: 0.82;
+        }
+        .language-tab:hover {
+            opacity: 1;
+            transform: translateY(-1px);
+            filter: brightness(1.12) saturate(1.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 3px 4px 0 #1e1e1e;
+        }
+        .language-tab.is-active {
+            opacity: 1;
+            border-color: #faae2b;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24), 3px 3px 0 #1e1e1e;
+        }
         .tab-icon-curl { color: #9be9a8; }
         .tab-icon-js { color: #f7df1e; }
-        .tab-icon-python-blue { color: #3776ab; }
+        .tab-icon-python-blue { color: #74c0fc; }
+        .sticky-navbar {
+            position: sticky;
+            top: 1rem;
+            z-index: 35;
+            border: 4px solid #1e1e1e;
+            border-radius: 999px;
+            padding: 0.85rem 1rem;
+            box-shadow: 4px 5px 0 #1e1e1e;
+        }
+        .scroll-top-btn {
+            position: fixed;
+            right: 1.25rem;
+            bottom: 1.25rem;
+            z-index: 45;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(12px);
+        }
+        .scroll-top-btn.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        .response-meta {
+            background: rgba(13, 17, 23, 0.96);
+            color: #c9d1d9;
+        }
         .gh-dark {
             background-color: #0d1117;
             color: #c9d1d9;
@@ -136,6 +193,24 @@
         .json-boolean { color: #ff9b5e; }
         .json-number { color: #d2a8ff; }
         .json-null { color: #8b949e; }
+        .shimmer-line {
+            position: relative;
+            overflow: hidden;
+            height: 0.85rem;
+            border-radius: 999px;
+            background: #161b22;
+        }
+        .shimmer-line::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            transform: translateX(-100%);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+            animation: shimmer 1.15s infinite;
+        }
+        @keyframes shimmer {
+            100% { transform: translateX(100%); }
+        }
         @keyframes loading-spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -173,7 +248,7 @@
 
     <div class="max-w-7xl mx-auto px-5 sm:px-8 py-6 md:py-10 space-y-14">
         
-        <nav class="flex items-center justify-between gap-4 border-b-4 border-saweria-dark bg-saweria-bg/95 backdrop-blur px-1 pb-5">
+        <nav class="sticky-navbar flex items-center justify-between gap-4 bg-saweria-bg/95 backdrop-blur">
             <a href="#" class="text-2xl sm:text-3xl font-extrabold tracking-tight text-saweria-dark">Anichin<span class="text-[#ff6f61]">.</span>API</a>
             <div class="flex items-center gap-2 sm:gap-3">
                 <div class="hidden sm:flex items-center gap-2 rounded-full border-4 border-saweria-dark bg-white px-4 py-2 text-xs font-extrabold pill-shadow">
@@ -214,7 +289,7 @@
                 </div>
                 <div class="relative border-4 border-saweria-dark rounded-3xl bg-saweria-dark text-white p-5 font-mono text-xs leading-relaxed">
                     <p><span class="text-[#79c0ff]">GET</span> <span class="select-all">/latest?page=1</span></p>
-                    <p class="text-slate-400 mt-2">Pilih endpoint di galeri untuk generate snippet dan simulasi respons.</p>
+                    <p class="text-slate-400 mt-2">Pilih endpoint di galeri untuk generate snippet dan melihat respons real API.</p>
                 </div>
             </aside>
         </header>
@@ -294,15 +369,15 @@
             <section class="space-y-3">
                 <div class="bg-white px-4 py-3 border-4 border-saweria-dark rounded-3xl shadow-[4px_4px_0px_0px_#1e1e1e]">
                     <div class="flex gap-2 overflow-x-auto">
-                        <button id="tab-curl" onclick="switchLanguage('curl')" class="rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 bg-[#1f883d] text-white border-2 border-saweria-dark">
+                        <button id="tab-curl" onclick="switchLanguage('curl')" class="language-tab is-active rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 border-2 border-[#faae2b]">
                             <i class="fa-solid fa-terminal text-[13px] tab-icon-curl"></i>
                             <span>cURL</span>
                         </button>
-                        <button id="tab-nodejs" onclick="switchLanguage('nodejs')" class="rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 bg-[#fff8c5] text-[#9a6700] border-2 border-[#f0d36a] hover:border-saweria-dark">
+                        <button id="tab-nodejs" onclick="switchLanguage('nodejs')" class="language-tab rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 border-2 border-slate-700">
                             <i class="fa-brands fa-js text-[15px] tab-icon-js"></i>
                             <span>JavaScript</span>
                         </button>
-                        <button id="tab-python" onclick="switchLanguage('python')" class="rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 bg-[#ddf4ff] text-[#0969da] border-2 border-[#54aeef] hover:border-saweria-dark">
+                        <button id="tab-python" onclick="switchLanguage('python')" class="language-tab rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 border-2 border-slate-700">
                             <span class="relative inline-flex h-3.5 w-3.5 items-center justify-center">
                                 <i class="fa-brands fa-python text-[15px] tab-icon-python-blue"></i>
                             </span>
@@ -327,7 +402,7 @@
             <section class="bg-white border-4 border-saweria-dark rounded-3xl p-5 sm:p-6 space-y-4 shadow-[4px_4px_0px_0px_#1e1e1e]">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                        <h4 class="text-sm font-extrabold text-saweria-dark uppercase">Sandbox Client Simulator</h4>
+                        <h4 class="text-sm font-extrabold text-saweria-dark uppercase">Sandbox Client Realtime</h4>
                         <p class="text-xs text-saweria-gray font-semibold">Uji fungsionalitas respons API</p>
                     </div>
                     <button onclick="executeSandboxRequest()" class="neo-btn rounded-2xl bg-saweria-yellow border-2 border-saweria-dark text-saweria-dark font-extrabold text-xs px-4 py-3 flex items-center justify-center gap-1.5 select-none">
@@ -337,15 +412,25 @@
                 </div>
 
                 <div class="gh-dark border-4 border-saweria-dark rounded-3xl p-5 font-mono text-xs relative overflow-hidden">
-                    <button id="copy-btn-response" onclick="copyResponseOutput()" class="copy-icon-swap absolute top-3 right-3 z-10 rounded-full border border-slate-700 bg-slate-900/95 px-3 py-1.5 text-slate-200 hover:text-white hover:border-slate-500 transition-colors flex items-center gap-1 text-[10px] font-mono font-bold w-fit">
-                        <span data-copy-state="copy" class="items-center gap-1 inline-flex"><i data-lucide="copy" class="w-3.5 h-3.5"></i><span>Copy</span></span>
-                        <span data-copy-state="check" class="items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span>Copied</span></span>
-                    </button>
-                    <pre id="json-output" class="overflow-y-auto max-h-[360px] pt-8 leading-relaxed select-all">// Klik "Kirim Request" untuk melihat output...</pre>
+                    <div class="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div id="response-speed" class="response-meta inline-flex w-fit items-center gap-2 rounded-full border border-slate-700 px-3 py-1.5 text-[10px] font-bold">
+                            <i data-lucide="timer" class="w-3.5 h-3.5 text-[#faae2b]"></i>
+                            <span>Response time: —</span>
+                        </div>
+                        <button id="copy-btn-response" onclick="copyResponseOutput()" class="copy-icon-swap rounded-full border border-slate-700 bg-slate-900/95 px-3 py-1.5 text-slate-200 hover:text-white hover:border-slate-500 transition-colors flex items-center gap-1 text-[10px] font-mono font-bold w-fit">
+                            <span data-copy-state="copy" class="items-center gap-1 inline-flex"><i data-lucide="copy" class="w-3.5 h-3.5"></i><span>Copy</span></span>
+                            <span data-copy-state="check" class="items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span>Copied</span></span>
+                        </button>
+                    </div>
+                    <pre id="json-output" class="overflow-y-auto max-h-[360px] leading-relaxed select-all">// Klik "Kirim Request" untuk melihat output...</pre>
                 </div>
             </section>
         </div>
     </div>
+
+    <button id="scroll-top-btn" onclick="scrollToTop()" class="scroll-top-btn neo-btn rounded-full border-4 border-saweria-dark bg-saweria-yellow p-3 text-saweria-dark transition-all duration-300" aria-label="Scroll to top">
+        <i data-lucide="arrow-up" class="w-5 h-5"></i>
+    </button>
 
     <div id="drawer-overlay" onclick="closeSandboxDrawer()" class="fixed inset-0 z-40 bg-saweria-dark/40 backdrop-blur-sm hidden transition-opacity duration-300 opacity-0"></div>
 
@@ -540,6 +625,7 @@
         let activeLanguage = 'curl';
         let codeSnippets = { curl: '', nodejs: '', python: '' };
         let latestResponseText = '';
+        let latestResponseMs = null;
 
         document.getElementById('host-indicator').innerText = currentHost;
 
@@ -672,9 +758,11 @@
             }, 50);
 
             latestResponseText = '';
+            latestResponseMs = null;
+            updateResponseSpeed(null);
             const jsonOutput = document.getElementById('json-output');
             jsonOutput.innerText = '// Klik "Kirim Request" untuk melihat output...';
-            jsonOutput.className = 'overflow-y-auto max-h-[360px] pt-8 leading-relaxed select-all';
+            jsonOutput.className = 'overflow-y-auto max-h-[360px] leading-relaxed select-all';
             document.getElementById('copy-btn-response').classList.remove('is-copied');
             lucide.createIcons();
         }
@@ -732,7 +820,10 @@
         }
 
         function renderCodeLines(code, highlighter) {
-            return code.split('\n').map((line, index) => `<span class="code-line"><span class="code-line-number">${index + 1}</span><code class="code-line-content">${highlighter(line)}</code></span>`).join('');
+            return code.split('\n').map((line, index) => {
+                const highlightedLine = highlighter(line) || '&nbsp;';
+                return `<span class="code-line"><span class="code-line-number">${index + 1}</span><code class="code-line-content">${highlightedLine}</code></span>`;
+            }).join('');
         }
 
         function highlightCurl(code) {
@@ -757,19 +848,14 @@
             return highlightByRules(code, [
                 { test: token => /^(import|print)$/.test(token), className: 'text-[#ff7b72] font-bold' },
                 { test: token => /^['"]/.test(token), className: 'text-[#a5d6ff]' },
-                { test: token => /^(requests|response|url)$/.test(token), className: 'text-[#79c0ff]' },
-                { test: token => /^\.(get|json)$/.test(token), className: 'text-[#d2a8ff]' }
+                { test: token => /^(json|requests|response|url|headers|timeout|indent|ensure_ascii)$/.test(token), className: 'text-[#79c0ff]' },
+                { test: token => /^\.(get|json|dumps|raise_for_status)$/.test(token), className: 'text-[#d2a8ff]' }
             ]);
         }
 
         function getLanguageTabClass(lang, isActive) {
-            const base = "rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 border-2";
-            const styles = {
-                curl: isActive ? "bg-[#1f883d] text-white border-saweria-dark" : "bg-[#dafbe1] text-[#1f883d] border-[#7ee787] hover:border-saweria-dark",
-                nodejs: isActive ? "bg-[#f7df1e] text-saweria-dark border-saweria-dark" : "bg-[#fff8c5] text-[#9a6700] border-[#f0d36a] hover:border-saweria-dark",
-                python: isActive ? "bg-[#0969da] text-white border-saweria-dark" : "bg-[#ddf4ff] text-[#0969da] border-[#54aeef] hover:border-saweria-dark"
-            };
-            return `${base} ${styles[lang]}`;
+            const base = "language-tab rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 border-2";
+            return `${base} ${isActive ? 'is-active border-[#faae2b]' : 'border-slate-700'}`;
         }
 
         function switchLanguage(lang) {
@@ -871,20 +957,50 @@
             return activePath;
         }
 
+        function updateResponseSpeed(milliseconds) {
+            const responseSpeed = document.getElementById('response-speed');
+            if (!responseSpeed) return;
+
+            responseSpeed.querySelector('span').innerText = milliseconds === null
+                ? 'Response time: —'
+                : `Response time: ${milliseconds.toLocaleString('id-ID')} ms`;
+        }
+
+        function renderResponseSkeleton() {
+            return [72, 56, 88, 64, 78, 46]
+                .map(width => `<span class="shimmer-line block my-2" style="width: ${width}%"></span>`)
+                .join('');
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function syncScrollTopButton() {
+            const scrollTopButton = document.getElementById('scroll-top-btn');
+            if (!scrollTopButton) return;
+            scrollTopButton.classList.toggle('is-visible', window.scrollY > 420);
+        }
+
         async function executeSandboxRequest() {
             const outputBox = document.getElementById('json-output');
             const activePath = buildActiveRequestPath();
             const requestUrl = `${currentHost}${activePath}`;
 
             latestResponseText = '';
-            outputBox.innerText = "// Mengirim permintaan GET ke " + requestUrl + "...";
-            outputBox.className = "overflow-y-auto max-h-[360px] pt-8 leading-relaxed select-all text-slate-500 animate-pulse";
+            latestResponseMs = null;
+            updateResponseSpeed(null);
+            outputBox.innerHTML = renderResponseSkeleton();
+            outputBox.className = "overflow-y-auto max-h-[360px] leading-relaxed select-none";
+            const startedAt = performance.now();
 
             try {
                 const response = await fetch(requestUrl, {
                     method: 'GET',
                     headers: { Accept: 'application/json' }
                 });
+                latestResponseMs = Math.max(1, Math.round(performance.now() - startedAt));
+                updateResponseSpeed(latestResponseMs);
                 const contentType = response.headers.get('content-type') || '';
                 const rawText = await response.text();
                 let responsePayload = rawText;
@@ -898,19 +1014,21 @@
                     outputBox.innerText = rawText || '// Response kosong dari API.';
                 }
 
-                outputBox.className = "overflow-y-auto max-h-[360px] pt-8 leading-relaxed select-all";
+                outputBox.className = "overflow-y-auto max-h-[360px] leading-relaxed select-all";
                 showToastNotification(
                     response.ok ? "Koneksi Berhasil" : "Request Selesai",
                     response.ok ? "Response real API berhasil diterima." : "API mengembalikan response non-OK, output tetap ditampilkan."
                 );
             } catch (error) {
+                latestResponseMs = Math.max(1, Math.round(performance.now() - startedAt));
+                updateResponseSpeed(latestResponseMs);
                 latestResponseText = JSON.stringify({
                     error: 'request_failed',
                     message: error.message,
                     url: requestUrl
                 }, null, 2);
                 outputBox.innerHTML = formatGitHubDarkJSON(latestResponseText);
-                outputBox.className = "overflow-y-auto max-h-[360px] pt-8 leading-relaxed select-all";
+                outputBox.className = "overflow-y-auto max-h-[360px] leading-relaxed select-all";
                 showToastNotification("Request gagal", "Tidak dapat mengambil response real API dari browser ini.");
             }
         }
@@ -961,6 +1079,8 @@
 
             renderEndpoints();
             loadGithubRepositoryStats();
+            syncScrollTopButton();
+            window.addEventListener('scroll', syncScrollTopButton, { passive: true });
 
             setTimeout(() => {
                 if (typeof AOS !== 'undefined') {
