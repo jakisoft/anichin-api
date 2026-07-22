@@ -1,0 +1,8 @@
+{
+  "name": "Anichin Donghua Stream",
+  "description": "Platform streaming Donghua Subtitle Indonesia terlengkap dengan pemutar video jernih, filter genre, dan dokumentasi API developer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

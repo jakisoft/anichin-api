@@ -174,13 +174,29 @@ class Anichin {
 
   async genre(genreSlug, page = 1) {
     const slug = String(genreSlug || "").replace(/^\/+|\/+$/g, "")
-    const path = page > 1 ? `/genres/${slug}/page/${page}/` : `/genres/${slug}/`
+    const pathsToTry = [
+      page > 1 ? `/genres/${slug}/page/${page}/` : `/genres/${slug}/`,
+      page > 1 ? `/genre/${slug}/page/${page}/` : `/genre/${slug}/`,
+      page > 1 ? `/tag/${slug}/page/${page}/` : `/tag/${slug}/`,
+      page > 1 ? `/kategori/${slug}/page/${page}/` : `/kategori/${slug}/`
+    ]
 
-    const html = await this._get(path)
+    let html = null
+    let lastErr = null
+    for (const path of pathsToTry) {
+      try {
+        html = await this._get(path)
+        if (html) break
+      } catch (err) {
+        lastErr = err
+      }
+    }
+
+    if (!html) throw lastErr || new Error(`Genre ${slug} tidak ditemukan.`)
+
     const $ = cheerio.load(html)
-
-    const title = $(".bixbox .releases h1 span").first().text().trim() || $(".releases h1 span").first().text().trim() || slug
-    const items = this._parseSeriesList($, ".bixbox .listupd article.bs")
+    const title = $(".bixbox .releases h1 span").first().text().trim() || $(".releases h1 span").first().text().trim() || $(".entry-title").first().text().trim() || slug
+    const items = this._parseSeriesList($, ".bixbox .listupd article.bs, .listupd article.bs")
     const pagination = this._parsePagination($)
 
     return { genre: title, slug, page, items, pagination }
@@ -224,9 +240,24 @@ class Anichin {
   }
 
   async detail(urlOrSlug) {
-    const path = /^https?:\/\//.test(urlOrSlug) ? urlOrSlug : `/seri/${urlOrSlug.replace(/^\/+|\/+$/g, "")}/`
+    const rawSlug = String(urlOrSlug || "").replace(/^\/+|\/+$/g, "")
+    const pathsToTry = /^https?:\/\//.test(urlOrSlug) 
+      ? [urlOrSlug]
+      : [`/seri/${rawSlug}/`, `/${rawSlug}/`, `/donghua/${rawSlug}/`, `/series/${rawSlug}/`]
 
-    const html = await this._get(path)
+    let html = null
+    let lastErr = null
+    for (const path of pathsToTry) {
+      try {
+        html = await this._get(path)
+        if (html) break
+      } catch (err) {
+        lastErr = err
+      }
+    }
+
+    if (!html) throw lastErr || new Error(`Detail ${rawSlug} tidak ditemukan.`)
+
     const $ = cheerio.load(html)
 
     const title = $(".entry-title").first().text().trim() || null
@@ -243,11 +274,12 @@ class Anichin {
     })
 
     const tags = []
-    $(".bottom.tags a").each((i, el) => {
-      tags.push({
-        name: $(el).text().trim(),
-        href: $(el).attr("href"),
-      })
+    $(".bottom.tags a, .genxed a, .mngen a, .genre a, .series-genre a").each((i, el) => {
+      const name = $(el).text().trim()
+      const href = $(el).attr("href")
+      if (name && !tags.some(t => t.name.toLowerCase() === name.toLowerCase())) {
+        tags.push({ name, href })
+      }
     })
 
     const episodes = []
@@ -264,7 +296,21 @@ class Anichin {
       })
     })
 
-    return { title, thumb, alt, synopsis, info, tags, episodes }
+    const related = []
+    $(".relat article.bs, .relat .bsx, .bixbox.relat article.bs, .listupd article.bs").each((i, el) => {
+      const a = $(el).find("a").first()
+      const href = a.attr("href") || null
+      const title = a.find("h2").text().trim() || a.attr("title") || null
+      const image = a.find("img").attr("src") || null
+      const ep = a.find(".epx").text().trim() || null
+      const type = a.find(".typez").text().trim() || null
+      let status = a.find(".status, .sb").text().trim() || null
+      if (title && href) {
+        related.push({ title, href, image, ep, type, status })
+      }
+    })
+
+    return { title, thumb, alt, synopsis, info, tags, episodes, related }
   }
 
   async episode(urlOrSlug) {

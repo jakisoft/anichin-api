@@ -1,24 +1,23 @@
 {
   "name": "anichin-api",
   "version": "1.0.0",
-  "description": "Unofficial Anichin scraper API",
+  "description": "Unofficial Anichin scraper API & EJS Express Streaming Web App",
   "main": "app.js",
-  "type": "commonjs",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "node app.js",
+    "build": "echo 'No build step required for Node.js Express'"
   },
   "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "axios": "^1.6.8",
     "cheerio": "^1.0.0",
     "cors": "^2.8.5",
     "ejs": "^3.1.10",
-    "express": "^4.19.2",
+    "express": "^4.21.2",
     "morgan": "^1.10.0"
   },
-  "devDependencies": {
-    "nodemon": "^3.1.0"
-  },
+  "devDependencies": {},
   "author": "Itzky",
   "license": "MIT"
 }
