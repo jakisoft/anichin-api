@@ -1,0 +1,363 @@
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-5 right-5 z-50 transform -translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-white border-4 border-saweria-dark text-saweria-dark px-4 py-3 rounded-2xl shadow-[4px_4px_0_#1e1e1e] flex items-center gap-3">
+        <div class="p-1.5 bg-saweria-yellow border-2 border-saweria-dark rounded-xl flex-shrink-0">
+            <i data-lucide="bell" class="w-4 h-4"></i>
+        </div>
+        <div>
+            <p id="toast-title" class="text-[10px] font-extrabold uppercase tracking-wider text-saweria-dark">Notifikasi</p>
+            <p id="toast-msg" class="text-xs font-bold text-saweria-gray"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t-4 border-saweria-dark bg-saweria-yellow/20 mt-12 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="space-y-3 md:col-span-2">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-xl bg-saweria-yellow border-2 border-saweria-dark flex items-center justify-center font-extrabold text-xs shadow-[2px_2px_0_#1e1e1e]">
+                            AN
+                        </div>
+                        <span class="font-extrabold text-lg text-saweria-dark">Anichin Stream</span>
+                    </div>
+                    <p class="text-xs text-saweria-gray font-semibold leading-relaxed max-w-md">
+                        Platform streaming Donghua (Anime China 3D & 2D) Subtitle Indonesia terlengkap. Nikmati episode terbaru secara gratis dengan pemutar jernih, filter genre, dan OpenGraph metadata lengkap.
+                    </p>
+                    <div class="flex items-center gap-2 pt-1">
+                        <a href="/api/developer" class="neo-btn px-3 py-1.5 rounded-full bg-saweria-lavender border-2 border-saweria-dark text-xs font-extrabold inline-flex items-center gap-1">
+                            <i data-lucide="terminal" class="w-3.5 h-3.5"></i> Developer API Sandbox
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-[11px] font-extrabold uppercase tracking-widest text-saweria-dark mb-3">Navigasi Utama</h4>
+                    <ul class="space-y-1.5 text-xs font-extrabold text-saweria-gray">
+                        <li><a href="/" class="hover:text-saweria-coral">Beranda Utama</a></li>
+                        <li><a href="/popular" class="hover:text-saweria-coral">Donghua Populer</a></li>
+                        <li><a href="/latest" class="hover:text-saweria-coral">Episode Terbaru</a></li>
+                        <li><a href="/schedule" class="hover:text-saweria-coral">Jadwal Rilis Harian</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-[11px] font-extrabold uppercase tracking-widest text-saweria-dark mb-3">Kategori Genre</h4>
+                    <ul class="space-y-1.5 text-xs font-extrabold text-saweria-gray">
+                        <li><a href="/genres/action" class="hover:text-saweria-coral">Action & Martial Arts</a></li>
+                        <li><a href="/genres/fantasy" class="hover:text-saweria-coral">Kultivasi (Cultivation)</a></li>
+                        <li><a href="/genres/reincarnation" class="hover:text-saweria-coral">Reinkarnasi & Isekai</a></li>
+                        <li><a href="/genres/romance" class="hover:text-saweria-coral">Romance & Harem</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t-2 border-saweria-dark pt-5 flex flex-col sm:flex-row items-center justify-between text-xs font-bold text-saweria-gray gap-3">
+                <p>&copy; <%= new Date().getFullYear() %> Anichin Stream. Engineered with Saweria Neobrutalism Design.</p>
+                <div class="flex items-center gap-3">
+                    <a href="/api/developer" class="hover:text-saweria-dark underline">API Sandbox</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script>
+        // Init AOS
+        AOS.init({ duration: 500, once: true, offset: 30 });
+
+        let searchDebounceTimer = null;
+
+        function extractSlug(url) {
+            if (!url) return '';
+            let cleaned = url.replace(/\/+$/, '');
+            let parts = cleaned.split('/');
+            let slug = parts[parts.length - 1];
+            return slug.replace(/^\/+|\/+$/g, '');
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleSearchModal() {
+            const modal = document.getElementById('search-modal');
+            const input = document.getElementById('modal-search-input');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden') && input) {
+                setTimeout(() => input.focus(), 100);
+            }
+        }
+
+        function showToast(title, msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('-translate-y-20', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('-translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // LocalStorage Helpers
+        function getBookmarks() {
+            try {
+                let list = JSON.parse(localStorage.getItem('anichin_bookmarks') || '[]');
+                let progress = getWatchProgress();
+                list.sort((a, b) => {
+                    let aProg = (progress[a.slug] && progress[a.slug]._last) ? (progress[a.slug]._last.updatedAt || 0) : 0;
+                    let bProg = (progress[b.slug] && progress[b.slug]._last) ? (progress[b.slug]._last.updatedAt || 0) : 0;
+                    let aTime = Math.max(a.updatedAt || 0, a.addedAt || 0, aProg);
+                    let bTime = Math.max(b.updatedAt || 0, b.addedAt || 0, bProg);
+                    return bTime - aTime;
+                });
+                return list;
+            } catch(e) { return []; }
+        }
+        function saveBookmarks(list) {
+            localStorage.setItem('anichin_bookmarks', JSON.stringify(list));
+            updateBadges();
+        }
+        function touchBookmark(seriesSlug, extraFields = {}) {
+            if (!seriesSlug) return;
+            try {
+                let list = JSON.parse(localStorage.getItem('anichin_bookmarks') || '[]');
+                let idx = list.findIndex(x => x.slug === seriesSlug);
+                if (idx >= 0) {
+                    let item = list.splice(idx, 1)[0];
+                    item = { ...item, ...extraFields, updatedAt: Date.now() };
+                    list.unshift(item);
+                    localStorage.setItem('anichin_bookmarks', JSON.stringify(list));
+                    updateBadges();
+                }
+            } catch(e) {}
+        }
+        function toggleBookmark(item) {
+            let list = getBookmarks();
+            let idx = list.findIndex(x => x.slug === item.slug);
+            if (idx >= 0) {
+                list.splice(idx, 1);
+                saveBookmarks(list);
+                showToast('Dihapus dari Favorit', `"${item.title}" dihapus.`);
+                return false;
+            } else {
+                let now = Date.now();
+                list.unshift({ ...item, addedAt: now, updatedAt: now });
+                saveBookmarks(list);
+                showToast('Disimpan ke Favorit', `"${item.title}" berhasil ditambahkan.`);
+                return true;
+            }
+        }
+        function isBookmarked(slug) {
+            return getBookmarks().some(x => x.slug === slug);
+        }
+
+        function getHistory() {
+            try { return JSON.parse(localStorage.getItem('anichin_history') || '[]'); } catch(e) { return []; }
+        }
+        function addToHistory(epData) {
+            let list = getHistory();
+            list = list.filter(x => x.slug !== epData.slug);
+            list.unshift({ ...epData, watchedAt: Date.now() });
+            if (list.length > 50) list.pop();
+            localStorage.setItem('anichin_history', JSON.stringify(list));
+            updateBadges();
+
+            if (epData.slug) {
+                let seriesSlug = epData.slug.replace(/-episode-\d+.*$/i, '').replace(/-sub-indo.*$/i, '');
+                touchBookmark(seriesSlug, { lastEpSlug: epData.slug, lastEpNum: epData.episode });
+            }
+        }
+
+        // Watch Progress Helpers (Session & Cross-Session Storage)
+        function getWatchProgress() {
+            try { return JSON.parse(localStorage.getItem('anichin_progress') || '{}'); } catch(e) { return {}; }
+        }
+        function saveWatchProgress(data) {
+            localStorage.setItem('anichin_progress', JSON.stringify(data));
+        }
+        function markEpisodeWatched(seriesSlug, epSlug, epNum, isWatched = true) {
+            if (!seriesSlug || !epSlug) return;
+            let progress = getWatchProgress();
+            if (!progress[seriesSlug]) progress[seriesSlug] = {};
+            if (isWatched) {
+                progress[seriesSlug][epSlug] = { watched: true, epNum: epNum || '', updatedAt: Date.now() };
+                progress[seriesSlug]._last = { epSlug: epSlug, epNum: epNum || '', updatedAt: Date.now() };
+                touchBookmark(seriesSlug, { lastEpSlug: epSlug, lastEpNum: epNum });
+            } else {
+                delete progress[seriesSlug][epSlug];
+                if (progress[seriesSlug]._last && progress[seriesSlug]._last.epSlug === epSlug) {
+                    delete progress[seriesSlug]._last;
+                }
+            }
+            saveWatchProgress(progress);
+        }
+        function isEpisodeWatched(seriesSlug, epSlug) {
+            if (!seriesSlug || !epSlug) return false;
+            let progress = getWatchProgress();
+            return !!(progress[seriesSlug] && progress[seriesSlug][epSlug] && progress[seriesSlug][epSlug].watched);
+        }
+        function getSeriesWatchStats(seriesSlug, totalEpisodes) {
+            if (!seriesSlug) return { watchedCount: 0, percentage: 0 };
+            let progress = getWatchProgress();
+            let seriesData = progress[seriesSlug] || {};
+            let watchedKeys = Object.keys(seriesData).filter(key => key !== '_last' && seriesData[key] && seriesData[key].watched);
+            let watchedCount = watchedKeys.length;
+            let percentage = (totalEpisodes && totalEpisodes > 0) ? Math.min(100, Math.round((watchedCount / totalEpisodes) * 100)) : 0;
+            return { watchedCount, percentage, totalEpisodes, watchedKeys };
+        }
+        function getLastWatchedForSeries(seriesSlug) {
+            if (!seriesSlug) return null;
+            let progress = getWatchProgress();
+            let seriesData = progress[seriesSlug] || {};
+            if (seriesData._last && seriesData._last.epSlug) {
+                return seriesData._last;
+            }
+            // Fallback from watch history
+            let history = getHistory();
+            let match = history.find(item => item.slug && item.slug.includes(seriesSlug));
+            if (match) {
+                return { epSlug: match.slug, epNum: match.episode, updatedAt: match.watchedAt };
+            }
+            // Fallback from latest progress entry
+            let latest = null;
+            Object.keys(seriesData).forEach(key => {
+                if (key !== '_last' && seriesData[key] && seriesData[key].watched) {
+                    let entry = seriesData[key];
+                    if (!latest || (entry.updatedAt && entry.updatedAt > latest.updatedAt)) {
+                        latest = { epSlug: key, epNum: entry.epNum, updatedAt: entry.updatedAt };
+                    }
+                }
+            });
+            return latest;
+        }
+
+        function updateBadges() {
+            const bm = getBookmarks().length;
+            const hs = getHistory().length;
+            const bmBadge = document.getElementById('bookmark-badge');
+            const hsBadge = document.getElementById('history-badge');
+            if (bmBadge) {
+                bmBadge.innerText = bm;
+                bmBadge.classList.toggle('hidden', bm === 0);
+            }
+            if (hsBadge) {
+                hsBadge.innerText = hs;
+                hsBadge.classList.toggle('hidden', hs === 0);
+            }
+        }
+
+        // Quick Search AJAX
+        async function handleQuickSearch(val) {
+            const dropdown = document.getElementById('quick-search-results');
+            if (!val || val.trim().length < 2) {
+                dropdown.classList.add('hidden');
+                return;
+            }
+
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(async () => {
+                dropdown.innerHTML = `<div class="p-4 text-center text-xs font-extrabold text-saweria-gray">Mencari "${val}"...</div>`;
+                dropdown.classList.remove('hidden');
+
+                try {
+                    const res = await fetch(`/api/search?q=${encodeURIComponent(val)}`);
+                    const json = await res.json();
+                    if (json.status && json.data && json.data.results && json.data.results.length > 0) {
+                        dropdown.innerHTML = json.data.results.slice(0, 6).map(item => {
+                            let slug = extractSlug(item.href);
+                            return `
+                                <a href="/detail/${slug}" class="flex items-center gap-3 p-3 hover:bg-saweria-yellow/20 transition-colors group">
+                                    <img src="${item.image || 'https://via.placeholder.com/300x400'}" class="w-12 h-16 object-cover rounded-xl border-2 border-saweria-dark flex-shrink-0 shadow-[2px_2px_0_#1e1e1e]" alt="${item.title}">
+                                    <div class="flex-1 min-w-0">
+                                        <h5 class="text-xs sm:text-sm font-extrabold text-saweria-dark group-hover:text-saweria-coral truncate">${item.title}</h5>
+                                        <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                                            ${item.ep ? `<span class="text-[10px] bg-saweria-yellow text-saweria-dark px-2 py-0.5 rounded-full font-extrabold border border-saweria-dark">${item.ep}</span>` : ''}
+                                            ${item.type ? `<span class="text-[10px] bg-saweria-light text-saweria-dark px-2 py-0.5 rounded-full font-bold border border-saweria-dark">${item.type}</span>` : ''}
+                                        </div>
+                                    </div>
+                                </a>
+                            `;
+                        }).join('') + `
+                            <a href="/search?q=${encodeURIComponent(val)}" class="block p-3 text-center text-xs font-extrabold text-saweria-dark bg-saweria-green hover:bg-saweria-yellow transition-colors border-t-2 border-saweria-dark">
+                                Lihat Semua Hasil Lengkap &rarr;
+                            </a>
+                        `;
+                    } else {
+                        dropdown.innerHTML = `<div class="p-4 text-center text-xs font-extrabold text-saweria-gray">Tidak ditemukan hasil.</div>`;
+                    }
+                } catch(e) {
+                    dropdown.innerHTML = `<div class="p-4 text-center text-xs font-extrabold text-rose-600">Gagal mencari data.</div>`;
+                }
+            }, 300);
+        }
+
+        async function handleModalSearch(val) {
+            const dropdown = document.getElementById('modal-search-results');
+            if (!val || val.trim().length < 2) {
+                dropdown.classList.add('hidden');
+                return;
+            }
+
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(async () => {
+                dropdown.innerHTML = `<div class="p-4 text-center text-xs font-extrabold text-saweria-gray">Mencari "${val}"...</div>`;
+                dropdown.classList.remove('hidden');
+
+                try {
+                    const res = await fetch(`/api/search?q=${encodeURIComponent(val)}`);
+                    const json = await res.json();
+                    if (json.status && json.data && json.data.results && json.data.results.length > 0) {
+                        dropdown.innerHTML = json.data.results.slice(0, 7).map(item => {
+                            let slug = extractSlug(item.href);
+                            return `
+                                <a href="/detail/${slug}" class="flex items-center gap-3.5 p-3.5 sm:p-4 hover:bg-saweria-yellow/20 transition-colors group">
+                                    <img src="${item.image || 'https://via.placeholder.com/300x400'}" class="w-12 h-16 sm:w-16 sm:h-20 object-cover rounded-xl border-2 border-saweria-dark flex-shrink-0 shadow-[2px_2px_0_#1e1e1e]" alt="${item.title}">
+                                    <div class="flex-1 min-w-0 space-y-1">
+                                        <h5 class="text-xs sm:text-base font-extrabold text-saweria-dark group-hover:text-saweria-coral truncate">${item.title}</h5>
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            ${item.ep ? `<span class="text-[10px] sm:text-xs bg-saweria-yellow text-saweria-dark px-2.5 py-0.5 rounded-full font-extrabold border-2 border-saweria-dark">${item.ep}</span>` : ''}
+                                            ${item.status ? `<span class="text-[10px] sm:text-xs bg-saweria-green text-saweria-dark px-2.5 py-0.5 rounded-full font-bold border-2 border-saweria-dark">${item.status}</span>` : ''}
+                                            ${item.type ? `<span class="text-[10px] sm:text-xs bg-saweria-pink text-saweria-dark px-2.5 py-0.5 rounded-full font-bold border-2 border-saweria-dark">${item.type}</span>` : ''}
+                                        </div>
+                                    </div>
+                                    <div class="neo-btn px-3 py-1.5 rounded-xl bg-saweria-yellow border-2 border-saweria-dark text-xs font-extrabold text-saweria-dark hidden sm:flex items-center gap-1">
+                                        Detail
+                                    </div>
+                                </a>
+                            `;
+                        }).join('') + `
+                            <a href="/search?q=${encodeURIComponent(val)}" class="block p-3.5 text-center text-xs sm:text-sm font-extrabold text-saweria-dark bg-saweria-green hover:bg-saweria-yellow transition-colors border-t-2 border-saweria-dark">
+                                Lihat Semua Hasil Lengkap (${json.data.results.length}) &rarr;
+                            </a>
+                        `;
+                    } else {
+                        dropdown.innerHTML = `<div class="p-4 text-center text-xs font-extrabold text-saweria-gray">Tidak ditemukan hasil pencarian.</div>`;
+                    }
+                } catch(e) {
+                    dropdown.innerHTML = `<div class="p-4 text-center text-xs font-extrabold text-rose-600">Gagal mengambil data dari server.</div>`;
+                }
+            }, 300);
+        }
+
+        // Active Link Highlight
+        document.addEventListener('DOMContentLoaded', () => {
+            updateBadges();
+            lucide.createIcons();
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.nav-link').forEach(link => {
+                const targetPath = link.getAttribute('data-path');
+                if (currentPath === targetPath || (targetPath !== '/' && currentPath.startsWith(targetPath))) {
+                    link.classList.add('bg-saweria-yellow');
+                    link.classList.remove('bg-white');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

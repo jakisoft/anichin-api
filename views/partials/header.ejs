@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title : 'Anichin Stream — Nonton Donghua Subtitle Indonesia Terlengkap' %></title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+
+    <!-- Meta Descriptions -->
+    <meta name="description" content="<%= typeof description !== 'undefined' ? description : 'Platform streaming Donghua 3D & 2D Subtitle Indonesia terlengkap dengan kualitas HD jernih dan pemutar video interaktif.' %>">
+    <meta name="keywords" content="Anichin, Donghua Sub Indo, Nonton Donghua, BTTH, Perfect World, Soul Land, Donghua 3D, Anichin Stream">
+    <meta name="author" content="Anichin Stream">
+
+    <!-- Open Graph / Facebook / WhatsApp / Telegram -->
+    <meta property="og:type" content="<%= typeof ogType !== 'undefined' ? ogType : 'website' %>">
+    <meta property="og:site_name" content="Anichin Stream">
+    <meta property="og:url" content="<%= typeof currentUrl !== 'undefined' ? currentUrl : 'https://anichin.stream' %>">
+    <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Anichin Stream — Nonton Donghua Subtitle Indonesia' %>">
+    <meta property="og:description" content="<%= typeof description !== 'undefined' ? description : 'Nonton Donghua 3D Subtitle Indonesia terlengkap gratis dengan kualitas HD.' %>">
+    <meta property="og:image" content="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://anichin.stream/og.png' %>">
+    <meta property="og:image:secure_url" content="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://anichin.stream/og.png' %>">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="<%= typeof title !== 'undefined' ? title : 'Anichin Stream' %>">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@anichin_stream">
+    <meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Anichin Stream — Nonton Donghua Subtitle Indonesia' %>">
+    <meta name="twitter:description" content="<%= typeof description !== 'undefined' ? description : 'Nonton Donghua 3D Subtitle Indonesia terlengkap gratis dengan kualitas HD.' %>">
+    <meta name="twitter:image" content="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://anichin.stream/og.png' %>">
+
+    <!-- Messaging Apps Fallback Link -->
+    <link rel="image_src" href="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://anichin.stream/og.png' %>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Ubuntu Mono', 'monospace'],
+                    },
+                    colors: {
+                        saweria: {
+                            yellow: '#faae2b',
+                            bg: '#fbf9f4',
+                            card: '#ffffff',
+                            dark: '#1e1e1e',
+                            gray: '#757575',
+                            light: '#f5f3ef',
+                            pink: '#ffb7b2',
+                            blue: '#a0c4ff',
+                            green: '#b9fbc0',
+                            lavender: '#e8aeff',
+                            coral: '#ff6f61'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- AOS Animation -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+    <!-- Swiper JS CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <!-- FontAwesome & Lucide -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: #fbf9f4;
+            background-image: radial-gradient(rgba(30, 30, 30, 0.08) 1px, transparent 1px);
+            background-size: 18px 18px;
+            color: #1e1e1e;
+        }
+        ::-webkit-scrollbar { width: 7px; height: 7px; }
+        ::-webkit-scrollbar-track { background: #fbf9f4; border-left: 2px solid #1e1e1e; }
+        ::-webkit-scrollbar-thumb { background: #1e1e1e; border: 2px solid #fbf9f4; border-radius: 4px; }
+
+        .neo-btn {
+            box-shadow: 3px 3px 0px 0px #1e1e1e;
+            transition: all 0.12s ease-in-out;
+        }
+        .neo-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px 0px #1e1e1e;
+        }
+        .neo-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px 0px #1e1e1e;
+        }
+
+        .neo-card {
+            box-shadow: 4px 4px 0px 0px #1e1e1e;
+            transition: all 0.2s ease-in-out;
+        }
+        .neo-card-hover:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px #1e1e1e;
+        }
+
+        .neo-input {
+            border: 3px solid #1e1e1e;
+            box-shadow: 3px 3px 0px 0px #1e1e1e;
+            transition: all 0.15s ease;
+        }
+        .neo-input:focus {
+            outline: none;
+            box-shadow: 4px 4px 0px 0px #1e1e1e;
+            background-color: #ffffff;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Swiper Neobrutalism Custom Styles */
+        .swiper-pagination-bullet {
+            background: #ffffff !important;
+            opacity: 0.5 !important;
+            width: 10px !important;
+            height: 10px !important;
+            border: 2px solid #1e1e1e !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            margin: 0 4px !important;
+        }
+        .swiper-pagination-bullet-active {
+            background: #faae2b !important;
+            opacity: 1 !important;
+            width: 32px !important;
+            border-radius: 999px !important;
+            box-shadow: 2px 2px 0px 0px #1e1e1e !important;
+        }
+
+        .swiper-button-disabled {
+            opacity: 0.35 !important;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+
+        @keyframes swiperProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        .swiper-progress-active {
+            animation: swiperProgress 5s linear infinite;
+        }
+
+        /* Shimmer Skeleton Animation */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .shimmer-bg {
+            background: linear-gradient(90deg, #e6e1d8 25%, #ffffff 50%, #e6e1d8 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col text-saweria-dark">
+
+    <!-- Top Loading Bar -->
+    <div id="loading-bar" class="fixed top-0 left-0 right-0 h-1.5 bg-saweria-yellow border-b-2 border-saweria-dark z-50 transition-all duration-300 w-0"></div>
+
+    <!-- Header Navbar -->
+    <header class="sticky top-0 z-40 bg-saweria-bg/95 backdrop-blur border-b-4 border-saweria-dark py-2.5 sm:py-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
+            
+            <!-- Brand Logo -->
+            <a href="/" class="flex items-center gap-2 group">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-saweria-yellow border-3 border-saweria-dark flex items-center justify-center neo-btn group-hover:bg-saweria-coral transition-colors">
+                    <i data-lucide="play" class="w-4 h-4 sm:w-5 sm:h-5 fill-saweria-dark text-saweria-dark"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-xl sm:text-2xl tracking-tight text-saweria-dark">
+                        Anichin<span class="text-saweria-coral">.</span>STREAM
+                    </span>
+                    <span class="hidden sm:inline-block text-[9px] uppercase font-extrabold tracking-widest bg-saweria-green text-saweria-dark px-2 py-0.5 rounded-full ml-1.5 border-2 border-saweria-dark">
+                        3D Donghua
+                    </span>
+                </div>
+            </a>
+
+            <!-- Navbar Quick Search Input (Desktop) -->
+            <div class="hidden md:flex relative flex-1 max-w-sm mx-3">
+                <form action="/search" method="GET" class="w-full relative">
+                    <input 
+                        type="text" 
+                        name="q"
+                        id="nav-search-input-desktop"
+                        placeholder="Cari Donghua (BTTH, Soul Land)..." 
+                        oninput="handleQuickSearch(this.value)"
+                        autocomplete="off"
+                        class="w-full neo-input bg-white text-xs font-bold text-saweria-dark placeholder-saweria-gray pl-9 pr-8 py-2 rounded-full"
+                    >
+                    <i data-lucide="search" class="w-4 h-4 text-saweria-dark absolute left-3 top-1/2 -translate-y-1/2"></i>
+                </form>
+
+                <!-- Quick Search Dropdown -->
+                <div id="quick-search-results" class="absolute left-0 right-0 top-full mt-2 bg-white border-3 border-saweria-dark rounded-2xl overflow-hidden shadow-[4px_4px_0_#1e1e1e] hidden z-50 max-h-96 overflow-y-auto divide-y-2 divide-saweria-dark"></div>
+            </div>
+
+            <!-- Navbar Actions Menu (Search Trigger, Bookmarks, History, API) -->
+            <div id="navbar-menu" class="flex items-center gap-1.5 sm:gap-2">
+                <!-- Search Button Modal Trigger (Ganti Bookmark di Navbar Menu) -->
+                <button onclick="toggleSearchModal()" class="neo-btn p-2 sm:p-2.5 rounded-full bg-saweria-yellow border-3 border-saweria-dark text-saweria-dark flex items-center justify-center" title="Pencarian Dinamis">
+                    <i data-lucide="search" class="w-4 h-4"></i>
+                </button>
+
+                <!-- Favorit Saya -->
+                <a href="/bookmarks" class="relative neo-btn p-2 sm:p-2.5 rounded-full bg-saweria-pink border-3 border-saweria-dark text-saweria-dark flex items-center justify-center" title="Favorit Saya">
+                    <i data-lucide="bookmark" class="w-4 h-4"></i>
+                    <span id="bookmark-badge" class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-saweria-yellow text-saweria-dark text-[9px] font-extrabold border border-saweria-dark flex items-center justify-center hidden">0</span>
+                </a>
+
+                <!-- Riwayat Nonton -->
+                <a href="/history" class="relative neo-btn p-2 sm:p-2.5 rounded-full bg-saweria-green border-3 border-saweria-dark text-saweria-dark flex items-center justify-center" title="Riwayat Nonton">
+                    <i data-lucide="history" class="w-4 h-4"></i>
+                    <span id="history-badge" class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-saweria-blue text-saweria-dark text-[9px] font-extrabold border border-saweria-dark flex items-center justify-center hidden">0</span>
+                </a>
+
+                <!-- API Developer Link -->
+                <a href="/api/developer" class="hidden lg:flex neo-btn bg-saweria-lavender rounded-full border-3 border-saweria-dark px-3 py-1.5 text-xs font-extrabold items-center gap-1.5 text-saweria-dark">
+                    <i data-lucide="code-2" class="w-3.5 h-3.5"></i>
+                    <span>API Dev</span>
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden neo-btn p-2 rounded-full bg-saweria-yellow border-3 border-saweria-dark text-saweria-dark">
+                    <i data-lucide="menu" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Category Menu Bar (Desktop) -->
+        <nav class="hidden md:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2.5">
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 text-xs font-extrabold">
+                <a href="/" class="nav-link neo-btn px-3.5 py-1.5 rounded-full border-2 border-saweria-dark bg-white text-saweria-dark flex items-center gap-1.5" data-path="/">
+                    <i data-lucide="home" class="w-3.5 h-3.5 text-saweria-coral"></i> Beranda
+                </a>
+                <a href="/popular" class="nav-link neo-btn px-3.5 py-1.5 rounded-full border-2 border-saweria-dark bg-white text-saweria-dark flex items-center gap-1.5" data-path="/popular">
+                    <i data-lucide="flame" class="w-3.5 h-3.5 text-saweria-yellow"></i> Populer
+                </a>
+                <a href="/latest" class="nav-link neo-btn px-3.5 py-1.5 rounded-full border-2 border-saweria-dark bg-white text-saweria-dark flex items-center gap-1.5" data-path="/latest">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-saweria-blue"></i> Terbaru
+                </a>
+                <a href="/ongoing" class="nav-link neo-btn px-3.5 py-1.5 rounded-full border-2 border-saweria-dark bg-white text-saweria-dark flex items-center gap-1.5" data-path="/ongoing">
+                    <i data-lucide="play-circle" class="w-3.5 h-3.5 text-saweria-green"></i> Ongoing
+                </a>
+                <a href="/completed" class="nav-link neo-btn px-3.5 py-1.5 rounded-full border-2 border-saweria-dark bg-white text-saweria-dark flex items-center gap-1.5" data-path="/completed">
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-saweria-lavender"></i> Tamat
+                </a>
+                <a href="/schedule" class="nav-link neo-btn px-3.5 py-1.5 rounded-full border-2 border-saweria-dark bg-white text-saweria-dark flex items-center gap-1.5" data-path="/schedule">
+                    <i data-lucide="calendar" class="w-3.5 h-3.5 text-saweria-pink"></i> Jadwal
+                </a>
+                <a href="/genres" class="nav-link neo-btn px-3.5 py-1.5 rounded-full border-2 border-saweria-dark bg-white text-saweria-dark flex items-center gap-1.5" data-path="/genres">
+                    <i data-lucide="tags" class="w-3.5 h-3.5 text-saweria-gray"></i> Genre
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- SEARCH DYNAMIC MODAL OVERLAY -->
+    <div id="search-modal" class="fixed inset-0 bg-saweria-dark/70 backdrop-blur-sm z-50 flex items-start justify-center pt-8 sm:pt-16 px-4 hidden transition-all duration-200">
+        <div class="bg-white border-4 border-saweria-dark rounded-[2rem] p-5 sm:p-7 w-full max-w-2xl sm:max-w-3xl shadow-[8px_8px_0_#1e1e1e] relative space-y-4">
+            <div class="flex items-center justify-between pb-3.5 border-b-3 border-saweria-dark">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-2xl bg-saweria-yellow border-2 border-saweria-dark flex items-center justify-center font-extrabold text-sm shadow-[2px_2px_0_#1e1e1e]">
+                        <i data-lucide="search" class="w-5 h-5 text-saweria-dark"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-base sm:text-lg text-saweria-dark">Pencarian Dinamis Donghua</h3>
+                        <p class="text-[11px] font-semibold text-saweria-gray hidden sm:block">Ketik judul untuk hasil seketika</p>
+                    </div>
+                </div>
+                <button onclick="toggleSearchModal()" class="neo-btn p-2 rounded-full bg-saweria-pink border-2 border-saweria-dark text-saweria-dark" title="Tutup Search">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form action="/search" method="GET" class="relative">
+                <input 
+                    type="text" 
+                    name="q" 
+                    id="modal-search-input"
+                    placeholder="Ketik nama Donghua (misal: BTTH, Soul Land, Perfect World)..." 
+                    oninput="handleModalSearch(this.value)"
+                    autocomplete="off"
+                    class="w-full neo-input bg-saweria-bg text-sm sm:text-base font-bold text-saweria-dark placeholder-saweria-gray pl-12 pr-5 py-3.5 sm:py-4 rounded-full"
+                >
+                <i data-lucide="search" class="w-6 h-6 text-saweria-dark absolute left-4 top-1/2 -translate-y-1/2"></i>
+            </form>
+
+            <div id="modal-search-results" class="max-h-96 overflow-y-auto divide-y-2 divide-saweria-dark border-3 border-saweria-dark rounded-2xl bg-white hidden"></div>
+            <p class="text-xs font-bold text-saweria-gray text-center pt-1">Tekan <kbd class="px-2 py-0.5 bg-saweria-light border border-saweria-dark rounded font-mono text-[10px]">ENTER</kbd> untuk melihat semua hasil pencarian lengkap.</p>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Drawer -->
+    <div id="mobile-menu" class="fixed inset-0 bg-saweria-bg z-50 flex flex-col p-6 hidden transition-all duration-300 overflow-y-auto">
+        <div class="flex items-center justify-between mb-5 pb-3 border-b-4 border-saweria-dark">
+            <span class="font-extrabold text-xl text-saweria-dark">NAVIGASI STREAM</span>
+            <button onclick="toggleMobileMenu()" class="neo-btn p-2 rounded-full bg-saweria-pink border-3 border-saweria-dark text-saweria-dark">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <form action="/search" method="GET" class="relative mb-5">
+            <input 
+                type="text" 
+                name="q"
+                placeholder="Cari Donghua..." 
+                class="w-full neo-input bg-white text-xs font-bold text-saweria-dark placeholder-saweria-gray pl-10 pr-4 py-3 rounded-full"
+            >
+            <i data-lucide="search" class="w-5 h-5 text-saweria-dark absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+        </form>
+
+        <div class="flex flex-col gap-2.5 font-extrabold text-xs">
+            <a href="/" class="neo-btn p-3 rounded-2xl bg-white border-3 border-saweria-dark text-saweria-dark flex items-center gap-3">
+                <i data-lucide="home" class="w-4 h-4 text-saweria-coral"></i> Beranda Utama
+            </a>
+            <a href="/popular" class="neo-btn p-3 rounded-2xl bg-white border-3 border-saweria-dark text-saweria-dark flex items-center gap-3">
+                <i data-lucide="flame" class="w-4 h-4 text-saweria-yellow"></i> Donghua Populer
+            </a>
+            <a href="/latest" class="neo-btn p-3 rounded-2xl bg-white border-3 border-saweria-dark text-saweria-dark flex items-center gap-3">
+                <i data-lucide="sparkles" class="w-4 h-4 text-saweria-blue"></i> Rilisan Terbaru
+            </a>
+            <a href="/ongoing" class="neo-btn p-3 rounded-2xl bg-white border-3 border-saweria-dark text-saweria-dark flex items-center gap-3">
+                <i data-lucide="play-circle" class="w-4 h-4 text-saweria-green"></i> Ongoing Donghua
+            </a>
+            <a href="/completed" class="neo-btn p-3 rounded-2xl bg-white border-3 border-saweria-dark text-saweria-dark flex items-center gap-3">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-saweria-lavender"></i> Donghua Tamat
+            </a>
+            <a href="/schedule" class="neo-btn p-3 rounded-2xl bg-white border-3 border-saweria-dark text-saweria-dark flex items-center gap-3">
+                <i data-lucide="calendar" class="w-4 h-4 text-saweria-pink"></i> Jadwal Rilis
+            </a>
+            <a href="/genres" class="neo-btn p-3 rounded-2xl bg-white border-3 border-saweria-dark text-saweria-dark flex items-center gap-3">
+                <i data-lucide="tags" class="w-4 h-4 text-saweria-gray"></i> Genre Categories
+            </a>
+            <a href="/bookmarks" class="neo-btn p-3 rounded-2xl bg-saweria-pink border-3 border-saweria-dark text-saweria-dark flex items-center gap-3">
+                <i data-lucide="bookmark" class="w-4 h-4"></i> Favorit Saya
+            </a>
+            <a href="/history" class="neo-btn p-3 rounded-2xl bg-saweria-green border-3 border-saweria-dark text-saweria-dark flex items-center gap-3">
+                <i data-lucide="history" class="w-4 h-4"></i> Riwayat Nonton
+            </a>
+            <a href="/api/developer" class="neo-btn p-3 rounded-2xl bg-saweria-lavender border-3 border-saweria-dark text-saweria-dark flex items-center gap-3 mt-1">
+                <i data-lucide="code-2" class="w-4 h-4"></i> Developer API
+            </a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 space-y-8">
