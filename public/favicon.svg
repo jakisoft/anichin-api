@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <!-- Outer Neobrutalist Shadow -->
+  <rect x="32" y="32" width="448" height="448" rx="96" fill="#1e1e1e" />
+  
+  <!-- Main Background Container -->
+  <rect x="16" y="16" width="448" height="448" rx="96" fill="#faae2b" stroke="#1e1e1e" stroke-width="24" />
+  
+  <!-- Accent Top Badge -->
+  <path d="M 120 16 L 360 16 A 40 40 0 0 1 400 56 L 400 96 L 100 96 L 100 36 A 20 20 0 0 1 120 16 Z" fill="#ff6f61" stroke="#1e1e1e" stroke-width="12" />
+  
+  <!-- Play Icon Polygon inside Outer Card -->
+  <polygon points="180,140 350,240 180,340" fill="#ffffff" stroke="#1e1e1e" stroke-width="20" stroke-linejoin="round" />
+  
+  <!-- Small Decorative Sparkle -->
+  <circle cx="380" cy="140" r="28" fill="#b9fbc0" stroke="#1e1e1e" stroke-width="12" />
+  <circle cx="100" cy="380" r="20" fill="#a0c4ff" stroke="#1e1e1e" stroke-width="10" />
+</svg>
