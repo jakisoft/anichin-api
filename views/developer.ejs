@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anichin API — Dokumentasi Resmi & Console Sandbox</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+
+    <!-- Meta Descriptions -->
+    <meta name="description" content="Dokumentasi resmi REST API Anichin Stream untuk pengembang, lengkap dengan Interactive Console Sandbox dan skema JSON.">
+    <meta name="keywords" content="Anichin API, Donghua API, REST API Donghua, Anichin Developer Hub">
+    <meta name="author" content="Anichin Stream Developer Team">
+
+    <!-- Open Graph / Facebook / WhatsApp / Telegram -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Anichin Stream Developer Hub">
+    <meta property="og:url" content="<%= typeof currentUrl !== 'undefined' ? currentUrl : 'https://anichin.stream/api/developer' %>">
+    <meta property="og:title" content="Anichin API — Dokumentasi Resmi & Console Sandbox">
+    <meta property="og:description" content="Integrasikan data Donghua 3D terbaru ke aplikasi Anda dengan Anichin REST API.">
+    <meta property="og:image" content="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://anichin.stream/og.png' %>">
+    <meta property="og:image:secure_url" content="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://anichin.stream/og.png' %>">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@anichin_stream">
+    <meta name="twitter:title" content="Anichin API — Dokumentasi Resmi & Console Sandbox">
+    <meta name="twitter:description" content="Integrasikan data Donghua 3D terbaru ke aplikasi Anda dengan Anichin REST API.">
+    <meta name="twitter:image" content="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://anichin.stream/og.png' %>">
+
+    <!-- Messaging Apps Fallback Link -->
+    <link rel="image_src" href="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://anichin.stream/og.png' %>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Ubuntu Mono', 'monospace'],
+                    },
+                    colors: {
+                        saweria: {
+                            yellow: '#faae2b',
+                            bg: '#fbf9f4',
+                            card: '#ffffff',
+                            dark: '#1e1e1e',
+                            gray: '#757575',
+                            light: '#f5f3ef',
+                            pink: '#ffb7b2',
+                            blue: '#a0c4ff',
+                            green: '#b9fbc0',
+                            lavender: '#e8aeff',
+                            coral: '#ff6f61'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: #fbf9f4;
+            background-image: radial-gradient(rgba(30, 30, 30, 0.08) 1px, transparent 1px);
+            background-size: 18px 18px;
+            color: #1e1e1e;
+        }
+        ::-webkit-scrollbar { width: 7px; height: 7px; }
+        ::-webkit-scrollbar-track { background: #fbf9f4; border-left: 2px solid #1e1e1e; }
+        ::-webkit-scrollbar-thumb { background: #1e1e1e; border: 2px solid #fbf9f4; border-radius: 4px; }
+
+        .neo-btn {
+            box-shadow: 3px 3px 0px 0px #1e1e1e;
+            transition: all 0.12s ease-in-out;
+        }
+        .neo-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px 0px #1e1e1e;
+        }
+        .neo-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px 0px #1e1e1e;
+        }
+
+        .neo-card {
+            box-shadow: 4px 4px 0px 0px #1e1e1e;
+            transition: all 0.2s ease-in-out;
+        }
+        .neo-card-hover:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px #1e1e1e;
+        }
+
+        .neo-input {
+            border: 3px solid #1e1e1e;
+            box-shadow: 3px 3px 0px 0px #1e1e1e;
+            transition: all 0.15s ease;
+        }
+        .neo-input:focus {
+            outline: none;
+            box-shadow: 4px 4px 0px 0px #1e1e1e;
+            background-color: #ffffff;
+        }
+
+        .code-tab.hidden { display: none; }
+        
+        /* JSON Syntax Highlighting */
+        .gh-dark { background-color: #0d1117; color: #c9d1d9; }
+        .json-key { color: #7ee787; font-weight: 700; }
+        .json-string { color: #a5d6ff; }
+        .json-value { color: #ff7b72; }
+        .json-boolean { color: #ff9b5e; font-weight: 700; }
+        .json-number { color: #d2a8ff; font-weight: 700; }
+        .json-null { color: #8b949e; font-style: italic; }
+
+        .copy-icon-swap [data-copy-state="check"] { display: none; }
+        .copy-icon-swap.is-copied [data-copy-state="copy"] { display: none; }
+        .copy-icon-swap.is-copied [data-copy-state="check"] { display: inline-flex; }
+
+        @keyframes loader-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spinner { animation: loader-spin 1s linear infinite; }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col text-saweria-dark">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-saweria-bg flex flex-col items-center justify-center z-50 transition-opacity duration-500 p-4">
+        <div class="text-center space-y-4">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-saweria-yellow border-4 border-saweria-dark rounded-2xl flex items-center justify-center mx-auto shadow-[4px_4px_0_#1e1e1e]">
+                <i data-lucide="code-2" class="w-8 h-8 sm:w-10 sm:h-10 text-saweria-dark spinner"></i>
+            </div>
+            <div>
+                <h2 class="font-extrabold text-xl text-saweria-dark tracking-tight">ANICHIN API DEV HUB</h2>
+                <p id="loading-text" class="text-xs font-mono text-saweria-gray mt-1">Memuat Dokumentasi & Endpoint API...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-5 right-5 z-[70] transform -translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-white border-4 border-saweria-dark text-saweria-dark px-4 py-3 rounded-2xl shadow-[4px_4px_0_#1e1e1e] flex items-center gap-3">
+        <div class="p-1.5 bg-saweria-yellow border-2 border-saweria-dark rounded-xl flex-shrink-0">
+            <i data-lucide="bell" class="w-4 h-4"></i>
+        </div>
+        <div>
+            <p id="toast-title" class="text-[10px] font-extrabold uppercase tracking-wider text-saweria-dark">Notifikasi</p>
+            <p id="toast-msg" class="text-xs font-bold text-saweria-gray"></p>
+        </div>
+    </div>
+
+    <!-- Top Sticky Header -->
+    <header class="sticky top-0 z-40 bg-saweria-bg/95 backdrop-blur border-b-4 border-saweria-dark py-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
+            <a href="/" class="flex items-center gap-2">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-saweria-lavender border-3 border-saweria-dark flex items-center justify-center neo-btn">
+                    <i data-lucide="code-2" class="w-4 h-4 sm:w-5 sm:h-5 text-saweria-dark"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-xl sm:text-2xl tracking-tight text-saweria-dark">
+                        Anichin<span class="text-saweria-coral">.</span>API
+                    </span>
+                    <span class="hidden sm:inline-block text-[9px] uppercase font-extrabold tracking-widest bg-saweria-yellow text-saweria-dark px-2 py-0.5 rounded-full ml-1.5 border-2 border-saweria-dark">
+                        Developer Hub
+                    </span>
+                </div>
+            </a>
+
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="/" class="neo-btn bg-saweria-yellow px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full border-3 border-saweria-dark text-xs sm:text-sm font-extrabold flex items-center gap-2 text-saweria-dark">
+                    <i data-lucide="play" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-saweria-dark"></i>
+                    <span>Nonton Stream</span>
+                </a>
+                <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="neo-btn bg-saweria-dark text-white px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border-3 border-saweria-dark text-xs sm:text-sm font-extrabold flex items-center gap-1.5">
+                    <i class="fa-brands fa-github text-sm"></i>
+                    <span class="hidden sm:inline">GitHub</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-8 sm:space-y-12">
+
+        <!-- Hero Section -->
+        <section class="neo-card bg-white border-4 border-saweria-dark rounded-[2rem] p-6 sm:p-8 space-y-6 relative overflow-hidden" data-aos="fade-up">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div class="space-y-3 max-w-2xl">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="px-3 py-1 rounded-full bg-saweria-green text-saweria-dark text-xs font-extrabold border-2 border-saweria-dark uppercase">
+                            RESTful JSON API v1.0
+                        </span>
+                        <span class="px-3 py-1 rounded-full bg-saweria-blue text-saweria-dark text-xs font-extrabold border-2 border-saweria-dark uppercase">
+                            CORS Enabled
+                        </span>
+                    </div>
+                    <h1 class="font-extrabold text-2xl sm:text-4xl lg:text-5xl text-saweria-dark tracking-tight leading-tight">
+                        Dokumentasi Resmi & Console Sandbox API
+                    </h1>
+                    <p class="text-xs sm:text-sm font-semibold text-saweria-gray leading-relaxed">
+                        Akses data Donghua 3D Subtitle Indonesia secara mudah melalui endpoint JSON yang cepat, terstruktur, dan siap diintegrasikan ke aplikasi web atau mobile Anda.
+                    </p>
+                </div>
+
+                <!-- Host & Stats Box -->
+                <div class="w-full md:w-80 neo-card bg-saweria-bg border-3 border-saweria-dark rounded-2xl p-4 space-y-3 flex-shrink-0">
+                    <div class="flex items-center justify-between border-b-2 border-saweria-dark/20 pb-2">
+                        <span class="text-[10px] font-extrabold uppercase text-saweria-gray tracking-wider">Base Host URL</span>
+                        <span class="text-[10px] font-extrabold bg-saweria-green px-2 py-0.5 rounded-full border border-saweria-dark">ONLINE</span>
+                    </div>
+                    <div class="bg-white border-2 border-saweria-dark rounded-xl p-2.5 flex items-center justify-between gap-2">
+                        <span id="host-indicator" class="font-mono text-xs font-bold truncate text-saweria-dark select-all">https://anichin.stream</span>
+                        <button onclick="copyHostUrl()" class="neo-btn p-1.5 rounded-lg bg-saweria-yellow border border-saweria-dark text-saweria-dark flex-shrink-0" title="Salin Base URL">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-center pt-1">
+                        <div class="bg-white border-2 border-saweria-dark rounded-xl p-2">
+                            <span class="block text-[9px] font-extrabold uppercase text-saweria-gray">Total Endpoints</span>
+                            <span id="total-endpoints" class="text-lg font-extrabold text-saweria-dark font-mono">11</span>
+                        </div>
+                        <div class="bg-white border-2 border-saweria-dark rounded-xl p-2">
+                            <span class="block text-[9px] font-extrabold uppercase text-saweria-gray">Format Output</span>
+                            <span class="text-lg font-extrabold text-saweria-dark font-mono">JSON</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search & Filter Bar -->
+        <section class="space-y-4" data-aos="fade-up">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-6 bg-saweria-lavender border-2 border-saweria-dark rounded-md"></div>
+                    <h2 class="font-extrabold text-xl sm:text-2xl text-saweria-dark">Daftar Endpoint API</h2>
+                </div>
+                <div class="relative w-full sm:w-80">
+                    <input 
+                        type="text" 
+                        id="api-search" 
+                        oninput="filterEndpoints(this.value)" 
+                        placeholder="Cari endpoint (misal: slide, popular, search)..." 
+                        class="w-full neo-input bg-white text-xs font-bold text-saweria-dark placeholder-saweria-gray pl-10 pr-4 py-2.5 rounded-full"
+                    >
+                    <i data-lucide="search" class="w-4 h-4 text-saweria-dark absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                </div>
+            </div>
+
+            <!-- Endpoint Grid -->
+            <div id="endpoints-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t-4 border-saweria-dark bg-saweria-yellow/20 mt-12 py-8 text-center text-xs font-bold text-saweria-gray">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>&copy; <%= new Date().getFullYear() %> Anichin Stream API Developer Hub.</p>
+            <div class="flex items-center gap-4">
+                <a href="/" class="hover:text-saweria-dark underline">Beranda Main Stream</a>
+                <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="hover:text-saweria-dark underline">Repository GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SANDBOX DRAWER OVERLAY & PANEL -->
+    <div id="drawer-overlay" onclick="closeSandboxDrawer()" class="fixed inset-0 z-40 bg-saweria-dark/60 backdrop-blur-sm hidden transition-opacity duration-300 opacity-0"></div>
+
+    <aside id="sandbox-drawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-2xl sm:max-w-3xl bg-saweria-bg text-saweria-dark shadow-[-8px_0_0_#1e1e1e] transform translate-x-full transition-transform duration-300 ease-in-out border-l-4 border-saweria-dark flex flex-col overflow-hidden">
+        
+        <!-- Drawer Header -->
+        <div class="bg-saweria-yellow px-5 sm:px-7 py-4 border-b-4 border-saweria-dark flex items-center justify-between gap-3 flex-shrink-0">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-2xl border-2 border-saweria-dark bg-white flex items-center justify-center flex-shrink-0 shadow-[2px_2px_0_#1e1e1e]">
+                    <i data-lucide="terminal" class="w-5 h-5 text-saweria-dark"></i>
+                </div>
+                <div class="min-w-0">
+                    <span class="text-[9px] font-extrabold uppercase tracking-widest text-saweria-dark/80 block">Console Sandbox Tester</span>
+                    <h3 id="drawer-title" class="text-base sm:text-xl font-extrabold tracking-tight truncate text-saweria-dark">Console Sandbox</h3>
+                </div>
+            </div>
+            <button onclick="closeSandboxDrawer()" class="neo-btn p-2 rounded-xl bg-saweria-pink border-2 border-saweria-dark text-saweria-dark flex-shrink-0">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Drawer Content Body -->
+        <div class="flex-1 p-4 sm:p-7 space-y-6 overflow-y-auto">
+            
+            <!-- Endpoint Info Card -->
+            <div class="neo-card bg-white border-3 border-saweria-dark rounded-2xl p-4 sm:p-5 space-y-3">
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                    <span class="px-3 py-1 rounded-full bg-saweria-blue text-saweria-dark text-xs font-mono font-extrabold border-2 border-saweria-dark uppercase">
+                        GET METHOD
+                    </span>
+                    <span id="drawer-param-summary" class="px-2.5 py-0.5 rounded-full bg-saweria-light text-saweria-dark text-[10px] font-extrabold border border-saweria-dark uppercase">
+                        0 Parameter
+                    </span>
+                </div>
+                <p id="drawer-desc" class="text-xs sm:text-sm font-semibold text-saweria-gray leading-relaxed"></p>
+                <div class="bg-saweria-light border-2 border-saweria-dark rounded-xl p-3 font-mono text-xs text-saweria-dark flex items-center justify-between gap-2">
+                    <span id="drawer-path-preview" class="select-all font-bold truncate">/api/slide</span>
+                    <i data-lucide="link-2" class="w-4 h-4 text-saweria-gray flex-shrink-0"></i>
+                </div>
+            </div>
+
+            <!-- Parameters Form Section -->
+            <div id="drawer-params-container" class="space-y-3 hidden">
+                <h4 class="text-xs font-extrabold text-saweria-dark uppercase tracking-wider flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-4 h-4 text-saweria-coral"></i> Parameter Kueri API
+                </h4>
+                <div id="drawer-params-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white p-4 border-3 border-saweria-dark rounded-2xl"></div>
+            </div>
+
+            <!-- Code Snippet Generator Tabs -->
+            <div class="space-y-3">
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                    <h4 class="text-xs font-extrabold text-saweria-dark uppercase tracking-wider flex items-center gap-2">
+                        <i data-lucide="code" class="w-4 h-4 text-saweria-yellow"></i> Integrasi Kode
+                    </h4>
+                    <div class="flex items-center gap-1.5">
+                        <button id="tab-curl" onclick="switchLanguage('curl')" class="neo-btn px-3 py-1 rounded-full bg-saweria-yellow border-2 border-saweria-dark text-[10px] font-extrabold text-saweria-dark">
+                            cURL
+                        </button>
+                        <button id="tab-nodejs" onclick="switchLanguage('nodejs')" class="neo-btn px-3 py-1 rounded-full bg-white border-2 border-saweria-dark text-[10px] font-extrabold text-saweria-dark">
+                            JavaScript
+                        </button>
+                        <button id="tab-python" onclick="switchLanguage('python')" class="neo-btn px-3 py-1 rounded-full bg-white border-2 border-saweria-dark text-[10px] font-extrabold text-saweria-dark">
+                            Python
+                        </button>
+                    </div>
+                </div>
+
+                <div class="relative bg-saweria-dark border-3 border-saweria-dark rounded-2xl p-4 font-mono text-xs leading-relaxed text-slate-200">
+                    <button id="copy-btn-content" onclick="copyCodeSnippet()" class="copy-icon-swap absolute top-3 right-3 neo-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-600 text-[10px] font-bold text-white flex items-center gap-1 z-10">
+                        <span data-copy-state="copy" class="inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i> Salin</span>
+                        <span data-copy-state="check" class="inline-flex items-center gap-1 text-emerald-400"><i data-lucide="check" class="w-3 h-3"></i> Tersalin</span>
+                    </button>
+                    <div class="overflow-x-auto pt-6">
+                        <pre id="code-curl" class="code-tab text-emerald-300"></pre>
+                        <pre id="code-nodejs" class="code-tab text-emerald-300 hidden"></pre>
+                        <pre id="code-python" class="code-tab text-emerald-300 hidden"></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Realtime API Response Viewer -->
+            <div class="neo-card bg-white border-3 border-saweria-dark rounded-2xl p-4 sm:p-5 space-y-4">
+                <div class="flex items-center justify-between gap-3 flex-wrap">
+                    <div>
+                        <h4 class="text-xs sm:text-sm font-extrabold text-saweria-dark uppercase">Output Response Realtime</h4>
+                        <p class="text-[11px] font-bold text-saweria-gray">Hasil response langsung dari server</p>
+                    </div>
+                    <button onclick="executeSandboxRequest()" class="neo-btn px-4 py-2 rounded-xl bg-saweria-green border-2 border-saweria-dark text-saweria-dark font-extrabold text-xs flex items-center gap-1.5">
+                        <i data-lucide="play" class="w-4 h-4 fill-saweria-dark"></i>
+                        <span>Kirim Request</span>
+                    </button>
+                </div>
+
+                <div class="gh-dark border-3 border-saweria-dark rounded-xl p-4 font-mono text-xs relative overflow-hidden">
+                    <div class="mb-3 flex items-center justify-between gap-2 border-b border-slate-800 pb-2">
+                        <span id="response-speed" class="text-[10px] font-mono text-slate-400 font-bold flex items-center gap-1">
+                            <i data-lucide="timer" class="w-3.5 h-3.5 text-saweria-yellow"></i> Response: —
+                        </span>
+                        <button id="copy-btn-response" onclick="copyResponseOutput()" class="copy-icon-swap neo-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-600 text-[10px] font-bold text-slate-200 flex items-center gap-1">
+                            <span data-copy-state="copy" class="inline-flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i> Copy JSON</span>
+                            <span data-copy-state="check" class="inline-flex items-center gap-1 text-emerald-400"><i data-lucide="check" class="w-3 h-3"></i> Copied</span>
+                        </button>
+                    </div>
+                    <pre id="json-output" class="overflow-y-auto max-h-[320px] leading-relaxed select-all text-slate-200">// Klik "Kirim Request" untuk melihat output live...</pre>
+                </div>
+            </div>
+
+        </div>
+    </aside>
+
+    <!-- JS Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+    <script>
+        const currentHost = window.location.origin;
+
+        const apiData = [
+            {
+                title: "Swiper Slide Hero",
+                description: "Mengekstrak deretan gambar slide sorotan utama beranda.",
+                method: "GET",
+                path: "/api/slide",
+                params: [],
+                mockResponse: { status: true, data: [] }
+            },
+            {
+                title: "Popular Today",
+                description: "Mengambil daftar Donghua terpopuler dengan penonton tertinggi.",
+                method: "GET",
+                path: "/api/popular",
+                params: [],
+                mockResponse: { status: true, data: [] }
+            },
+            {
+                title: "Latest Release",
+                description: "Mendapatkan episode Donghua rilis terbaru beserta pagination.",
+                method: "GET",
+                path: "/api/latest",
+                params: [
+                    { name: "page", type: "number", required: false, default: "1", desc: "Halaman data" }
+                ],
+                mockResponse: { status: true, data: { items: [] } }
+            },
+            {
+                title: "Ongoing Series",
+                description: "Daftar serial Donghua yang sedang aktif tayang mingguan.",
+                method: "GET",
+                path: "/api/ongoing",
+                params: [
+                    { name: "page", type: "number", required: false, default: "1", desc: "Halaman data" }
+                ],
+                mockResponse: { status: true, data: { items: [] } }
+            },
+            {
+                title: "Completed Series",
+                description: "Daftar serial Donghua yang sudah tamat secara keseluruhan.",
+                method: "GET",
+                path: "/api/completed",
+                params: [
+                    { name: "page", type: "number", required: false, default: "1", desc: "Halaman data" }
+                ],
+                mockResponse: { status: true, data: { items: [] } }
+            },
+            {
+                title: "Daftar Kategori Genres",
+                description: "Mengumpulkan semua kategori genre Donghua terindeks.",
+                method: "GET",
+                path: "/api/genres",
+                params: [],
+                mockResponse: { status: true, genres: [] }
+            },
+            {
+                title: "Filter Detail Genre",
+                description: "Mengekstrak serial Donghua berdasarkan kategori genre terpilih.",
+                method: "GET",
+                path: "/api/genres/:genre",
+                params: [
+                    { name: "genre", type: "string", required: true, default: "action", desc: "Slug genre (contoh: action)" },
+                    { name: "page", type: "number", required: false, default: "1", desc: "Nomor halaman" }
+                ],
+                mockResponse: { status: true, data: { items: [] } }
+            },
+            {
+                title: "Detail Donghua Series",
+                description: "Profil lengkap Donghua, sinopsis, status, dan daftar episode.",
+                method: "GET",
+                path: "/api/detail/:slug",
+                params: [
+                    { name: "slug", type: "string", required: true, default: "soul-land", desc: "Slug donghua (contoh: soul-land)" }
+                ],
+                mockResponse: { status: true, data: {} }
+            },
+            {
+                title: "Player Video Episode",
+                description: "Mengambil data streaming video player dan mirror alternatif.",
+                method: "GET",
+                path: "/api/episode/:slug",
+                params: [
+                    { name: "slug", type: "string", required: true, default: "martial-master-episode-1", desc: "Slug episode target" }
+                ],
+                mockResponse: { status: true, data: {} }
+            },
+            {
+                title: "Pencarian Dinamis Search",
+                description: "Pencarian serial Donghua dengan kata kunci dinamis.",
+                method: "GET",
+                path: "/api/search",
+                params: [
+                    { name: "q", type: "string", required: true, default: "martial master", desc: "Kata kunci pencarian" },
+                    { name: "page", type: "number", required: false, default: "1", desc: "Halaman data" }
+                ],
+                mockResponse: { status: true, data: {} }
+            },
+            {
+                title: "Jadwal Rilis Harian",
+                description: "Mengambil jadwal perilisan mingguan serial Donghua.",
+                method: "GET",
+                path: "/api/schedule",
+                params: [],
+                mockResponse: { status: true, data: {} }
+            }
+        ];
+
+        const pastelColors = [
+            'bg-saweria-pink',
+            'bg-saweria-blue',
+            'bg-saweria-green',
+            'bg-saweria-lavender',
+            'bg-saweria-yellow'
+        ];
+
+        let activeEndpointIndex = 0;
+        let activeLanguage = 'curl';
+        let codeSnippets = { curl: '', nodejs: '', python: '' };
+        let latestResponseText = '';
+
+        function copyHostUrl() {
+            navigator.clipboard.writeText(currentHost);
+            showToastNotification('Tersalin', 'Base Host URL berhasil disalin.');
+        }
+
+        function renderEndpoints() {
+            const container = document.getElementById('endpoints-list');
+            container.innerHTML = "";
+            document.getElementById('total-endpoints').innerText = apiData.length;
+
+            apiData.forEach((ep, i) => {
+                const card = document.createElement('article');
+                const accentColor = pastelColors[i % pastelColors.length];
+                const iconNames = ['play-square', 'flame', 'sparkles', 'play-circle', 'check-circle-2', 'tags', 'folder-search', 'info', 'tv', 'search', 'calendar'];
+                const paramText = ep.params.length > 0 ? `${ep.params.length} Param` : 'Tanpa Param';
+
+                card.className = 'neo-card bg-white border-3 border-saweria-dark rounded-2xl p-4 sm:p-5 flex flex-col justify-between h-full neo-card-hover group';
+                card.setAttribute('data-aos', 'fade-up');
+
+                card.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="w-10 h-10 ${accentColor} border-2 border-saweria-dark rounded-xl flex items-center justify-center shadow-[2px_2px_0_#1e1e1e]">
+                                <i data-lucide="${iconNames[i % iconNames.length]}" class="w-5 h-5 text-saweria-dark"></i>
+                            </div>
+                            <span class="px-2.5 py-0.5 rounded-full bg-saweria-blue text-saweria-dark font-mono text-[10px] font-extrabold border-2 border-saweria-dark uppercase">
+                                ${ep.method}
+                            </span>
+                        </div>
+
+                        <div>
+                            <h3 class="font-extrabold text-base sm:text-lg text-saweria-dark group-hover:text-saweria-coral transition-colors">${ep.title}</h3>
+                            <p class="font-mono text-xs font-bold text-saweria-dark bg-saweria-light px-2.5 py-1 rounded-lg border border-saweria-dark mt-1 select-all truncate">${ep.path}</p>
+                        </div>
+
+                        <p class="text-xs text-saweria-gray font-semibold leading-relaxed line-clamp-2">${ep.description}</p>
+                    </div>
+
+                    <div class="pt-4 mt-3 border-t-2 border-saweria-dark/10 flex items-center justify-between gap-2">
+                        <span class="text-[10px] font-extrabold uppercase bg-saweria-light px-2 py-0.5 rounded-full border border-saweria-dark text-saweria-dark">
+                            ${paramText}
+                        </span>
+                        <button onclick="openSandboxDrawer(${i})" class="neo-btn px-3 py-1.5 rounded-xl bg-saweria-yellow border-2 border-saweria-dark text-xs font-extrabold text-saweria-dark flex items-center gap-1">
+                            <span>Uji Console</span>
+                            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function filterEndpoints(query) {
+            const key = query.toLowerCase().trim();
+            const cards = document.getElementById('endpoints-list').children;
+            
+            apiData.forEach((ep, i) => {
+                const matches = ep.title.toLowerCase().includes(key) || ep.path.toLowerCase().includes(key);
+                if (cards[i]) {
+                    cards[i].style.display = matches ? 'flex' : 'none';
+                }
+            });
+        }
+
+        function openSandboxDrawer(index) {
+            activeEndpointIndex = index;
+            const ep = apiData[index];
+
+            document.getElementById('drawer-title').innerText = ep.title;
+            document.getElementById('drawer-desc').innerText = ep.description;
+
+            const paramsContainer = document.getElementById('drawer-params-container');
+            const paramsForm = document.getElementById('drawer-params-form');
+            const paramSummary = document.getElementById('drawer-param-summary');
+            paramSummary.innerText = ep.params.length > 0 ? `${ep.params.length} Parameter` : 'Tanpa Parameter';
+            
+            if (ep.params.length > 0) {
+                paramsContainer.classList.remove('hidden');
+                paramsForm.innerHTML = ep.params.map(p => `
+                    <div class="space-y-1 bg-saweria-light p-2.5 rounded-xl border border-saweria-dark">
+                        <div class="flex justify-between items-center text-[10px] font-mono font-bold">
+                            <span class="text-saweria-dark">${p.name} (${p.type})</span>
+                            <span class="${p.required ? 'text-rose-600 font-extrabold' : 'text-saweria-gray'}">${p.required ? 'Wajib' : 'Opsional'}</span>
+                        </div>
+                        <input type="text" id="sandbox-input-${p.name}" value="${p.default || ''}" oninput="updateInteractivePayloads()" class="w-full neo-input bg-white px-2.5 py-1 text-xs text-saweria-dark font-mono rounded-lg">
+                        <p class="text-[9px] text-saweria-gray font-semibold">${p.desc}</p>
+                    </div>
+                `).join('');
+            } else {
+                paramsContainer.classList.add('hidden');
+                paramsForm.innerHTML = "";
+            }
+
+            updateInteractivePayloads();
+
+            const drawer = document.getElementById('sandbox-drawer');
+            const overlay = document.getElementById('drawer-overlay');
+            
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+                overlay.classList.remove('opacity-0');
+                drawer.classList.remove('translate-x-full');
+            }, 50);
+
+            latestResponseText = '';
+            document.getElementById('response-speed').innerText = 'Response: —';
+            document.getElementById('json-output').innerText = '// Klik "Kirim Request" untuk melihat output live...';
+            lucide.createIcons();
+        }
+
+        function closeSandboxDrawer() {
+            const drawer = document.getElementById('sandbox-drawer');
+            const overlay = document.getElementById('drawer-overlay');
+
+            drawer.classList.add('translate-x-full');
+            overlay.classList.add('opacity-0');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 300);
+        }
+
+        function buildActiveRequestPath() {
+            const ep = apiData[activeEndpointIndex];
+            let activePath = ep.path;
+
+            ep.params.forEach(p => {
+                const inputElement = document.getElementById(`sandbox-input-${p.name}`);
+                if (inputElement) {
+                    const value = inputElement.value.trim();
+                    if (value.length > 0) {
+                        if (activePath.includes(`:${p.name}`)) {
+                            activePath = activePath.replace(`:${p.name}`, encodeURIComponent(value));
+                        } else {
+                            const sep = activePath.includes('?') ? '&' : '?';
+                            activePath = `${activePath}${sep}${p.name}=${encodeURIComponent(value)}`;
+                        }
+                    }
+                }
+            });
+
+            return activePath;
+        }
+
+        function updateInteractivePayloads() {
+            const activePath = buildActiveRequestPath();
+            const fullUrl = `${currentHost}${activePath}`;
+            document.getElementById('drawer-path-preview').innerText = activePath;
+
+            codeSnippets = {
+                curl: `curl -X GET "${fullUrl}" \\\n  -H "Accept: application/json"`,
+                nodejs: `import axios from 'axios';\n\naxios.get('${fullUrl}')\n  .then(res => console.log(res.data))\n  .catch(err => console.error(err));`,
+                python: `import requests\n\nurl = "${fullUrl}"\nres = requests.get(url)\nprint(res.json())`
+            };
+
+            document.getElementById('code-curl').innerText = codeSnippets.curl;
+            document.getElementById('code-nodejs').innerText = codeSnippets.nodejs;
+            document.getElementById('code-python').innerText = codeSnippets.python;
+        }
+
+        function switchLanguage(lang) {
+            activeLanguage = lang;
+            ['curl', 'nodejs', 'python'].forEach(l => {
+                const tab = document.getElementById(`code-${l}`);
+                const btn = document.getElementById(`tab-${l}`);
+                if (l === lang) {
+                    tab.classList.remove('hidden');
+                    btn.classList.add('bg-saweria-yellow');
+                    btn.classList.remove('bg-white');
+                } else {
+                    tab.classList.add('hidden');
+                    btn.classList.remove('bg-saweria-yellow');
+                    btn.classList.add('bg-white');
+                }
+            });
+        }
+
+        async function executeSandboxRequest() {
+            const outputBox = document.getElementById('json-output');
+            const activePath = buildActiveRequestPath();
+            const fullUrl = `${currentHost}${activePath}`;
+
+            outputBox.innerText = 'Mengambil data dari server...';
+            const startedAt = performance.now();
+
+            try {
+                const res = await fetch(fullUrl);
+                const ms = Math.max(1, Math.round(performance.now() - startedAt));
+                document.getElementById('response-speed').innerText = `Response: ${ms} ms (${res.status} ${res.statusText})`;
+
+                const rawText = await res.text();
+                try {
+                    const json = JSON.parse(rawText);
+                    latestResponseText = JSON.stringify(json, null, 2);
+                    outputBox.innerHTML = formatColorJSON(json);
+                } catch(e) {
+                    latestResponseText = rawText;
+                    outputBox.innerText = rawText;
+                }
+                showToastNotification('Request Selesai', `Status: ${res.status} OK`);
+            } catch(e) {
+                const ms = Math.max(1, Math.round(performance.now() - startedAt));
+                document.getElementById('response-speed').innerText = `Response Error: ${ms} ms`;
+                outputBox.innerText = `Error: ${e.message}`;
+                showToastNotification('Request Gagal', e.message);
+            }
+        }
+
+        function formatColorJSON(json) {
+            let str = JSON.stringify(json, null, 2);
+            str = str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return str.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g, function (match) {
+                let cls = 'json-value';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'json-key';
+                    } else {
+                        cls = 'json-string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'json-boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'json-null';
+                } else if (/\d+/.test(match)) {
+                    cls = 'json-number';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+
+        function copyCodeSnippet() {
+            navigator.clipboard.writeText(codeSnippets[activeLanguage]);
+            const btn = document.getElementById('copy-btn-content');
+            btn.classList.add('is-copied');
+            setTimeout(() => btn.classList.remove('is-copied'), 2000);
+            showToastNotification('Tersalin', 'Snippet kode berhasil disalin.');
+        }
+
+        function copyResponseOutput() {
+            navigator.clipboard.writeText(latestResponseText || document.getElementById('json-output').innerText);
+            const btn = document.getElementById('copy-btn-response');
+            btn.classList.add('is-copied');
+            setTimeout(() => btn.classList.remove('is-copied'), 2000);
+            showToastNotification('Tersalin', 'Output JSON berhasil disalin.');
+        }
+
+        function showToastNotification(title, msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('-translate-y-20', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('-translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        window.onload = function() {
+            renderEndpoints();
+            document.getElementById('host-indicator').innerText = currentHost;
+            if (typeof AOS !== 'undefined') AOS.init({ duration: 500, once: true });
+
+            const loader = document.getElementById('loading-screen');
+            loader.classList.add('opacity-0');
+            setTimeout(() => loader.style.display = 'none', 500);
+        };
+    </script>
+</body>
+</html>

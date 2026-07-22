@@ -1,0 +1,39 @@
+<%- include('partials/header', { title: title, description: description, currentUrl: currentUrl, ogImage: ogImage, ogType: 'website' }) %>
+
+<section class="space-y-4" data-aos="fade-up">
+    <!-- Breadcrumb Path Navigation -->
+    <nav class="flex items-center gap-1.5 sm:gap-2 text-xs font-extrabold text-saweria-dark bg-white border-2 border-saweria-dark px-3.5 sm:px-4 py-2 rounded-2xl shadow-[2px_2px_0_#1e1e1e] w-full max-w-full flex-wrap overflow-hidden leading-normal">
+        <a href="/" class="hover:text-saweria-coral flex items-center gap-1 transition-colors flex-shrink-0">
+            <i data-lucide="home" class="w-3.5 h-3.5"></i> Beranda
+        </a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-saweria-gray flex-shrink-0"></i>
+        <span class="text-saweria-coral flex items-center gap-1 font-black max-w-[180px] sm:max-w-[280px] truncate">
+            <i data-lucide="tags" class="w-3.5 h-3.5 flex-shrink-0"></i> Kategori Genre
+        </span>
+    </nav>
+
+    <!-- Title Banner -->
+    <div class="neo-card bg-saweria-lavender border-4 border-saweria-dark rounded-3xl p-5 sm:p-6 text-saweria-dark space-y-1">
+        <h1 class="text-xl sm:text-2xl font-extrabold flex items-center gap-2">
+            <i data-lucide="tags" class="w-6 h-6"></i> Kategori Genre Donghua
+        </h1>
+        <p class="text-xs font-bold text-saweria-dark/80">Eksplorasi ribuan judul Donghua berdasarkan tema & genre favorit Anda.</p>
+    </div>
+
+    <% if (genres && genres.length > 0) { %>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <% genres.forEach(g => { %>
+        <a href="/genres/<%= g.slug %>" class="neo-btn bg-white hover:bg-saweria-yellow border-3 border-saweria-dark p-3.5 rounded-2xl flex items-center justify-between group transition-colors">
+            <span class="font-extrabold text-xs text-saweria-dark group-hover:text-saweria-coral truncate">
+                # <%= g.name %>
+            </span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-saweria-dark group-hover:translate-x-0.5 transition-transform"></i>
+        </a>
+        <% }); %>
+    </div>
+    <% } else { %>
+    <p class="text-xs font-bold text-saweria-gray text-center py-8">Gagal memuat kategori genre.</p>
+    <% } %>
+</section>
+
+<%- include('partials/footer') %>

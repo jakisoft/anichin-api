@@ -1,0 +1,66 @@
+<%- include('partials/header', { title: title, description: description, currentUrl: currentUrl, ogImage: ogImage, ogType: 'website' }) %>
+
+<section class="space-y-4" data-aos="fade-up">
+    <!-- Breadcrumb Path Navigation -->
+    <nav class="flex items-center gap-1.5 sm:gap-2 text-xs font-extrabold text-saweria-dark bg-white border-2 border-saweria-dark px-3.5 sm:px-4 py-2 rounded-2xl shadow-[2px_2px_0_#1e1e1e] w-full max-w-full flex-wrap overflow-hidden leading-normal">
+        <a href="/" class="hover:text-saweria-coral flex items-center gap-1 transition-colors flex-shrink-0">
+            <i data-lucide="home" class="w-3.5 h-3.5"></i> Beranda
+        </a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-saweria-gray flex-shrink-0"></i>
+        <span class="text-saweria-coral flex items-center gap-1 font-black max-w-[180px] sm:max-w-[280px] truncate">
+            <i data-lucide="calendar" class="w-3.5 h-3.5 flex-shrink-0"></i> Jadwal Rilis Harian
+        </span>
+    </nav>
+    <!-- Title Banner -->
+    <div class="neo-card bg-saweria-coral border-4 border-saweria-dark rounded-3xl p-5 sm:p-6 text-white space-y-1">
+        <h1 class="text-xl sm:text-2xl font-extrabold flex items-center gap-2">
+            <i data-lucide="calendar" class="w-6 h-6"></i> Jadwal Rilis Donghua Harian
+        </h1>
+        <p class="text-xs font-bold text-white/90">Pantau jadwal tayang episode terbaru Donghua favorit Anda setiap harinya.</p>
+    </div>
+
+    <!-- Days Schedule List -->
+    <% if (days && days.length > 0) { %>
+    <div class="space-y-6">
+        <% days.forEach(d => { %>
+        <div class="neo-card bg-white border-4 border-saweria-dark rounded-3xl p-4 sm:p-5 space-y-4">
+            <div class="flex items-center gap-2 pb-2 border-b-3 border-saweria-dark">
+                <div class="w-3 h-6 bg-saweria-yellow border-2 border-saweria-dark rounded-md"></div>
+                <h2 class="font-extrabold text-lg text-saweria-dark"><%= d.day %></h2>
+                <span class="text-xs font-extrabold bg-saweria-light px-2.5 py-0.5 rounded-full border border-saweria-dark ml-auto">
+                    <%= d.items ? d.items.length : 0 %> Donghua
+                </span>
+            </div>
+
+            <% if (d.items && d.items.length > 0) { %>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                <% d.items.forEach(item => { 
+                    let slug = item.href ? item.href.replace(/\/+$/, '').split('/').pop() : '';
+                %>
+                <a href="/detail/<%= slug %>" class="neo-btn bg-saweria-bg hover:bg-saweria-yellow border-2 border-saweria-dark p-2.5 rounded-2xl flex flex-col gap-2 group transition-colors">
+                    <div class="relative aspect-[3/4] rounded-xl overflow-hidden border-2 border-saweria-dark bg-white">
+                        <img src="<%= item.image || 'https://via.placeholder.com/300x400' %>" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform" alt="<%= item.title %>">
+                        <% if (item.at) { %>
+                        <span class="absolute top-1 left-1 bg-saweria-yellow text-saweria-dark font-extrabold text-[9px] px-1.5 py-0.5 rounded-full border border-saweria-dark">
+                            <%= item.at %>
+                        </span>
+                        <% } %>
+                    </div>
+                    <span class="font-extrabold text-xs text-saweria-dark group-hover:text-saweria-coral line-clamp-2 leading-tight">
+                        <%= item.title %>
+                    </span>
+                </a>
+                <% }); %>
+            </div>
+            <% } else { %>
+            <p class="text-xs font-bold text-saweria-gray py-2">Tidak ada jadwal rilis pada hari ini.</p>
+            <% } %>
+        </div>
+        <% }); %>
+    </div>
+    <% } else { %>
+    <p class="text-xs font-bold text-saweria-gray text-center py-8">Gagal memuat jadwal rilis harian.</p>
+    <% } %>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,479 @@
+<%- include('partials/header', { title: title, description: description, currentUrl: currentUrl, ogImage: ogImage, ogType: 'video.episode' }) %>
+
+<div class="space-y-6" data-aos="fade-up">
+    <!-- Breadcrumb Path Navigation -->
+    <nav class="flex items-center gap-1.5 sm:gap-2 text-xs font-extrabold text-saweria-dark bg-white border-2 border-saweria-dark px-3.5 sm:px-4 py-2 rounded-2xl shadow-[2px_2px_0_#1e1e1e] w-full max-w-full flex-wrap overflow-hidden leading-normal">
+        <a href="/" class="hover:text-saweria-coral flex items-center gap-1 transition-colors flex-shrink-0">
+            <i data-lucide="home" class="w-3.5 h-3.5"></i> Beranda
+        </a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-saweria-gray flex-shrink-0"></i>
+        <% if (typeof seriesTitle !== 'undefined' && seriesTitle && typeof seriesSlug !== 'undefined' && seriesSlug) { %>
+        <a href="/detail/<%= seriesSlug %>" class="hover:text-saweria-coral flex items-center gap-1 transition-colors max-w-[120px] sm:max-w-[200px] md:max-w-[320px] truncate" title="<%= seriesTitle %>">
+            <i data-lucide="tv" class="w-3.5 h-3.5 flex-shrink-0"></i>
+            <span class="truncate"><%= seriesTitle %></span>
+        </a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-saweria-gray flex-shrink-0"></i>
+        <% } %>
+        <span class="text-saweria-coral flex items-center gap-1 font-black max-w-[140px] sm:max-w-[220px] md:max-w-[340px] truncate" title="Episode <%= epData.episode || 'Nonton' %>">
+            <i data-lucide="play-circle" class="w-3.5 h-3.5 flex-shrink-0"></i>
+            <span class="truncate">Episode <%= epData.episode || 'Nonton' %></span>
+        </span>
+    </nav>
+
+    <!-- PLAYER CONTAINER SECTION -->
+    <section class="neo-card bg-saweria-dark border-4 border-saweria-dark rounded-3xl p-3.5 sm:p-5 text-white space-y-4">
+        <!-- Video Header Info -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b-2 border-white/20">
+            <div class="space-y-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="px-2.5 py-0.5 rounded-full bg-saweria-yellow text-saweria-dark font-extrabold text-[10px] uppercase border border-saweria-dark">
+                        3D Donghua Sub Indo
+                    </span>
+                    <% if (epData.episode) { %>
+                    <span class="px-2.5 py-0.5 rounded-full bg-saweria-blue text-saweria-dark font-extrabold text-[10px] uppercase border border-saweria-dark">
+                        Episode <%= epData.episode %>
+                    </span>
+                    <% } %>
+                </div>
+                <h1 class="text-lg sm:text-2xl font-extrabold text-white leading-tight">
+                    <%= epData.title %>
+                </h1>
+            </div>
+
+            <!-- Player Controls (Theater Mode) -->
+            <div class="flex items-center gap-2 flex-shrink-0">
+                <button onclick="toggleTheaterMode()" class="neo-btn px-3.5 py-1.5 rounded-full bg-saweria-lavender border-2 border-saweria-dark text-saweria-dark font-extrabold text-xs flex items-center gap-1.5">
+                    <i data-lucide="sun-medium" class="w-3.5 h-3.5"></i>
+                    <span>Mode Bioskop</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 16:9 Video iFrame Embed Stage -->
+        <div class="relative w-full aspect-[16/9] rounded-2xl overflow-hidden border-3 border-white/20 bg-black shadow-inner">
+            <% if (epData.embedSrc) { %>
+            <iframe 
+                id="video-player-iframe"
+                src="<%= epData.embedSrc %>" 
+                class="w-full h-full border-0" 
+                allowfullscreen="true" 
+                scrolling="no"
+                loading="lazy">
+            </iframe>
+            <% } else { %>
+            <div class="w-full h-full flex flex-col items-center justify-center p-6 text-center space-y-3 bg-saweria-dark">
+                <i data-lucide="video-off" class="w-12 h-12 text-saweria-coral"></i>
+                <p class="text-xs font-extrabold text-white">Video pemutar tidak dapat dimuat atau sedang dalam perbaikan server.</p>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- CUSTOM ACTION SELECTORS BAR (SERVER DROPDOWN & EPISODE DROPDOWN) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t-2 border-white/10">
+            
+            <!-- 1. CUSTOM SERVER DROPDOWN WITH SEARCH -->
+            <div class="relative">
+                <label class="block text-[11px] font-extrabold text-saweria-yellow mb-1 flex items-center gap-1.5">
+                    <i data-lucide="server" class="w-3.5 h-3.5"></i> Server Pemutar / Mirror:
+                </label>
+                <button 
+                    type="button" 
+                    onclick="toggleCustomDropdown('server-dropdown-menu')"
+                    class="w-full neo-btn bg-white text-saweria-dark border-2 border-saweria-dark px-4 py-2.5 rounded-2xl flex items-center justify-between text-xs font-extrabold"
+                >
+                    <div class="flex items-center gap-2 truncate">
+                        <span class="w-2.5 h-2.5 rounded-full bg-saweria-green border border-saweria-dark flex-shrink-0"></span>
+                        <span id="active-server-name" class="truncate">
+                            <%= (epData.embeds && epData.embeds.length > 0) ? (epData.embeds[0].name || 'Server Utama HD') : 'Default Player' %>
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-shrink-0 text-saweria-gray">
+                        <span class="text-[10px] bg-saweria-bg text-saweria-dark px-2 py-0.5 rounded-md border border-saweria-dark font-extrabold">
+                            <%= (epData.embeds ? epData.embeds.length : 1) %> Server
+                        </span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </div>
+                </button>
+
+                <!-- Server Dropdown Panel -->
+                <div id="server-dropdown-menu" class="hidden absolute left-0 right-0 top-full mt-1.5 z-30 bg-white border-4 border-saweria-dark rounded-2xl p-3 shadow-[6px_6px_0_#1e1e1e] space-y-2">
+                    <!-- Search Input -->
+                    <div class="relative">
+                        <i data-lucide="search" class="w-3.5 h-3.5 text-saweria-gray absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input 
+                            type="text" 
+                            oninput="filterDropdownList(this.value, '.server-item')"
+                            placeholder="Cari nama server..." 
+                            class="w-full bg-saweria-bg border-2 border-saweria-dark rounded-xl pl-8 pr-3 py-1.5 text-xs font-bold text-saweria-dark focus:outline-none"
+                        >
+                    </div>
+
+                    <!-- Server List -->
+                    <div class="max-h-48 overflow-y-auto space-y-1 pr-1">
+                        <% if (epData.embeds && epData.embeds.length > 0) { %>
+                            <% epData.embeds.forEach((emb, idx) => { %>
+                            <button 
+                                type="button"
+                                onclick="selectServerMirror('<%= emb.src %>', '<%= emb.name || ('Server ' + (idx + 1)) %>', this)"
+                                class="server-item w-full text-left px-3 py-2 rounded-xl border border-saweria-dark text-xs font-extrabold transition-colors flex items-center justify-between gap-2 <%= idx === 0 ? 'bg-saweria-yellow text-saweria-dark' : 'bg-saweria-bg text-saweria-dark hover:bg-saweria-light' %>"
+                                data-search="<%= emb.name || ('server ' + (idx + 1)) %>"
+                            >
+                                <span class="truncate"><%= emb.name || ('Server ' + (idx + 1)) %></span>
+                                <i data-lucide="play" class="w-3 h-3 flex-shrink-0"></i>
+                            </button>
+                            <% }); %>
+                        <% } else if (epData.embedSrc) { %>
+                            <button 
+                                type="button"
+                                onclick="selectServerMirror('<%= epData.embedSrc %>', 'Server Default HD', this)"
+                                class="server-item w-full text-left px-3 py-2 rounded-xl border border-saweria-dark text-xs font-extrabold bg-saweria-yellow text-saweria-dark flex items-center justify-between gap-2"
+                                data-search="default"
+                            >
+                                <span>Server Default HD</span>
+                                <i data-lucide="play" class="w-3 h-3"></i>
+                            </button>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. CUSTOM EPISODE DROPDOWN WITH SEARCH -->
+            <div class="relative">
+                <label class="block text-[11px] font-extrabold text-saweria-yellow mb-1 flex items-center gap-1.5">
+                    <i data-lucide="list-video" class="w-3.5 h-3.5"></i> Pilih Episode Lainnya:
+                </label>
+                <button 
+                    type="button" 
+                    onclick="toggleCustomDropdown('episode-dropdown-menu')"
+                    class="w-full neo-btn bg-white text-saweria-dark border-2 border-saweria-dark px-4 py-2.5 rounded-2xl flex items-center justify-between text-xs font-extrabold"
+                >
+                    <div class="flex items-center gap-2 truncate">
+                        <i data-lucide="play-circle" class="w-4 h-4 text-saweria-coral flex-shrink-0"></i>
+                        <span class="truncate">
+                            <%= epData.episode ? ('Episode ' + epData.episode) : 'Pilih Episode' %>
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-shrink-0 text-saweria-gray">
+                        <span class="text-[10px] bg-saweria-bg text-saweria-dark px-2 py-0.5 rounded-md border border-saweria-dark font-extrabold">
+                            <%= (seriesDetail && seriesDetail.episodes) ? seriesDetail.episodes.length + ' Ep' : 'Navigasi' %>
+                        </span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </div>
+                </button>
+
+                <!-- Episode Dropdown Panel -->
+                <div id="episode-dropdown-menu" class="hidden absolute left-0 right-0 top-full mt-1.5 z-30 bg-white border-4 border-saweria-dark rounded-2xl p-3 shadow-[6px_6px_0_#1e1e1e] space-y-2">
+                    <!-- Search Input -->
+                    <div class="relative">
+                        <i data-lucide="search" class="w-3.5 h-3.5 text-saweria-gray absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input 
+                            type="text" 
+                            oninput="filterDropdownList(this.value, '.ep-dropdown-item')"
+                            placeholder="Cari nomor episode (misal: 12)..." 
+                            class="w-full bg-saweria-bg border-2 border-saweria-dark rounded-xl pl-8 pr-3 py-1.5 text-xs font-bold text-saweria-dark focus:outline-none"
+                        >
+                    </div>
+
+                    <!-- Episode List -->
+                    <div class="max-h-56 overflow-y-auto space-y-1 pr-1">
+                        <% if (seriesDetail && seriesDetail.episodes && seriesDetail.episodes.length > 0) { %>
+                            <% seriesDetail.episodes.forEach(ep => { 
+                                let epSlug = ep.href ? ep.href.replace(/\/+$/, '').split('/').pop() : '';
+                                let isCurrent = (epSlug === slug);
+                            %>
+                            <a 
+                                href="/watch/<%= epSlug %>"
+                                class="ep-dropdown-item block px-3 py-2 rounded-xl border border-saweria-dark text-xs font-extrabold transition-colors flex items-center justify-between gap-2 <%= isCurrent ? 'bg-saweria-yellow text-saweria-dark' : 'bg-saweria-bg text-saweria-dark hover:bg-saweria-light' %>"
+                                data-search="<%= ep.num %> <%= ep.etitle %>"
+                                data-ep-slug="<%= epSlug %>"
+                            >
+                                <span class="truncate"><%= ep.etitle || ('Episode ' + ep.num) %></span>
+                                <div class="flex items-center gap-1.5 flex-shrink-0">
+                                    <span class="ep-status-badge hidden text-[9px] bg-saweria-green text-saweria-dark font-black px-1.5 py-0.5 rounded-full border border-saweria-dark">✓ Selesai</span>
+                                    <% if (isCurrent) { %>
+                                    <span class="text-[9px] bg-saweria-dark text-white px-2 py-0.5 rounded-full font-bold">Diputar</span>
+                                    <% } else { %>
+                                    <i data-lucide="play" class="w-3 h-3 text-saweria-gray"></i>
+                                    <% } %>
+                                </div>
+                            </a>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="p-2 text-center text-xs font-bold text-saweria-gray">
+                                Gunakan tombol Navigasi di bawah untuk episode sebelum & sesudah.
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navigation Buttons (Prev Ep, Next Ep, Series Detail) -->
+        <div class="flex items-center justify-between gap-2 pt-2 border-t-2 border-white/10">
+            <% if (epData.nav && epData.nav.prev) { 
+                let prevSlug = epData.nav.prev.replace(/\/+$/, '').split('/').pop();
+            %>
+            <a href="/watch/<%= prevSlug %>" class="neo-btn px-4 py-2 rounded-full bg-saweria-pink border-2 border-saweria-dark text-saweria-dark text-xs font-extrabold flex items-center gap-1.5">
+                &larr; Prev Ep
+            </a>
+            <% } else { %>
+            <div></div>
+            <% } %>
+
+            <% if (epData.nav && epData.nav.allEpisodes) { 
+                let seriesSlug = epData.nav.allEpisodes.replace(/\/+$/, '').split('/').pop();
+            %>
+            <a href="/detail/<%= seriesSlug %>" class="neo-btn px-4 py-2 rounded-full bg-white border-2 border-saweria-dark text-saweria-dark text-xs font-extrabold flex items-center gap-1.5">
+                <i data-lucide="list" class="w-3.5 h-3.5"></i> Halaman Series
+            </a>
+            <% } %>
+
+            <% if (epData.nav && epData.nav.next) { 
+                let nextSlug = epData.nav.next.replace(/\/+$/, '').split('/').pop();
+            %>
+            <a href="/watch/<%= nextSlug %>" class="neo-btn px-4 py-2 rounded-full bg-saweria-green border-2 border-saweria-dark text-saweria-dark text-xs font-extrabold flex items-center gap-1.5">
+                Next Ep &rarr;
+            </a>
+            <% } else { %>
+            <div></div>
+            <% } %>
+        </div>
+    </section>
+
+    <!-- VISUAL WATCH PROGRESS INDICATOR CARD -->
+    <section class="neo-card bg-white text-saweria-dark border-4 border-saweria-dark rounded-3xl p-4 sm:p-5 space-y-3.5">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="space-y-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <i data-lucide="activity" class="w-4 h-4 text-saweria-coral"></i>
+                    <h3 class="font-extrabold text-sm sm:text-base text-saweria-dark">Indikator Progress Menonton Series</h3>
+                    <span id="watch-progress-badge" class="px-2.5 py-0.5 rounded-full bg-saweria-yellow text-saweria-dark font-black text-[11px] border-2 border-saweria-dark">
+                        0 / 0 Episode (0%)
+                    </span>
+                </div>
+                <p class="text-xs font-bold text-saweria-gray">
+                    Episode saat ini: <span id="current-ep-status-label" class="font-black text-saweria-coral">Menghubungkan...</span>
+                </p>
+            </div>
+
+            <!-- Interactive Toggle Button -->
+            <button type="button" id="toggle-watch-btn" onclick="toggleCurrentEpisodeWatched()" class="neo-btn px-4 py-2 rounded-2xl border-2 border-saweria-dark text-xs font-black bg-saweria-green text-saweria-dark flex items-center gap-1.5 shadow-[2px_2px_0_#1e1e1e] transition-colors">
+                <i id="toggle-watch-icon" data-lucide="check-circle" class="w-4 h-4"></i>
+                <span id="toggle-watch-btn-text">Selesai Ditonton</span>
+            </button>
+        </div>
+
+        <!-- Visual Progress Bar -->
+        <div class="space-y-1">
+            <div class="w-full bg-saweria-bg border-2 border-saweria-dark rounded-full h-4 p-0.5 relative overflow-hidden shadow-inner">
+                <div id="watch-progress-bar" class="bg-saweria-green h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] font-extrabold text-saweria-gray px-1">
+                <span>0%</span>
+                <span>Kemajuan Tersimpan Otomatis</span>
+                <span>100%</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- DOWNLOAD LINKS SECTION -->
+    <% if (epData.download && epData.download.length > 0) { %>
+    <section class="neo-card bg-white border-4 border-saweria-dark rounded-3xl p-4 sm:p-6 space-y-3">
+        <h3 class="font-extrabold text-base text-saweria-dark flex items-center gap-2">
+            <i data-lucide="download" class="w-4 h-4 text-saweria-coral"></i> Link Download Episode
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <% epData.download.forEach(dl => { %>
+            <div class="border-2 border-saweria-dark bg-saweria-bg rounded-2xl p-3 space-y-2">
+                <span class="text-xs font-extrabold bg-saweria-yellow text-saweria-dark px-2.5 py-0.5 rounded-full border border-saweria-dark">
+                    Kualitas: <%= dl.quality || 'HD' %>
+                </span>
+                <div class="flex items-center gap-2 flex-wrap pt-1">
+                    <% dl.links.forEach(l => { %>
+                    <a href="<%= l.href %>" target="_blank" rel="noopener noreferrer" class="neo-btn px-3 py-1 rounded-xl bg-white border border-saweria-dark text-[11px] font-extrabold text-saweria-dark hover:bg-saweria-coral hover:text-white transition-colors">
+                        <%= l.name %>
+                    </a>
+                    <% }); %>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+    </section>
+    <% } %>
+
+    <!-- RELATED EPISODES / RECOMMENDED DONGHUA -->
+    <% if (epData.related && epData.related.length > 0) { %>
+    <section class="space-y-3">
+        <div class="flex items-center gap-2">
+            <div class="w-2.5 h-6 bg-saweria-blue border-2 border-saweria-dark rounded-md"></div>
+            <h3 class="font-extrabold text-lg text-saweria-dark">Rekomendasi Donghua Lainnya</h3>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5">
+            <% epData.related.forEach(rel => { 
+                let rslug = rel.href ? rel.href.replace(/\/+$/, '').split('/').pop() : '';
+            %>
+            <a href="/watch/<%= rslug %>" class="neo-card bg-white border-3 border-saweria-dark rounded-2xl p-2.5 space-y-2 flex flex-col h-full neo-card-hover group">
+                <div class="relative aspect-[3/4] rounded-xl overflow-hidden border-2 border-saweria-dark bg-saweria-bg">
+                    <img src="<%= rel.image || 'https://via.placeholder.com/300x400' %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="<%= rel.title %>">
+                </div>
+                <h4 class="font-extrabold text-xs text-saweria-dark group-hover:text-saweria-coral line-clamp-2 leading-tight">
+                    <%= rel.title %>
+                </h4>
+            </a>
+            <% }); %>
+        </div>
+    </section>
+    <% } %>
+</div>
+
+<script>
+    function toggleCustomDropdown(id) {
+        const target = document.getElementById(id);
+        const allDropdowns = ['server-dropdown-menu', 'episode-dropdown-menu'];
+        allDropdowns.forEach(dId => {
+            if (dId !== id) {
+                const el = document.getElementById(dId);
+                if (el) el.classList.add('hidden');
+            }
+        });
+        if (target) {
+            target.classList.toggle('hidden');
+        }
+    }
+
+    function filterDropdownList(query, itemSelector) {
+        const q = query.toLowerCase().trim();
+        const items = document.querySelectorAll(itemSelector);
+        items.forEach(item => {
+            const searchData = (item.getAttribute('data-search') || item.innerText).toLowerCase();
+            if (!q || searchData.includes(q)) {
+                item.classList.remove('hidden');
+            } else {
+                item.classList.add('hidden');
+            }
+        });
+    }
+
+    function selectServerMirror(src, name, btnEl) {
+        const iframe = document.getElementById('video-player-iframe');
+        if (iframe && src) {
+            iframe.src = src;
+            document.getElementById('active-server-name').innerText = name;
+            document.querySelectorAll('.server-item').forEach(b => {
+                b.classList.remove('bg-saweria-yellow');
+                b.classList.add('bg-saweria-bg');
+            });
+            btnEl.classList.remove('bg-saweria-bg');
+            btnEl.classList.add('bg-saweria-yellow');
+            document.getElementById('server-dropdown-menu').classList.add('hidden');
+            showToast('Server Diganti', 'Memuat video dari ' + name);
+        }
+    }
+
+    function toggleTheaterMode() {
+        const body = document.body;
+        body.classList.toggle('brightness-75');
+        showToast('Mode Bioskop', 'Fokus layar dinyalakan.');
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#server-dropdown-menu') && !e.target.closest('#episode-dropdown-menu') && !e.target.closest('button[onclick*="toggleCustomDropdown"]')) {
+            const serverMenu = document.getElementById('server-dropdown-menu');
+            const epMenu = document.getElementById('episode-dropdown-menu');
+            if (serverMenu) serverMenu.classList.add('hidden');
+            if (epMenu) epMenu.classList.add('hidden');
+        }
+    });
+
+    const currentSeriesSlug = "<%= (typeof seriesSlug !== 'undefined' && seriesSlug) ? seriesSlug : (slug.replace(/-episode-\d+.*$/i, '').replace(/-sub-indo.*$/i, '')) %>";
+    const currentEpSlug = "<%= slug %>";
+    const currentEpNum = "<%= epData.episode %>";
+    const totalSeriesEpisodes = <%= (seriesDetail && seriesDetail.episodes) ? seriesDetail.episodes.length : 1 %>;
+
+    function updateWatchProgressUI() {
+        if (!currentSeriesSlug || !currentEpSlug) return;
+
+        const isWatched = isEpisodeWatched(currentSeriesSlug, currentEpSlug);
+        const stats = getSeriesWatchStats(currentSeriesSlug, totalSeriesEpisodes);
+
+        // Update progress bar & badge
+        const progressBar = document.getElementById('watch-progress-bar');
+        const progressBadge = document.getElementById('watch-progress-badge');
+        const statusLabel = document.getElementById('current-ep-status-label');
+        const toggleBtn = document.getElementById('toggle-watch-btn');
+        const toggleBtnText = document.getElementById('toggle-watch-btn-text');
+        const toggleIcon = document.getElementById('toggle-watch-icon');
+
+        if (progressBar) {
+            progressBar.style.width = Math.max(stats.percentage, isWatched ? 5 : 0) + '%';
+        }
+        if (progressBadge) {
+            progressBadge.innerText = `${stats.watchedCount} / ${stats.totalEpisodes} Episode (${stats.percentage}%)`;
+        }
+        if (statusLabel) {
+            statusLabel.innerText = isWatched ? '✓ Selesai Ditonton (Status Tersimpan)' : '◯ Belum Selesai';
+            statusLabel.className = isWatched ? 'font-black text-saweria-green drop-shadow-sm' : 'font-black text-saweria-coral';
+        }
+
+        if (toggleBtn && toggleBtnText && toggleIcon) {
+            if (isWatched) {
+                toggleBtn.className = 'neo-btn px-4 py-2 rounded-2xl border-2 border-saweria-dark text-xs font-black bg-saweria-yellow text-saweria-dark flex items-center gap-1.5 shadow-[2px_2px_0_#1e1e1e] transition-colors';
+                toggleBtnText.innerText = 'Batalkan Status Ditonton';
+                toggleIcon.setAttribute('data-lucide', 'x-circle');
+            } else {
+                toggleBtn.className = 'neo-btn px-4 py-2 rounded-2xl border-2 border-saweria-dark text-xs font-black bg-saweria-green text-saweria-dark flex items-center gap-1.5 shadow-[2px_2px_0_#1e1e1e] transition-colors';
+                toggleBtnText.innerText = 'Tandai Selesai Ditonton';
+                toggleIcon.setAttribute('data-lucide', 'check-circle');
+            }
+        }
+
+        // Update dropdown items
+        document.querySelectorAll('.ep-dropdown-item').forEach(item => {
+            const epSlug = item.getAttribute('data-ep-slug');
+            const badge = item.querySelector('.ep-status-badge');
+            if (epSlug && badge) {
+                if (isEpisodeWatched(currentSeriesSlug, epSlug)) {
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        });
+
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }
+
+    function toggleCurrentEpisodeWatched() {
+        const isWatched = isEpisodeWatched(currentSeriesSlug, currentEpSlug);
+        markEpisodeWatched(currentSeriesSlug, currentEpSlug, currentEpNum, !isWatched);
+        updateWatchProgressUI();
+        if (!isWatched) {
+            showToast('Progress Menonton', `Episode ${currentEpNum || 'ini'} ditandai Selesai Ditonton!`);
+        } else {
+            showToast('Progress Menonton', `Status episode ${currentEpNum || 'ini'} dibatalkan.`);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Automatically append to Watch History
+        addToHistory({
+            slug: "<%= slug %>",
+            title: "<%= epData.title %>",
+            image: "<%= epData.img %>",
+            episode: "<%= epData.episode %>"
+        });
+
+        // Automatically mark episode as watched on page load
+        markEpisodeWatched(currentSeriesSlug, currentEpSlug, currentEpNum, true);
+        updateWatchProgressUI();
+    });
+</script>
+
+<%- include('partials/footer') %>
+

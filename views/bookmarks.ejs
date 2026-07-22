@@ -1,0 +1,121 @@
+<%- include('partials/header', { title: title, description: description, currentUrl: currentUrl, ogImage: ogImage, ogType: 'website' }) %>
+
+<section class="space-y-4" data-aos="fade-up">
+    <!-- Breadcrumb Path Navigation -->
+    <nav class="flex items-center gap-1.5 sm:gap-2 text-xs font-extrabold text-saweria-dark bg-white border-2 border-saweria-dark px-3.5 sm:px-4 py-2 rounded-2xl shadow-[2px_2px_0_#1e1e1e] w-full max-w-full flex-wrap overflow-hidden leading-normal">
+        <a href="/" class="hover:text-saweria-coral flex items-center gap-1 transition-colors flex-shrink-0">
+            <i data-lucide="home" class="w-3.5 h-3.5"></i> Beranda
+        </a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-saweria-gray flex-shrink-0"></i>
+        <span class="text-saweria-coral flex items-center gap-1 font-black max-w-[180px] sm:max-w-[280px] truncate">
+            <i data-lucide="bookmark" class="w-3.5 h-3.5 flex-shrink-0"></i> Favorit Saya
+        </span>
+    </nav>
+    <!-- Title Banner -->
+    <div class="neo-card bg-saweria-pink border-4 border-saweria-dark rounded-3xl p-5 sm:p-6 text-saweria-dark flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="space-y-1">
+            <h1 class="text-xl sm:text-2xl font-extrabold flex items-center gap-2">
+                <i data-lucide="bookmark" class="w-6 h-6"></i> Favorit Saya
+            </h1>
+            <p class="text-xs font-bold text-saweria-dark/80">Daftar Donghua favorit yang diurutkan berdasarkan update & aktivitas menonton terbaru.</p>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+            <span id="bookmark-count-badge" class="px-3.5 py-1 bg-white border-2 border-saweria-dark rounded-full text-xs font-black text-saweria-dark shadow-[1px_1px_0_#1e1e1e]">
+                0 Favorit
+            </span>
+        </div>
+    </div>
+
+    <!-- Container Rendered by JS from LocalStorage -->
+    <div id="bookmarks-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4"></div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        renderBookmarksList();
+    });
+
+    function renderBookmarksList() {
+        const list = getBookmarks();
+        const container = document.getElementById('bookmarks-container');
+        const badge = document.getElementById('bookmark-count-badge');
+
+        if (badge) badge.innerText = `${list ? list.length : 0} Favorit`;
+
+        if (list && list.length > 0) {
+            container.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4";
+            container.innerHTML = list.map(item => {
+                const lastWatched = getLastWatchedForSeries(item.slug);
+
+                let statusBadgeHtml = '';
+                if (lastWatched && lastWatched.epNum) {
+                    statusBadgeHtml = `<span class="bg-saweria-green text-saweria-dark font-black text-[9px] px-2 py-0.5 rounded-full border border-saweria-dark shadow-xs truncate">Ep ${lastWatched.epNum} Ditonton</span>`;
+                } else if (item.lastEpNum) {
+                    statusBadgeHtml = `<span class="bg-saweria-yellow text-saweria-dark font-black text-[9px] px-2 py-0.5 rounded-full border border-saweria-dark shadow-xs truncate">Ep ${item.lastEpNum}</span>`;
+                } else {
+                    statusBadgeHtml = `<span class="bg-saweria-lavender text-saweria-dark font-black text-[9px] px-2 py-0.5 rounded-full border border-saweria-dark shadow-xs truncate">Favorit</span>`;
+                }
+
+                let targetWatchUrl = (lastWatched && lastWatched.epSlug) ? `/watch/${lastWatched.epSlug}` : (item.lastEpSlug ? `/watch/${item.lastEpSlug}` : `/detail/${item.slug}`);
+                let actionText = (lastWatched && lastWatched.epNum) ? `Lanjutkan Ep ${lastWatched.epNum}` : (item.lastEpNum ? `Ep ${item.lastEpNum}` : 'Buka Detail');
+
+                const safeTitle = (item.title || 'Series').replace(/'/g, "\\'");
+
+                return `
+                <div class="neo-card bg-white border-3 border-saweria-dark rounded-2xl p-2.5 space-y-2 flex flex-col h-full neo-card-hover group">
+                    <div class="relative aspect-[3/4] rounded-xl overflow-hidden border-2 border-saweria-dark bg-saweria-bg flex-shrink-0">
+                        <img src="${item.image || 'https://via.placeholder.com/300x400'}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="${item.title}">
+                        
+                        <div class="absolute top-1.5 left-1.5 max-w-[70%]">
+                            ${statusBadgeHtml}
+                        </div>
+
+                        <button type="button" onclick="removeBookmarkItem('${item.slug}', '${safeTitle}')" class="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-saweria-coral border border-saweria-dark text-white flex items-center justify-center hover:bg-rose-700 transition-colors shadow-sm" title="Hapus dari Favorit">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex-1 flex flex-col justify-between space-y-2">
+                        <a href="/detail/${item.slug}" class="font-extrabold text-xs text-saweria-dark group-hover:text-saweria-coral line-clamp-2 leading-tight">
+                            ${item.title}
+                        </a>
+
+                        <div class="space-y-1.5 pt-1">
+                            <a href="${targetWatchUrl}" class="neo-btn w-full text-center py-1 rounded-xl bg-saweria-yellow hover:bg-saweria-coral hover:text-white border-2 border-saweria-dark text-[10px] font-black text-saweria-dark block transition-colors shadow-[1px_1px_0_#1e1e1e] truncate px-1">
+                                ${actionText}
+                            </a>
+                            <a href="/detail/${item.slug}" class="w-full text-center py-0.5 text-[10px] font-bold text-saweria-gray hover:text-saweria-coral block truncate">
+                                Detail Series &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+            lucide.createIcons();
+        } else {
+            container.className = 'block';
+            container.innerHTML = `
+                <div class="neo-card bg-white border-4 border-saweria-dark rounded-3xl p-8 text-center space-y-3 max-w-md mx-auto">
+                    <i data-lucide="bookmark-x" class="w-10 h-10 text-saweria-gray mx-auto"></i>
+                    <h3 class="text-base font-extrabold text-saweria-dark">Belum Ada Favorit Disimpan</h3>
+                    <p class="text-xs font-bold text-saweria-gray">Klik tombol "Simpan Favorit" pada halaman detail Donghua untuk menyimpannya di sini.</p>
+                    <a href="/popular" class="neo-btn inline-block px-5 py-2 rounded-full bg-saweria-yellow border-2 border-saweria-dark text-xs font-extrabold text-saweria-dark">
+                        Eksplor Donghua
+                    </a>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+    }
+
+    function removeBookmarkItem(slug, title) {
+        let list = getBookmarks();
+        list = list.filter(x => x.slug !== slug);
+        saveBookmarks(list);
+        showToast('Dihapus', `"${title || 'Series'}" dihapus dari favorit.`);
+        renderBookmarksList();
+    }
+</script>
+
+<%- include('partials/footer') %>

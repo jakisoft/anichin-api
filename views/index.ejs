@@ -1,1121 +1,343 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anichin API — Dokumentasi Resmi & Sandbox</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        mono: ['Ubuntu Mono', 'monospace'],
-                    },
-                    colors: {
-                        saweria: {
-                            yellow: '#faae2b',
-                            bg: '#fbf9f4',
-                            card: '#ffffff',
-                            dark: '#1e1e1e',
-                            gray: '#757575',
-                            light: '#f5f3ef',
-                            pink: '#ffb7b2',
-                            blue: '#a0c4ff',
-                            green: '#b9fbc0',
-                            lavender: '#e8aeff'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-    <style>
-        html {
-            scroll-behavior: smooth;
-        }
-        body {
-            background-color: #fbf9f4;
-            background-image: radial-gradient(rgba(30, 30, 30, 0.10) 1px, transparent 1px);
-            background-size: 18px 18px;
-        }
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #fbf9f4;
-            border-left: 2px solid #1e1e1e;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1e1e1e;
-            border: 2px solid #fbf9f4;
-        }
-        .neo-btn {
-            box-shadow: 3px 3px 0px 0px #1e1e1e;
-            transition: all 0.1s ease-in-out;
-        }
-        .neo-btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0px 0px #1e1e1e;
-        }
-        .neo-card {
-            box-shadow: 5px 5px 0px 0px #1e1e1e;
-            transition: all 0.2s ease-in-out;
-        }
-        .neo-card:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 7px 7px 0px 0px #1e1e1e;
-        }
-        .pill-shadow {
-            box-shadow: 4px 5px 0px 0px #1e1e1e;
-        }
-        .hero-mark {
-            box-decoration-break: clone;
-            -webkit-box-decoration-break: clone;
-        }
-        .copy-icon-swap [data-copy-state="check"] {
-            display: none;
-        }
-        .copy-icon-swap.is-copied [data-copy-state="copy"] {
-            display: none;
-        }
-        .copy-icon-swap.is-copied [data-copy-state="check"] {
-            display: inline-flex;
-        }
-        .code-tab {
-            display: table;
-            margin: 0;
-            min-width: 100%;
-            width: max-content;
-            border-collapse: separate;
-            border-spacing: 0 0.1rem;
-        }
-        .code-tab.hidden {
-            display: none;
-        }
-        .code-scroll {
-            scrollbar-gutter: stable;
-        }
-        .code-copy-button {
-            position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
-        }
-        .code-window-dots {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-        }
-        .code-window-dot {
-            width: 0.72rem;
-            height: 0.72rem;
-            border-radius: 999px;
-            border: 1px solid rgba(30, 30, 30, 0.55);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 1px 1px 0 rgba(0, 0, 0, 0.45);
-        }
-        .code-line {
-            display: table-row;
-            min-height: 1.5rem;
-            line-height: 1.5rem;
-        }
-        .code-line-number {
-            display: table-cell;
-            width: 1.75rem;
-            color: #6e7681;
-            text-align: right;
-            user-select: none;
-            vertical-align: top;
-        }
-        .code-line-content {
-            display: table-cell;
-            min-width: max-content;
-            padding-left: 0.75rem;
-            white-space: pre;
-            vertical-align: top;
-        }
-        .method-badge {
-            background: #a0c4ff;
-            color: #1e1e1e;
-        }
-        .github-mark,
-        .language-tab {
-            background: linear-gradient(135deg, #0d1117 0%, #24292f 55%, #57606a 100%);
-            color: #ffffff;
-        }
-        .language-tab {
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 2px 2px 0 #1e1e1e;
-            opacity: 0.82;
-        }
-        .language-tab:hover {
-            opacity: 1;
-            transform: translateY(-1px);
-            filter: brightness(1.12) saturate(1.08);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 3px 4px 0 #1e1e1e;
-        }
-        .language-tab.is-active {
-            opacity: 1;
-            border-color: #faae2b;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24), 3px 3px 0 #1e1e1e;
-        }
-        .tab-icon-curl { color: #9be9a8; }
-        .tab-icon-js { color: #f7df1e; }
-        .tab-icon-python-blue { color: #74c0fc; }
-        .sticky-navbar {
-            position: sticky;
-            top: 1rem;
-            z-index: 35;
-            border: 4px solid #1e1e1e;
-            border-radius: 999px;
-            padding: 0.85rem 1rem;
-            box-shadow: 4px 5px 0 #1e1e1e;
-        }
-        .scroll-top-btn {
-            position: fixed;
-            right: 1.25rem;
-            bottom: 1.25rem;
-            z-index: 45;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(12px);
-        }
-        .scroll-top-btn.is-visible {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateY(0);
-        }
-        .response-meta {
-            background: rgba(13, 17, 23, 0.96);
-            color: #c9d1d9;
-        }
-        .gh-dark {
-            background-color: #0d1117;
-            color: #c9d1d9;
-        }
-        .json-key { color: #7ee787; }
-        .json-string { color: #a5d6ff; }
-        .json-value { color: #ff7b72; }
-        .json-boolean { color: #ff9b5e; }
-        .json-number { color: #d2a8ff; }
-        .json-null { color: #8b949e; }
-        .shimmer-line {
-            position: relative;
-            overflow: hidden;
-            height: 0.85rem;
-            border-radius: 999px;
-            background: #161b22;
-        }
-        .shimmer-line::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            transform: translateX(-100%);
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
-            animation: shimmer 1.15s infinite;
-        }
-        @keyframes shimmer {
-            100% { transform: translateX(100%); }
-        }
-        @keyframes loading-spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .loader-spin {
-            animation: loading-spin 1.2s linear infinite;
-        }
-    </style>
-</head>
-<body class="text-saweria-dark antialiased min-h-screen">
+<%- include('partials/header', { title: title, description: description, currentUrl: currentUrl, ogImage: ogImage, ogType: 'website' }) %>
 
-    <div id="loading-screen" class="fixed inset-0 min-h-dvh bg-saweria-bg grid place-items-center z-50 transition-all duration-700 px-5 py-8">
-        <div class="relative w-full max-w-[18rem] sm:max-w-sm flex flex-col items-center gap-5 sm:gap-6 text-center">
-            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-saweria-yellow border-4 border-saweria-dark rounded-full flex items-center justify-center shadow-[4px_4px_0px_0px_#1e1e1e]">
-                <svg viewBox="0 0 24 24" class="w-8 h-8 sm:w-10 sm:h-10 loader-spin text-saweria-dark" fill="none" stroke="currentColor" stroke-width="3">
-                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-                </svg>
-            </div>
-            <div>
-                <h3 class="text-base sm:text-lg font-extrabold tracking-tight uppercase">ANICHIN API</h3>
-                <p id="loading-text" class="text-[11px] sm:text-xs text-saweria-gray font-mono mt-1 break-words">Menyiapkan Berkas...</p>
-            </div>
+<!-- HERO FEATURED SPOTLIGHT SWIPER SLIDER -->
+<% if (slides && slides.length > 0) { %>
+<section class="relative neo-card bg-white border-4 border-saweria-dark rounded-[2rem] p-3 sm:p-5 shadow-[6px_6px_0_#1e1e1e] space-y-3" data-aos="fade-up">
+    <!-- Header Showcase Bar -->
+    <div class="flex items-center justify-between px-1">
+        <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-full bg-saweria-yellow text-saweria-dark font-extrabold text-[10px] sm:text-xs uppercase tracking-wider border-2 border-saweria-dark shadow-[2px_2px_0_#1e1e1e] flex items-center gap-1.5">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-saweria-dark fill-saweria-dark"></i>
+                FEATURED SPOTLIGHT
+            </span>
+            <span class="hidden sm:inline-flex px-3 py-1 rounded-full bg-saweria-light text-saweria-dark font-bold text-[10px] sm:text-xs border-2 border-saweria-dark">
+                Rekomendasi Minggu Ini
+            </span>
         </div>
-    </div>
-
-    <div id="toast" class="fixed top-6 right-6 z-[70] transform translate-y-[-20px] opacity-0 transition-all duration-300 pointer-events-none bg-white border-4 border-saweria-dark text-saweria-dark px-5 py-4 rounded-2xl shadow-[4px_4px_0px_0px_#1e1e1e] flex items-center gap-3">
-        <div class="p-1 bg-saweria-yellow border-2 border-saweria-dark">
-            <i data-lucide="bell" class="w-5 h-5"></i>
-        </div>
-        <div>
-            <p class="text-xs font-extrabold uppercase">Sistem Berhasil</p>
-            <p id="toast-msg" class="text-[11px] font-semibold text-saweria-gray"></p>
-        </div>
-    </div>
-
-    <div class="max-w-7xl mx-auto px-5 sm:px-8 py-6 md:py-10 space-y-14">
         
-        <nav class="sticky-navbar flex items-center justify-between gap-4 bg-saweria-bg/95 backdrop-blur">
-            <a href="#" class="text-2xl sm:text-3xl font-extrabold tracking-tight text-saweria-dark">Anichin<span class="text-[#ff6f61]">.</span>API</a>
-            <div class="flex items-center gap-2 sm:gap-3">
-                <div class="hidden sm:flex items-center gap-2 rounded-full border-4 border-saweria-dark bg-white px-4 py-2 text-xs font-extrabold pill-shadow">
-                    <i data-lucide="eye" class="w-4 h-4 text-saweria-gray"></i>
-                    <span id="github-stars-nav">Fetching...</span>
-                </div>
-                <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="neo-btn github-mark rounded-full border-4 border-saweria-dark px-4 py-2 text-xs sm:text-sm font-extrabold flex items-center gap-2">
-                    <i class="fa-brands fa-github text-base text-white drop-shadow-sm"></i>
-                    <span>GitHub</span>
-                </a>
-            </div>
-        </nav>
+        <!-- Slide Counter Indicator -->
+        <div class="flex items-center gap-1.5 font-mono font-extrabold text-xs bg-saweria-light border-2 border-saweria-dark px-3 py-1 rounded-full shadow-[2px_2px_0_#1e1e1e]">
+            <span id="hero-current-slide" class="text-saweria-coral">01</span>
+            <span class="text-saweria-gray">/</span>
+            <span class="text-saweria-dark"><%= slides.length < 10 ? '0' + slides.length : slides.length %></span>
+        </div>
+    </div>
 
-        <header class="py-4 md:py-8">
-            <aside class="neo-card bg-white border-4 border-saweria-dark rounded-[2rem] p-6 sm:p-8 space-y-6 relative overflow-hidden max-w-4xl" data-aos="fade-up">
-                <div class="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-saweria-yellow/50 blur-2xl"></div>
-                <div class="relative flex items-center gap-4">
-                    <div class="h-16 w-16 rounded-2xl border-4 border-saweria-dark bg-saweria-yellow flex items-center justify-center shadow-[4px_4px_0_#1e1e1e]">
-                        <i data-lucide="wrench" class="w-8 h-8"></i>
+    <!-- Swiper Hero Main Container -->
+    <div class="relative group/hero overflow-hidden rounded-2xl sm:rounded-3xl border-3 sm:border-4 border-saweria-dark shadow-[4px_4px_0_#1e1e1e] bg-saweria-dark">
+        
+        <!-- Custom Navigation Arrows (Melayang Elegant) -->
+        <button class="hero-prev neo-btn absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-saweria-yellow border-2 sm:border-3 border-saweria-dark text-saweria-dark flex items-center justify-center shadow-[3px_3px_0_#1e1e1e] transition-all opacity-85 group-hover/hero:opacity-100" title="Slide Sebelumnya">
+            <i data-lucide="chevron-left" class="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5]"></i>
+        </button>
+        <button class="hero-next neo-btn absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-saweria-yellow border-2 sm:border-3 border-saweria-dark text-saweria-dark flex items-center justify-center shadow-[3px_3px_0_#1e1e1e] transition-all opacity-85 group-hover/hero:opacity-100" title="Slide Selanjutnya">
+            <i data-lucide="chevron-right" class="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5]"></i>
+        </button>
+
+        <div class="swiper hero-swiper w-full">
+            <div class="swiper-wrapper">
+                <% slides.forEach((slide, idx) => { 
+                    let slug = slide.url ? slide.url.replace(/\/+$/, '').split('/').pop() : '';
+                    let watchSlug = slide.watch ? slide.watch.replace(/\/+$/, '').split('/').pop() : slug;
+                %>
+                <div class="swiper-slide relative">
+                    <div class="relative w-full aspect-[16/11] sm:aspect-[21/9] lg:aspect-[2.4/1] overflow-hidden flex items-center">
+                        
+                        <!-- Backdrop Cover Image -->
+                        <img src="<%= slide.image || 'https://via.placeholder.com/1200x675' %>" class="absolute inset-0 w-full h-full object-cover opacity-40 scale-100 group-hover/hero:scale-105 transition-transform duration-1000 ease-out" alt="<%= slide.title %>">
+                        
+                        <!-- Smooth Vignette Gradient Overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-saweria-dark via-saweria-dark/90 to-saweria-dark/30 p-5 sm:p-8 md:p-10 flex items-center justify-between gap-6 z-10">
+                            
+                            <!-- Main Content Column -->
+                            <div class="max-w-2xl space-y-2.5 sm:space-y-4 text-white z-20">
+                                
+                                <!-- Badges Cluster -->
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-saweria-yellow text-saweria-dark font-extrabold text-[10px] sm:text-xs uppercase border-2 border-saweria-dark shadow-[2px_2px_0_#1e1e1e]">
+                                        3D DONGHUA
+                                    </span>
+                                    <span class="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-saweria-green text-saweria-dark font-extrabold text-[10px] sm:text-xs uppercase border-2 border-saweria-dark">
+                                        SUB INDO
+                                    </span>
+                                    <span class="hidden md:inline-flex px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-saweria-lavender text-saweria-dark font-extrabold text-[10px] sm:text-xs border-2 border-saweria-dark">
+                                        HD 1080P
+                                    </span>
+                                </div>
+
+                                <!-- Title -->
+                                <h1 class="font-extrabold text-lg sm:text-2xl md:text-3xl lg:text-4xl text-white tracking-tight drop-shadow-md line-clamp-2 leading-tight">
+                                    <%= slide.title %>
+                                </h1>
+
+                                <!-- Description -->
+                                <% if (slide.description) { %>
+                                <p class="hidden sm:block text-xs sm:text-sm font-medium text-saweria-light/90 line-clamp-2 leading-relaxed max-w-xl">
+                                    <%= slide.description %>
+                                </p>
+                                <% } %>
+
+                                <!-- Clean Action Buttons (No Bookmark) -->
+                                <div class="flex items-center gap-2.5 sm:gap-3 pt-1">
+                                    <a href="/watch/<%= watchSlug %>" class="neo-btn inline-flex items-center gap-2 px-5 py-2 sm:px-6 sm:py-2.5 rounded-full bg-saweria-yellow border-2 sm:border-3 border-saweria-dark text-saweria-dark font-extrabold text-xs sm:text-sm shadow-[3px_3px_0_#1e1e1e]">
+                                        <i data-lucide="play" class="w-4 h-4 fill-saweria-dark"></i>
+                                        <span>Nonton Sekarang</span>
+                                    </a>
+                                    <a href="/detail/<%= slug %>" class="neo-btn inline-flex items-center gap-1.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-white border-2 sm:border-3 border-saweria-dark text-saweria-dark font-extrabold text-xs sm:text-sm">
+                                        <i data-lucide="info" class="w-4 h-4"></i>
+                                        <span>Detail Serial</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Right Vertical Poster Preview (Desktop Only) -->
+                            <div class="hidden md:block flex-shrink-0 z-20 pr-4">
+                                <div class="relative w-32 lg:w-40 aspect-[3/4] rounded-2xl overflow-hidden border-3 border-saweria-dark shadow-[5px_5px_0_#faae2b] bg-saweria-bg group/poster">
+                                    <img src="<%= slide.image || 'https://via.placeholder.com/300x400' %>" class="w-full h-full object-cover group-hover/poster:scale-105 transition-transform duration-500" alt="<%= slide.title %>">
+                                    <div class="absolute top-2 right-2 bg-saweria-yellow text-saweria-dark text-[9px] font-extrabold px-2 py-0.5 rounded-full border border-saweria-dark shadow-[1px_1px_0_#1e1e1e]">
+                                        POPULER
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-xs text-saweria-gray font-extrabold uppercase tracking-widest">Repository</p>
-                        <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="font-extrabold text-lg hover:underline inline-flex items-center gap-1">
-                            jakisoft/anichin-api
-                            <i data-lucide="external-link" class="w-4 h-4"></i>
+                </div>
+                <% }); %>
+            </div>
+
+            <!-- Custom Swiper Pagination Pills -->
+            <div class="hero-pagination swiper-pagination !bottom-3 !z-20"></div>
+        </div>
+
+        <!-- Progress Line Bar Indicator -->
+        <div class="w-full h-1 bg-saweria-dark/80 relative z-20 overflow-hidden">
+            <div id="hero-progress-line" class="h-full bg-saweria-yellow transition-all duration-300 w-0"></div>
+        </div>
+    </div>
+</section>
+<% } %>
+
+<!-- POPULAR DONGHUA CAROUSEL SLIDER -->
+<% if (populars && populars.length > 0) { %>
+<section class="space-y-3.5" data-aos="fade-up">
+    <!-- Header with Custom Navigation Arrows -->
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+            <div class="w-3 h-7 bg-saweria-yellow border-2 border-saweria-dark rounded-md shadow-[2px_2px_0_#1e1e1e]"></div>
+            <div>
+                <h2 class="font-extrabold text-lg sm:text-2xl text-saweria-dark tracking-tight">Donghua Populer</h2>
+                <p class="text-[11px] font-semibold text-saweria-gray hidden sm:block">Serial favorit pilihan penonton minggu ini</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <!-- Swiper Custom Nav Buttons -->
+            <div class="flex items-center gap-1">
+                <button class="popular-prev neo-btn p-1.5 sm:p-2 rounded-full bg-white hover:bg-saweria-yellow border-2 border-saweria-dark text-saweria-dark" title="Sebelumnya">
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                </button>
+                <button class="popular-next neo-btn p-1.5 sm:p-2 rounded-full bg-white hover:bg-saweria-yellow border-2 border-saweria-dark text-saweria-dark" title="Selanjutnya">
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+            
+            <a href="/popular" class="neo-btn px-3.5 py-1.5 rounded-full bg-saweria-light border-2 border-saweria-dark text-xs font-extrabold text-saweria-dark flex items-center gap-1 ml-1">
+                <span>Semua</span> &rarr;
+            </a>
+        </div>
+    </div>
+
+    <!-- Swiper Popular Slider -->
+    <div class="swiper popular-swiper pb-4 overflow-visible">
+        <div class="swiper-wrapper">
+            <% populars.forEach(item => { 
+                let slug = item.href ? item.href.replace(/\/+$/, '').split('/').pop() : '';
+            %>
+            <div class="swiper-slide p-1">
+                <div class="neo-card bg-white border-3 border-saweria-dark rounded-2xl p-2.5 space-y-2 flex flex-col h-full neo-card-hover group">
+                    <div class="relative aspect-[3/4] rounded-xl overflow-hidden border-2 border-saweria-dark bg-saweria-bg flex-shrink-0">
+                        <img src="<%= item.image || 'https://via.placeholder.com/300x400' %>" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="<%= item.title %>">
+                        
+                        <% if (item.ep) { %>
+                        <span class="absolute top-1.5 left-1.5 bg-saweria-yellow text-saweria-dark font-extrabold text-[9px] px-2 py-0.5 rounded-full border border-saweria-dark shadow-[1px_1px_0_#1e1e1e]">
+                            <%= item.ep %>
+                        </span>
+                        <% } %>
+
+                        <% if (item.status) { %>
+                        <span class="absolute bottom-1.5 right-1.5 bg-saweria-green text-saweria-dark font-extrabold text-[9px] px-2 py-0.5 rounded-full border border-saweria-dark">
+                            <%= item.status %>
+                        </span>
+                        <% } %>
+
+                        <!-- Play Button Overlay on Hover -->
+                        <div class="absolute inset-0 bg-saweria-dark/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <div class="w-10 h-10 rounded-full bg-saweria-yellow border-2 border-saweria-dark flex items-center justify-center shadow-[2px_2px_0_#1e1e1e] transform scale-75 group-hover:scale-100 transition-transform">
+                                <i data-lucide="play" class="w-5 h-5 fill-saweria-dark text-saweria-dark"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 flex flex-col justify-between space-y-2">
+                        <a href="/detail/<%= slug %>" class="font-extrabold text-xs text-saweria-dark group-hover:text-saweria-coral line-clamp-2 leading-tight">
+                            <%= item.title %>
                         </a>
-                    </div>
-                </div>
-                <div class="relative grid grid-cols-2 gap-3">
-                    <div class="border-4 border-saweria-dark rounded-2xl p-4 bg-saweria-light">
-                        <span class="block text-[10px] text-saweria-gray uppercase tracking-wider font-extrabold">Stars</span>
-                        <span id="github-stars" class="text-2xl font-extrabold font-mono">Fetching...</span>
-                    </div>
-                    <div class="border-4 border-saweria-dark rounded-2xl p-4 bg-saweria-light">
-                        <span class="block text-[10px] text-saweria-gray uppercase tracking-wider font-extrabold">Host Aktif</span>
-                        <span id="host-indicator" class="block text-xs font-extrabold font-mono truncate select-all mt-2"></span>
-                    </div>
-                </div>
-                <div class="relative border-4 border-saweria-dark rounded-3xl bg-saweria-dark text-white p-5 font-mono text-xs leading-relaxed">
-                    <p><span class="text-[#79c0ff]">GET</span> <span class="select-all">/latest?page=1</span></p>
-                    <p class="text-slate-400 mt-2">Pilih endpoint di galeri untuk generate snippet dan melihat respons real API.</p>
-                </div>
-            </aside>
-        </header>
-
-        <main id="gallery-section" class="space-y-8">
-            <div class="space-y-5">
-                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-                    <div>
-                        <p class="text-xs text-saweria-gray font-extrabold uppercase tracking-[0.2em]">Endpoint Gallery</p>
-                        <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-saweria-dark tracking-tight">Daftar API</h2>
-                    </div>
-                    <div class="inline-flex w-fit items-center gap-2 rounded-full border-4 border-saweria-dark bg-saweria-yellow px-5 py-2 text-xs font-extrabold pill-shadow">
-                        <i data-lucide="layers" class="w-4 h-4"></i>
-                        <span id="total-endpoints">0</span>
-                        <span>endpoint</span>
-                    </div>
-                </div>
-                <div class="relative max-w-4xl">
-                    <i data-lucide="search" class="w-6 h-6 text-saweria-gray absolute left-5 top-1/2 -translate-y-1/2"></i>
-                    <input type="text" id="api-search" oninput="filterEndpoints(this.value)" placeholder="Cari endpoint..." class="w-full bg-white border-4 border-saweria-dark rounded-2xl pl-14 pr-5 py-5 text-base focus:outline-none focus:bg-saweria-light font-semibold text-saweria-dark">
-                </div>
-            </div>
-
-            <div id="endpoints-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"></div>
-        </main>
-        <footer class="py-6 border-t-2 border-saweria-dark text-center text-xs text-saweria-gray flex flex-col sm:flex-row justify-between items-center gap-3 font-semibold">
-            <p>&copy; 2026 Anichin Scraper Hub. Berkas Berlisensi MIT.</p>
-            <div class="flex gap-4">
-                <a href="https://github.com/jakisoft/anichin-api" target="_blank" class="hover:text-saweria-dark flex items-center gap-1">
-                    <i data-lucide="github" class="w-3.5 h-3.5"></i>
-                    <span>GitHub</span>
-                </a>
-                <a href="#" class="hover:text-saweria-dark">Dokumentasi</a>
-            </div>
-        </footer>
-    </div>
-
-    <div id="sandbox-drawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-3xl bg-saweria-bg text-saweria-dark shadow-[-8px_0px_0px_0px_#1e1e1e] transform translate-x-full transition-transform duration-300 ease-in-out border-l-4 border-saweria-dark rounded-l-[2rem] flex flex-col overflow-hidden">
-        <div class="bg-saweria-yellow px-6 sm:px-8 py-5 border-b-4 border-saweria-dark flex items-center justify-between">
-            <div class="flex items-center gap-3 min-w-0">
-                <div class="h-11 w-11 rounded-2xl border-2 border-saweria-dark bg-white flex items-center justify-center shrink-0">
-                    <i data-lucide="terminal" class="w-5 h-5"></i>
-                </div>
-                <div class="min-w-0">
-                    <p class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-saweria-gray">Console Sandbox</p>
-                    <h3 id="drawer-title" class="text-lg sm:text-2xl font-extrabold tracking-tight truncate">Console Sandbox</h3>
-                </div>
-            </div>
-            <button onclick="closeSandboxDrawer()" class="h-11 w-11 rounded-2xl border-2 border-saweria-dark bg-white text-saweria-dark hover:bg-saweria-light transition-colors flex items-center justify-center shrink-0">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-        </div>
-
-        <div class="flex-1 p-5 sm:p-8 space-y-7 overflow-y-auto">
-            <section class="bg-white border-4 border-saweria-dark rounded-3xl p-5 sm:p-6 space-y-4 shadow-[4px_4px_0px_0px_#1e1e1e]">
-                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                    <div class="space-y-2 min-w-0">
-                        <span class="inline-flex text-[10px] method-badge px-3 py-1 rounded-full font-mono font-extrabold border-2 border-saweria-dark">GET METHOD</span>
-                        <p id="drawer-desc" class="text-sm text-saweria-gray font-semibold leading-relaxed"></p>
-                    </div>
-                    <div id="drawer-param-summary" class="hidden shrink-0 rounded-full border-2 border-saweria-dark bg-saweria-light px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider"></div>
-                </div>
-                <div class="bg-saweria-light border-2 border-saweria-dark rounded-2xl p-4 font-mono text-xs text-saweria-dark overflow-x-auto whitespace-nowrap scrollbar-none flex items-center justify-between gap-2">
-                    <span id="drawer-path-preview" class="select-all"></span>
-                    <i data-lucide="link" class="w-4 h-4 text-saweria-gray shrink-0"></i>
-                </div>
-            </section>
-
-            <div id="drawer-params-container" class="space-y-3 hidden">
-                <h4 class="text-xs font-extrabold text-saweria-dark flex items-center gap-1.5 uppercase tracking-wider">
-                    <i data-lucide="sliders" class="w-4 h-4"></i>
-                    <span>Parameter Kueri</span>
-                </h4>
-                <div id="drawer-params-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-white p-4 border-4 border-saweria-dark rounded-3xl shadow-[4px_4px_0px_0px_#1e1e1e]"></div>
-            </div>
-
-            <section class="space-y-3">
-                <div class="bg-white px-4 py-3 border-4 border-saweria-dark rounded-3xl shadow-[4px_4px_0px_0px_#1e1e1e]">
-                    <div class="flex gap-2 overflow-x-auto">
-                        <button id="tab-curl" onclick="switchLanguage('curl')" class="language-tab is-active rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 border-2 border-[#faae2b]">
-                            <i class="fa-solid fa-terminal text-[13px] tab-icon-curl"></i>
-                            <span>cURL</span>
-                        </button>
-                        <button id="tab-nodejs" onclick="switchLanguage('nodejs')" class="language-tab rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 border-2 border-slate-700">
-                            <i class="fa-brands fa-js text-[15px] tab-icon-js"></i>
-                            <span>JavaScript</span>
-                        </button>
-                        <button id="tab-python" onclick="switchLanguage('python')" class="language-tab rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 border-2 border-slate-700">
-                            <span class="relative inline-flex h-3.5 w-3.5 items-center justify-center">
-                                <i class="fa-brands fa-python text-[15px] tab-icon-python-blue"></i>
-                            </span>
-                            <span>Python</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="relative bg-saweria-dark p-4 sm:p-5 border-4 border-saweria-dark rounded-3xl text-xs font-mono leading-relaxed text-slate-300 shadow-[4px_4px_0px_0px_#1e1e1e]">
-                    <div class="code-window-dots" aria-hidden="true">
-                        <span class="code-window-dot bg-[#ff5f57]"></span>
-                        <span class="code-window-dot bg-[#ffbd2e]"></span>
-                        <span class="code-window-dot bg-[#28c840]"></span>
-                    </div>
-                    <button id="copy-btn-content" onclick="copyCodeSnippet()" class="copy-icon-swap code-copy-button z-10 rounded-full border border-slate-700 bg-slate-900/95 px-3 py-1.5 text-slate-200 hover:text-white hover:border-slate-500 transition-colors flex items-center gap-1 text-[10px] font-mono font-bold w-fit">
-                        <span data-copy-state="copy" class="items-center gap-1 inline-flex"><i data-lucide="copy" class="w-3.5 h-3.5"></i><span>Copy</span></span>
-                        <span data-copy-state="check" class="items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span>Copied</span></span>
-                    </button>
-                    <div class="code-scroll overflow-x-auto">
-                        <pre id="code-curl" class="code-tab pt-10 text-[#e6edf3]"></pre>
-                        <pre id="code-nodejs" class="code-tab pt-10 text-[#e6edf3] hidden"></pre>
-                        <pre id="code-python" class="code-tab pt-10 text-[#e6edf3] hidden"></pre>
-                    </div>
-                </div>
-            </section>
-
-            <section class="bg-white border-4 border-saweria-dark rounded-3xl p-5 sm:p-6 space-y-4 shadow-[4px_4px_0px_0px_#1e1e1e]">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                        <h4 class="text-sm font-extrabold text-saweria-dark uppercase">Sandbox Client Realtime</h4>
-                        <p class="text-xs text-saweria-gray font-semibold">Uji fungsionalitas respons API</p>
-                    </div>
-                    <button onclick="executeSandboxRequest()" class="neo-btn rounded-2xl bg-saweria-yellow border-2 border-saweria-dark text-saweria-dark font-extrabold text-xs px-4 py-3 flex items-center justify-center gap-1.5 select-none">
-                        <i data-lucide="play" class="w-4 h-4"></i>
-                        <span>Kirim Request</span>
-                    </button>
-                </div>
-
-                <div class="gh-dark border-4 border-saweria-dark rounded-3xl p-5 font-mono text-xs relative overflow-hidden">
-                    <div class="mb-4 flex flex-row items-center justify-between gap-3">
-                        <div id="response-speed" class="response-meta inline-flex min-w-0 items-center gap-2 rounded-full border border-slate-700 px-3 py-1.5 text-[10px] font-bold">
-                            <i data-lucide="timer" class="w-3.5 h-3.5 text-[#faae2b]"></i>
-                            <span>Response time: —</span>
+                        <div class="pt-1.5 flex items-center justify-between border-t border-saweria-dark/10">
+                            <a href="/detail/<%= slug %>" class="neo-btn w-full text-center py-1.5 rounded-xl bg-saweria-yellow border-2 border-saweria-dark text-[10px] font-extrabold text-saweria-dark">
+                                Lihat Detail
+                            </a>
                         </div>
-                        <button id="copy-btn-response" onclick="copyResponseOutput()" class="copy-icon-swap rounded-full border border-slate-700 bg-slate-900/95 px-3 py-1.5 text-slate-200 hover:text-white hover:border-slate-500 transition-colors flex shrink-0 items-center gap-1 text-[10px] font-mono font-bold w-fit">
-                            <span data-copy-state="copy" class="items-center gap-1 inline-flex"><i data-lucide="copy" class="w-3.5 h-3.5"></i><span>Copy</span></span>
-                            <span data-copy-state="check" class="items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span>Copied</span></span>
-                        </button>
                     </div>
-                    <pre id="json-output" class="overflow-y-auto max-h-[360px] leading-relaxed select-all">// Klik "Kirim Request" untuk melihat output...</pre>
                 </div>
-            </section>
+            </div>
+            <% }); %>
         </div>
     </div>
-
-    <button id="scroll-top-btn" onclick="scrollToTop()" class="scroll-top-btn neo-btn rounded-full border-4 border-saweria-dark bg-saweria-yellow p-3 text-saweria-dark transition-all duration-300" aria-label="Scroll to top">
-        <i data-lucide="arrow-up" class="w-5 h-5"></i>
-    </button>
-
-    <div id="drawer-overlay" onclick="closeSandboxDrawer()" class="fixed inset-0 z-40 bg-saweria-dark/40 backdrop-blur-sm hidden transition-opacity duration-300 opacity-0"></div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script>
-        const currentHost = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-            ? 'https://api.anichin.my.id'
-            : window.location.origin;
-
-        const apiData = [
-            {
-                title: "Swiper Slide",
-                description: "Mengekstrak deretan gambar slide sorotan utama beranda yang diperbarui berkala.",
-                method: "GET",
-                path: "/slide",
-                params: [],
-                mockResponse: {
-                    status: "success",
-                    engine: "Anichin Scraper core v2.5",
-                    results: [
-                        {
-                            title: "Soul Land 2: Peerless Tang Sect",
-                            slug: "soul-land-2-peerless-tang-sect",
-                            cover: "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?auto=format&fit=crop&w=600&q=80",
-                            status: "Ongoing",
-                            episode: "Episode 52"
-                        },
-                        {
-                            title: "Perfect World",
-                            slug: "perfect-world",
-                            cover: "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?auto=format&fit=crop&w=600&q=80",
-                            status: "Ongoing",
-                            episode: "Episode 165"
-                        }
-                    ]
-                }
-            },
-            {
-                title: "Popular Today",
-                description: "Mengambil daftar daftar Donghua terpopuler dengan jumlah tontonan tertinggi hari ini.",
-                method: "GET",
-                path: "/popular",
-                params: [],
-                mockResponse: {
-                    status: "success",
-                    total_results: 3,
-                    results: [
-                        { rank: 1, title: "Martial Master", rating: "9.6", slug: "martial-master" },
-                        { rank: 2, title: "A Will Eternal", rating: "9.4", slug: "a-will-eternal" },
-                        { rank: 3, title: "Battle Through the Heavens", rating: "9.8", slug: "btth-season-5" }
-                    ]
-                }
-            },
-            {
-                title: "Latest Release",
-                description: "Mendapatkan daftar episode terbaru rilis lengkap beserta pagination halaman.",
-                method: "GET",
-                path: "/latest",
-                params: [
-                    { name: "page", type: "number", required: false, default: "1", desc: "Halaman data" }
-                ],
-                mockResponse: {
-                    status: "success",
-                    page: 1,
-                    has_more: true,
-                    results: [
-                        { title: "Throne of Seal", episode: "102", release_time: "5 menit lalu", slug: "throne-of-seal-episode-102" },
-                        { title: "The Great Ruler", episode: "48", release_time: "1 jam lalu", slug: "the-great-ruler-episode-48" }
-                    ]
-                }
-            },
-            {
-                title: "Daftar Genres",
-                description: "Mengumpulkan semua genre donghua terindeks yang tersedia di platform.",
-                method: "GET",
-                path: "/genres",
-                params: [],
-                mockResponse: {
-                    status: "success",
-                    total: 5,
-                    genres: [
-                        { name: "Action", slug: "action" },
-                        { name: "Fantasy", slug: "fantasy" },
-                        { name: "Martial Arts", slug: "martial-arts" },
-                        { name: "Cultivation", slug: "cultivation" }
-                    ]
-                }
-            },
-            {
-                title: "Detail Genre",
-                description: "Mengekstrak judul-judul Donghua yang masuk ke dalam parameter genre terpilih.",
-                method: "GET",
-                path: "/genres/:genre",
-                params: [
-                    { name: "genre", type: "string", required: true, default: "action", desc: "Slug kategori (contoh: action)" },
-                    { name: "page", type: "number", required: false, default: "1", desc: "Nomor halaman" }
-                ],
-                mockResponse: {
-                    status: "success",
-                    filter_genre: "action",
-                    page: 1,
-                    results: [
-                        { title: "Against the Gods", rating: "8.9", slug: "against-the-gods" },
-                        { title: "A Mortals Journey to Immortality", rating: "9.5", slug: "a-mortals-journey" }
-                    ]
-                }
-            },
-            {
-                title: "Detail Donghua",
-                description: "Profil lengkap Donghua, synopsis, rating, status rilis, dan ketersediaan episode.",
-                method: "GET",
-                path: "/detail/:slug",
-                params: [
-                    { name: "slug", type: "string", required: true, default: "soul-land", desc: "Slug donghua (contoh: soul-land)" }
-                ],
-                mockResponse: {
-                    status: "success",
-                    data: {
-                        title: "Soul Land (Douluo Dalu)",
-                        alternate_title: "Tanah Jiwa",
-                        rating: "9.7",
-                        type: "3D Donghua",
-                        status: "Completed",
-                        total_episodes: 263,
-                        synopsis: "Tang San menghabiskan hidupnya di sekte Tang, didedikasikan untuk penciptaan dan penguasaan senjata rahasia...",
-                        genres: ["Action", "Fantasy", "Historical"],
-                        episodes: [
-                            { ep_num: "263", slug: "soul-land-episode-263" },
-                            { ep_num: "262", slug: "soul-land-episode-262" }
-                        ]
-                    }
-                }
-            },
-            {
-                title: "Episode Player",
-                description: "Mengambil data streaming video mirror, link embed, serta ketersediaan resolusi player.",
-                method: "GET",
-                path: "/episode/:slug",
-                params: [
-                    { name: "slug", type: "string", required: true, default: "martial-master-episode-1", desc: "Slug unik episode target" }
-                ],
-                mockResponse: {
-                    status: "success",
-                    episode_title: "Martial Master - Episode 1",
-                    streaming_urls: [
-                        { resolution: "360p", engine: "Mirror-1", url: "https://iframe.mirror.net/embed/360p" },
-                        { resolution: "720p", engine: "Mirror-1", url: "https://iframe.mirror.net/embed/720p" }
-                    ]
-                }
-            },
-            {
-                title: "Search Donghua",
-                description: "Menemukan judul-judul Donghua terkait melalui pencarian kata kunci kueri dinamis.",
-                method: "GET",
-                path: "/search",
-                params: [
-                    { name: "q", type: "string", required: true, default: "martial master", desc: "Kata kunci pencarian" },
-                    { name: "page", type: "number", required: false, default: "1", desc: "Halaman data" }
-                ],
-                mockResponse: {
-                    status: "success",
-                    search_query: "martial master",
-                    results: [
-                        { title: "Martial Master", slug: "martial-master", rating: "9.2" }
-                    ]
-                }
-            },
-            {
-                title: "Release Schedule",
-                description: "Mengambil data skedul atau jadwal perilisan mingguan serial Donghua.",
-                method: "GET",
-                path: "/schedule",
-                params: [],
-                mockResponse: {
-                    status: "success",
-                    schedule: {
-                        senin: [{ title: "A Will Eternal", time: "10:00 WIB" }],
-                        selasa: [{ title: "Swallowed Star", time: "11:00 WIB" }]
-                    }
-                }
-            }
-        ];
-
-        const pastelColors = [
-            'bg-saweria-pink',
-            'bg-saweria-blue',
-            'bg-saweria-green',
-            'bg-saweria-lavender'
-        ];
-
-        let activeEndpointIndex = 0;
-        let activeLanguage = 'curl';
-        let codeSnippets = { curl: '', nodejs: '', python: '' };
-        let latestResponseText = '';
-        let latestResponseMs = null;
-
-        document.getElementById('host-indicator').innerText = currentHost;
-
-        async function loadGithubRepositoryStats() {
-            try {
-                const response = await fetch('https://api.github.com/repos/jakisoft/anichin-api');
-                if (response.ok) {
-                    const data = await response.json();
-                    updateGithubStars(`${data.stargazers_count.toLocaleString()} Stars`);
-                } else {
-                    useFallbackGithubStats();
-                }
-            } catch (err) {
-                useFallbackGithubStats();
-            }
-        }
-
-        function updateGithubStars(value) {
-            document.querySelectorAll('#github-stars, #github-stars-nav').forEach(element => {
-                element.innerText = value;
-            });
-        }
-
-        function useFallbackGithubStats() {
-            updateGithubStars("142 Stars");
-        }
-
-        function renderEndpoints() {
-            const container = document.getElementById('endpoints-list');
-            container.innerHTML = "";
-            document.getElementById('total-endpoints').innerText = apiData.length;
-
-            apiData.forEach((ep, i) => {
-                const card = document.createElement('article');
-                const accentColor = pastelColors[i % pastelColors.length];
-                const iconNames = ['wrench', 'sparkles', 'clock', 'tags', 'folder-search', 'badge-info', 'play-square', 'search', 'calendar-days'];
-                const paramText = ep.params.length > 0 ? `${ep.params.length} parameter` : 'tanpa parameter';
-                card.className = 'neo-card bg-white border-4 border-saweria-dark rounded-[2rem] p-6 sm:p-8 flex flex-col min-h-[340px] relative overflow-hidden';
-                card.setAttribute('data-aos', 'fade-up');
-                card.setAttribute('data-aos-delay', `${(i % 3) * 90}`);
-
-                card.innerHTML = `
-                    <div class="flex items-start justify-between gap-4">
-                        <div class="h-16 w-16 ${accentColor} border-4 border-saweria-dark rounded-2xl flex items-center justify-center shadow-[4px_4px_0_#1e1e1e]">
-                            <i data-lucide="${iconNames[i % iconNames.length]}" class="w-8 h-8"></i>
-                        </div>
-                        <span class="inline-flex method-badge border-4 border-saweria-dark rounded-full px-4 py-1.5 text-[10px] font-extrabold tracking-wider font-mono uppercase">
-                            ${ep.method}
-                        </span>
-                    </div>
-
-                    <div class="mt-8 space-y-4 flex-1">
-                        <div>
-                            <h3 class="font-extrabold text-2xl text-saweria-dark tracking-tight leading-tight">${ep.title}</h3>
-                            <p class="font-mono text-sm text-saweria-gray mt-2 select-all">${ep.path}</p>
-                        </div>
-                        <p class="text-sm text-saweria-gray font-semibold leading-relaxed">${ep.description}</p>
-                    </div>
-
-                    <div class="mt-7 flex items-center justify-between gap-3 border-t-2 border-saweria-dark pt-5">
-                        <span class="inline-flex items-center gap-1.5 rounded-full border-2 border-saweria-dark bg-saweria-light px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider">
-                            <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
-                            <span>${paramText}</span>
-                        </span>
-                    </div>
-
-                    <button onclick="openSandboxDrawer(${i})" class="neo-btn mt-5 w-full rounded-2xl flex items-center justify-center gap-3 bg-saweria-dark border-4 border-saweria-dark text-white font-extrabold text-base px-5 py-4 select-none">
-                        <span>Buka konsol uji</span>
-                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                    </button>
-                `;
-                container.appendChild(card);
-            });
-            lucide.createIcons();
-        }
-
-        function filterEndpoints(query) {
-            const key = query.toLowerCase().trim();
-            const cards = document.getElementById('endpoints-list').children;
-            
-            apiData.forEach((ep, i) => {
-                const matches = ep.title.toLowerCase().includes(key) || ep.path.toLowerCase().includes(key);
-                if (matches) {
-                    cards[i].style.display = 'flex';
-                } else {
-                    cards[i].style.display = 'none';
-                }
-            });
-        }
-
-        function openSandboxDrawer(index) {
-            activeEndpointIndex = index;
-            const ep = apiData[index];
-
-            document.getElementById('drawer-title').innerText = ep.title;
-            document.getElementById('drawer-desc').innerText = ep.description;
-
-            const paramsContainer = document.getElementById('drawer-params-container');
-            const paramsForm = document.getElementById('drawer-params-form');
-            const paramSummary = document.getElementById('drawer-param-summary');
-            paramSummary.innerText = ep.params.length > 0 ? `${ep.params.length} parameter` : 'tanpa parameter';
-            paramSummary.classList.remove('hidden');
-            
-            if (ep.params.length > 0) {
-                paramsContainer.classList.remove('hidden');
-                paramsForm.innerHTML = ep.params.map(p => `
-                    <div class="space-y-2 rounded-2xl border-2 border-saweria-dark bg-saweria-light p-3">
-                        <div class="flex justify-between gap-3 font-mono text-[10px]">
-                            <span class="text-saweria-dark font-extrabold">${p.name} <span class="text-saweria-gray">(${p.type})</span></span>
-                            <span class="${p.required ? 'text-red-500 font-extrabold' : 'text-saweria-gray'}">${p.required ? 'Harus diisi' : 'Opsional'}</span>
-                        </div>
-                        <input type="text" id="sandbox-input-${p.name}" value="${p.default || ''}" oninput="updateInteractivePayloads()" class="w-full rounded-xl bg-white border-2 border-saweria-dark px-3 py-2 text-xs text-saweria-dark font-mono focus:outline-none focus:bg-saweria-bg">
-                        <p class="text-[10px] text-saweria-gray font-semibold">${p.desc}</p>
-                    </div>
-                `).join('');
-            } else {
-                paramsContainer.classList.add('hidden');
-                paramsForm.innerHTML = "";
-            }
-
-            updateInteractivePayloads();
-
-            const drawer = document.getElementById('sandbox-drawer');
-            const overlay = document.getElementById('drawer-overlay');
-            
-            overlay.classList.remove('hidden');
-            setTimeout(() => {
-                overlay.classList.remove('opacity-0');
-                drawer.classList.remove('translate-x-full');
-            }, 50);
-
-            latestResponseText = '';
-            latestResponseMs = null;
-            updateResponseSpeed(null);
-            const jsonOutput = document.getElementById('json-output');
-            jsonOutput.innerText = '// Klik "Kirim Request" untuk melihat output...';
-            jsonOutput.className = 'overflow-y-auto max-h-[360px] leading-relaxed select-all';
-            document.getElementById('copy-btn-response').classList.remove('is-copied');
-            lucide.createIcons();
-        }
-
-        function closeSandboxDrawer() {
-            const drawer = document.getElementById('sandbox-drawer');
-            const overlay = document.getElementById('drawer-overlay');
-
-            drawer.classList.add('translate-x-full');
-            overlay.classList.add('opacity-0');
-            setTimeout(() => {
-                overlay.classList.add('hidden');
-            }, 300);
-        }
-
-        function updateInteractivePayloads() {
-            const activePath = buildActiveRequestPath();
-            const fullRequestUrl = `${currentHost}${activePath}`;
-            document.getElementById('drawer-path-preview').innerText = activePath;
-
-            codeSnippets = {
-                curl: [
-                    `curl -X GET "${fullRequestUrl}" \\`,
-                    `  -H "Accept: application/json"`
-                ].join('\n'),
-                nodejs: `import axios from 'axios';\n\naxios.get('${fullRequestUrl}')\n  .then(res => console.log(res.data))\n  .catch(err => console.error(err));`,
-                python: `import json\nimport requests\n\nurl = "${fullRequestUrl}"\nheaders = {\n    "Accept": "application/json",\n}\n\nwith requests.Session() as session:\n    response = session.get(\n        url,\n        headers=headers,\n        timeout=30,\n    )\n    response.raise_for_status()\n\n    data = response.json()\n    print(json.dumps(data, indent=2, ensure_ascii=False))`
-            };
-
-            document.getElementById('code-curl').innerHTML = renderCodeLines(codeSnippets.curl, highlightCurl);
-            document.getElementById('code-nodejs').innerHTML = renderCodeLines(codeSnippets.nodejs, highlightJS);
-            document.getElementById('code-python').innerHTML = renderCodeLines(codeSnippets.python, highlightPython);
-        }
-
-        function escapeHtml(value) {
-            return String(value)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-        }
-
-        function highlightByRules(code, rules) {
-            const tokenRegex = /('(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*"|\b[a-zA-Z_][\w]*\b|-[A-Za-z]+|\.[a-zA-Z_][\w]*)/g;
-            let cursor = 0;
-            let html = '';
-            for (const match of code.matchAll(tokenRegex)) {
-                html += escapeHtml(code.slice(cursor, match.index));
-                const token = match[0];
-                const rule = rules.find(item => item.test(token));
-                html += rule ? `<span class="${rule.className}">${escapeHtml(token)}</span>` : escapeHtml(token);
-                cursor = match.index + token.length;
-            }
-            html += escapeHtml(code.slice(cursor));
-            return html;
-        }
-
-        function renderCodeLines(code, highlighter) {
-            return code.split('\n').map((line, index) => {
-                const highlightedLine = highlighter(line) || '&nbsp;';
-                return `<span class="code-line"><span class="code-line-number">${index + 1}</span><code class="code-line-content">${highlightedLine}</code></span>`;
-            }).join('');
-        }
-
-        function highlightCurl(code) {
-            return highlightByRules(code, [
-                { test: token => token === 'curl', className: 'text-[#7ee787] font-bold' },
-                { test: token => token === 'GET', className: 'text-[#79c0ff] font-bold' },
-                { test: token => /^-[A-Za-z]+$/.test(token), className: 'text-[#79c0ff]' },
-                { test: token => /^['"]/.test(token), className: 'text-[#a5d6ff]' }
-            ]);
-        }
-
-        function highlightJS(code) {
-            return highlightByRules(code, [
-                { test: token => /^(import|from|const|require|let|then|catch)$/.test(token), className: 'text-[#ff7b72] font-bold' },
-                { test: token => /^['"]/.test(token), className: 'text-[#a5d6ff]' },
-                { test: token => /^(console|axios|res|err)$/.test(token), className: 'text-[#79c0ff]' },
-                { test: token => /^\.(log|error|get|data)$/.test(token), className: 'text-[#d2a8ff]' }
-            ]);
-        }
-
-        function highlightPython(code) {
-            return highlightByRules(code, [
-                { test: token => /^(import|with|as|print)$/.test(token), className: 'text-[#ff7b72] font-bold' },
-                { test: token => /^['"]/.test(token), className: 'text-[#a5d6ff]' },
-                { test: token => /^(json|requests|session|response|data|url|headers|timeout|indent|ensure_ascii)$/.test(token), className: 'text-[#79c0ff]' },
-                { test: token => /^\.(Session|get|json|dumps|raise_for_status)$/.test(token), className: 'text-[#d2a8ff]' }
-            ]);
-        }
-
-        function getLanguageTabClass(lang, isActive) {
-            const base = "language-tab rounded-full text-[10px] font-mono font-bold px-3 py-1.5 transition-all inline-flex items-center gap-1.5 border-2";
-            return `${base} ${isActive ? 'is-active border-[#faae2b]' : 'border-slate-700'}`;
-        }
-
-        function switchLanguage(lang) {
-            activeLanguage = lang;
-            
-            document.querySelectorAll('.code-tab').forEach(block => {
-                if (block.id === `code-${lang}`) {
-                    block.classList.remove('hidden');
-                } else {
-                    block.classList.add('hidden');
-                }
-            });
-
-            ['curl', 'nodejs', 'python'].forEach(l => {
-                const btn = document.getElementById(`tab-${l}`);
-                btn.className = getLanguageTabClass(l, l === lang);
-            });
-        }
-
-        async function writeClipboardText(textToCopy) {
-            if (navigator.clipboard && window.isSecureContext) {
-                await navigator.clipboard.writeText(textToCopy);
-                return;
-            }
-
-            const textarea = document.createElement("textarea");
-            textarea.value = textToCopy;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.focus();
-            textarea.select();
-            document.execCommand("copy");
-            document.body.removeChild(textarea);
-        }
-
-        async function copyWithFeedback(textToCopy, buttonId, successMessage) {
-            const copyButton = document.getElementById(buttonId);
-
-            try {
-                await writeClipboardText(textToCopy || '');
-                copyButton.classList.add('is-copied');
-                showToastNotification("Copied", successMessage);
-                setTimeout(() => copyButton.classList.remove('is-copied'), 1400);
-            } catch (error) {
-                showToastNotification("Copy gagal", "Browser tidak mengizinkan akses clipboard.");
-            }
-        }
-
-        function copyCodeSnippet() {
-            return copyWithFeedback(
-                codeSnippets[activeLanguage],
-                'copy-btn-content',
-                'Snippet integrasi kode berhasil disimpan ke clipboard.'
-            );
-        }
-
-        function copyResponseOutput() {
-            return copyWithFeedback(
-                latestResponseText || document.getElementById('json-output').innerText,
-                'copy-btn-response',
-                'Response API berhasil disimpan ke clipboard.'
-            );
-        }
-
-        function showToastNotification(title, message) {
-            const toastElement = document.getElementById('toast');
-            toastElement.querySelector('p').innerText = title;
-            document.getElementById('toast-msg').innerText = message;
-
-            toastElement.classList.remove('translate-y-[-20px]', 'opacity-0');
-            toastElement.classList.add('translate-y-0', 'opacity-100');
-
-            setTimeout(() => {
-                toastElement.classList.add('translate-y-[-20px]', 'opacity-0');
-                toastElement.classList.remove('translate-y-0', 'opacity-100');
-            }, 3000);
-        }
-
-        function buildActiveRequestPath() {
-            const ep = apiData[activeEndpointIndex];
-            let activePath = ep.path;
-
-            ep.params.forEach(p => {
-                const inputElement = document.getElementById(`sandbox-input-${p.name}`);
-                if (inputElement) {
-                    const value = inputElement.value.trim();
-                    if (value.length > 0) {
-                        if (activePath.includes(`:${p.name}`)) {
-                            activePath = activePath.replace(`:${p.name}`, encodeURIComponent(value));
-                        } else {
-                            const sep = activePath.includes('?') ? '&' : '?';
-                            activePath = `${activePath}${sep}${p.name}=${encodeURIComponent(value)}`;
-                        }
-                    }
-                }
-            });
-
-            return activePath;
-        }
-
-        function updateResponseSpeed(milliseconds) {
-            const responseSpeed = document.getElementById('response-speed');
-            if (!responseSpeed) return;
-
-            responseSpeed.querySelector('span').innerText = milliseconds === null
-                ? 'Response time: —'
-                : `Response time: ${milliseconds.toLocaleString('id-ID')} ms`;
-        }
-
-        function renderResponseSkeleton() {
-            return [72, 56, 88, 64, 78, 46]
-                .map(width => `<span class="shimmer-line block my-2" style="width: ${width}%"></span>`)
-                .join('');
-        }
-
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function syncScrollTopButton() {
-            const scrollTopButton = document.getElementById('scroll-top-btn');
-            if (!scrollTopButton) return;
-            scrollTopButton.classList.toggle('is-visible', window.scrollY > 420);
-        }
-
-        async function executeSandboxRequest() {
-            const outputBox = document.getElementById('json-output');
-            const activePath = buildActiveRequestPath();
-            const requestUrl = `${currentHost}${activePath}`;
-
-            latestResponseText = '';
-            latestResponseMs = null;
-            updateResponseSpeed(null);
-            outputBox.innerHTML = renderResponseSkeleton();
-            outputBox.className = "overflow-y-auto max-h-[360px] leading-relaxed select-none";
-            const startedAt = performance.now();
-
-            try {
-                const response = await fetch(requestUrl, {
-                    method: 'GET',
-                    headers: { Accept: 'application/json' }
-                });
-                latestResponseMs = Math.max(1, Math.round(performance.now() - startedAt));
-                updateResponseSpeed(latestResponseMs);
-                const contentType = response.headers.get('content-type') || '';
-                const rawText = await response.text();
-                let responsePayload = rawText;
-
-                if (contentType.includes('application/json') || rawText.trim().startsWith('{') || rawText.trim().startsWith('[')) {
-                    responsePayload = JSON.parse(rawText);
-                    latestResponseText = JSON.stringify(responsePayload, null, 2);
-                    outputBox.innerHTML = formatGitHubDarkJSON(responsePayload);
-                } else {
-                    latestResponseText = rawText;
-                    outputBox.innerText = rawText || '// Response kosong dari API.';
-                }
-
-                outputBox.className = "overflow-y-auto max-h-[360px] leading-relaxed select-all";
-                showToastNotification(
-                    response.ok ? "Koneksi Berhasil" : "Request Selesai",
-                    response.ok ? "Response real API berhasil diterima." : "API mengembalikan response non-OK, output tetap ditampilkan."
-                );
-            } catch (error) {
-                latestResponseMs = Math.max(1, Math.round(performance.now() - startedAt));
-                updateResponseSpeed(latestResponseMs);
-                latestResponseText = JSON.stringify({
-                    error: 'request_failed',
-                    message: error.message,
-                    url: requestUrl
-                }, null, 2);
-                outputBox.innerHTML = formatGitHubDarkJSON(latestResponseText);
-                outputBox.className = "overflow-y-auto max-h-[360px] leading-relaxed select-all";
-                showToastNotification("Request gagal", "Tidak dapat mengambil response real API dari browser ini.");
-            }
-        }
-
-        function formatGitHubDarkJSON(json) {
-            if (typeof json !== 'string') {
-                json = JSON.stringify(json, null, 2);
-            }
-            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g, function (match) {
-                let cls = 'json-value';
-                if (/^"/.test(match)) {
-                    if (/:$/.test(match)) {
-                        cls = 'json-key';
-                    } else {
-                        cls = 'json-string';
-                    }
-                } else if (/true|false/.test(match)) {
-                    cls = 'json-boolean';
-                } else if (/null/.test(match)) {
-                    cls = 'json-null';
-                } else if (/\d+/.test(match)) {
-                    cls = 'json-number';
-                }
-                return '<span class="' + cls + '">' + match + '</span>';
-            });
-        }
-
-        const preloadingProcessSteps = [
-            "Parsing API Schemas...",
-            "Assembling Saweria Canvas...",
-            "Connecting Github API...",
-            "Ready to test!"
-        ];
-
-        window.onload = function() {
-            let stepIndex = 0;
-            const loaderText = document.getElementById("loading-text");
-            
-            const preloadStep = setInterval(() => {
-                if (stepIndex < preloadingProcessSteps.length) {
-                    loaderText.innerText = preloadingProcessSteps[stepIndex];
-                    stepIndex++;
-                } else {
-                    clearInterval(preloadStep);
-                }
-            }, 180);
-
-            renderEndpoints();
-            loadGithubRepositoryStats();
-            syncScrollTopButton();
-            window.addEventListener('scroll', syncScrollTopButton, { passive: true });
-
-            setTimeout(() => {
-                if (typeof AOS !== 'undefined') {
-                    AOS.init({
-                        duration: 700,
-                        once: true,
-                        easing: 'ease-out-quad'
-                    });
-                }
+</section>
+<% } %>
+
+<!-- LATEST EPISODES GRID -->
+<% if (latests && latests.length > 0) { %>
+<section class="space-y-4" data-aos="fade-up">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <div class="w-3 h-7 bg-saweria-coral border-2 border-saweria-dark rounded-md shadow-[2px_2px_0_#1e1e1e]"></div>
+            <div>
+                <h2 class="font-extrabold text-lg sm:text-2xl text-saweria-dark tracking-tight">Rilisan Episode Terbaru</h2>
+                <p class="text-[11px] font-semibold text-saweria-gray hidden sm:block">Update setiap hari langsung dengan Subtitle Indonesia</p>
+            </div>
+        </div>
+        <a href="/latest" class="neo-btn px-3.5 py-1.5 rounded-full bg-saweria-light border-2 border-saweria-dark text-xs font-extrabold text-saweria-dark flex items-center gap-1">
+            <span>Lihat Semua</span> &rarr;
+        </a>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
+        <% latests.forEach(item => { 
+            let slug = item.href ? item.href.replace(/\/+$/, '').split('/').pop() : '';
+        %>
+        <div class="neo-card bg-white border-3 border-saweria-dark rounded-2xl p-2.5 space-y-2 flex flex-col h-full neo-card-hover group">
+            <div class="relative aspect-[3/4] rounded-xl overflow-hidden border-2 border-saweria-dark bg-saweria-bg flex-shrink-0">
+                <img src="<%= item.image || 'https://via.placeholder.com/300x400' %>" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="<%= item.title %>">
                 
-                const loader = document.getElementById("loading-screen");
-                loader.style.opacity = "0";
-                setTimeout(() => loader.style.display = "none", 600);
-            }, 1000);
-        };
-    </script>
-</body>
-</html>
+                <% if (item.ep) { %>
+                <span class="absolute top-1.5 left-1.5 bg-saweria-yellow text-saweria-dark font-extrabold text-[9px] px-2 py-0.5 rounded-full border border-saweria-dark shadow-[1px_1px_0_#1e1e1e]">
+                    <%= item.ep %>
+                </span>
+                <% } %>
+
+                <% if (item.type) { %>
+                <span class="absolute top-1.5 right-1.5 bg-saweria-pink text-saweria-dark font-extrabold text-[9px] px-1.5 py-0.5 rounded-full border border-saweria-dark">
+                    <%= item.type %>
+                </span>
+                <% } %>
+            </div>
+
+            <div class="flex-1 flex flex-col justify-between space-y-2">
+                <a href="/watch/<%= slug %>" class="font-extrabold text-xs text-saweria-dark group-hover:text-saweria-coral line-clamp-2 leading-tight">
+                    <%= item.title %>
+                </a>
+                
+                <div class="grid grid-cols-2 gap-1.5 pt-1.5 border-t border-saweria-dark/10">
+                    <a href="/watch/<%= slug %>" class="neo-btn text-center py-1.5 rounded-xl bg-saweria-yellow border-2 border-saweria-dark text-[10px] font-extrabold text-saweria-dark flex items-center justify-center gap-1">
+                        <i data-lucide="play" class="w-3 h-3 fill-saweria-dark"></i> Nonton
+                    </a>
+                    <a href="/detail/<%= slug.replace(/-episode-\d+.*$/, '') %>" class="neo-btn text-center py-1.5 rounded-xl bg-saweria-light border-2 border-saweria-dark text-[10px] font-extrabold text-saweria-dark flex items-center justify-center">
+                        Detail
+                    </a>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+</section>
+<% } %>
+
+<!-- QUICK GENRES CLUSTER -->
+<% if (genres && genres.length > 0) { %>
+<section class="space-y-3" data-aos="fade-up">
+    <div class="flex items-center gap-2.5">
+        <div class="w-3 h-7 bg-saweria-lavender border-2 border-saweria-dark rounded-md shadow-[2px_2px_0_#1e1e1e]"></div>
+        <h2 class="font-extrabold text-lg sm:text-2xl text-saweria-dark tracking-tight">Kategori Genre Populer</h2>
+    </div>
+
+    <div class="flex items-center gap-2 flex-wrap">
+        <% genres.slice(0, 18).forEach(g => { %>
+        <a href="/genres/<%= g.slug %>" class="neo-btn px-3.5 py-1.5 rounded-full border-2 border-saweria-dark bg-white hover:bg-saweria-yellow text-xs font-extrabold text-saweria-dark transition-colors">
+            # <%= g.name %>
+        </a>
+        <% }); %>
+    </div>
+</section>
+<% } %>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof Swiper !== 'undefined') {
+            const heroProgressLine = document.getElementById('hero-progress-line');
+            const heroCurrentSlide = document.getElementById('hero-current-slide');
+
+            function startHeroProgress() {
+                if (!heroProgressLine) return;
+                heroProgressLine.style.transition = 'none';
+                heroProgressLine.style.width = '0%';
+                setTimeout(() => {
+                    heroProgressLine.style.transition = 'width 5000ms linear';
+                    heroProgressLine.style.width = '100%';
+                }, 50);
+            }
+
+            // Hero Swiper Initialization
+            const heroSwiper = new Swiper('.hero-swiper', {
+                loop: true,
+                speed: 800,
+                effect: 'fade',
+                fadeEffect: { crossFade: true },
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true
+                },
+                pagination: {
+                    el: '.hero-pagination',
+                    clickable: true
+                },
+                navigation: {
+                    nextEl: '.hero-next',
+                    prevEl: '.hero-prev'
+                },
+                on: {
+                    init: function () {
+                        startHeroProgress();
+                    },
+                    slideChange: function () {
+                        startHeroProgress();
+                        if (heroCurrentSlide) {
+                            let realIdx = this.realIndex + 1;
+                            heroCurrentSlide.innerText = realIdx < 10 ? '0' + realIdx : realIdx;
+                        }
+                    }
+                }
+            });
+
+            // Popular Donghua Swiper Initialization
+            new Swiper('.popular-swiper', {
+                slidesPerView: 2,
+                spaceBetween: 14,
+                speed: 600,
+                navigation: {
+                    nextEl: '.popular-next',
+                    prevEl: '.popular-prev'
+                },
+                breakpoints: {
+                    640: { slidesPerView: 3, spaceBetween: 16 },
+                    768: { slidesPerView: 4, spaceBetween: 18 },
+                    1024: { slidesPerView: 5, spaceBetween: 20 }
+                }
+            });
+        }
+    });
+</script>
+
+<%- include('partials/footer') %>

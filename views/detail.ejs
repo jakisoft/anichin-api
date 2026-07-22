@@ -1,0 +1,556 @@
+<%- include('partials/header', { title: title, description: description, currentUrl: currentUrl, ogImage: ogImage, ogType: 'article' }) %>
+
+<div class="space-y-6" data-aos="fade-up">
+    <!-- Breadcrumb Path Navigation -->
+    <nav class="flex items-center gap-1.5 sm:gap-2 text-xs font-extrabold text-saweria-dark bg-white border-2 border-saweria-dark px-3.5 sm:px-4 py-2 rounded-2xl shadow-[2px_2px_0_#1e1e1e] w-full max-w-full flex-wrap overflow-hidden leading-normal">
+        <a href="/" class="hover:text-saweria-coral flex items-center gap-1 transition-colors flex-shrink-0">
+            <i data-lucide="home" class="w-3.5 h-3.5"></i> Beranda
+        </a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-saweria-gray flex-shrink-0"></i>
+        <span class="text-saweria-coral flex items-center gap-1 font-black max-w-[200px] sm:max-w-[380px] md:max-w-[550px] truncate" title="<%= detail.title %>">
+            <i data-lucide="tv" class="w-3.5 h-3.5 flex-shrink-0"></i> <%= detail.title %>
+        </span>
+    </nav>
+
+    <!-- Main Detail Card Banner -->
+    <section class="neo-card bg-white border-4 border-saweria-dark rounded-3xl p-4 sm:p-6 lg:p-8 space-y-6">
+        <div class="flex flex-col md:flex-row gap-6 lg:gap-8 items-start">
+            
+            <!-- Poster Image -->
+            <div class="w-full md:w-1/3 lg:w-1/4 max-w-[260px] mx-auto md:mx-0 flex-shrink-0">
+                <div class="relative aspect-[3/4] rounded-2xl overflow-hidden border-4 border-saweria-dark shadow-[6px_6px_0_#1e1e1e] bg-saweria-bg group">
+                    <img src="<%= detail.thumb || 'https://via.placeholder.com/400x530' %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="<%= detail.title %>">
+                    <% if (detail.info && detail.info.status) { %>
+                    <span class="absolute top-2 left-2 bg-saweria-yellow text-saweria-dark font-extrabold text-xs px-3 py-1 rounded-full border-2 border-saweria-dark shadow-[2px_2px_0_#1e1e1e]">
+                        <%= detail.info.status %>
+                    </span>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Info & Actions -->
+            <div class="w-full md:w-2/3 lg:w-3/4 space-y-4">
+                <div class="space-y-1.5">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="px-2.5 py-0.5 rounded-full bg-saweria-pink text-saweria-dark font-extrabold text-[10px] uppercase border-2 border-saweria-dark">
+                            3D Donghua
+                        </span>
+                        <span class="px-2.5 py-0.5 rounded-full bg-saweria-green text-saweria-dark font-extrabold text-[10px] uppercase border-2 border-saweria-dark">
+                            Sub Indonesia
+                        </span>
+                        <% if (detail.episodes) { %>
+                        <span class="px-2.5 py-0.5 rounded-full bg-saweria-blue text-saweria-dark font-extrabold text-[10px] uppercase border-2 border-saweria-dark">
+                            Total <%= detail.episodes.length %> Ep
+                        </span>
+                        <% } %>
+                    </div>
+
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-saweria-dark leading-tight">
+                        <%= detail.title %>
+                    </h1>
+
+                    <% if (detail.alt) { %>
+                    <p class="text-xs font-bold text-saweria-gray">
+                        <span class="font-extrabold text-saweria-dark">Judul Alternatif:</span> <%= detail.alt %>
+                    </p>
+                    <% } %>
+                </div>
+
+                <!-- Tags / Genres with Show More -->
+                <% if (detail.tags && detail.tags.length > 0) { 
+                    const maxInitialTags = 6;
+                    const hasMoreTags = detail.tags.length > maxInitialTags;
+                %>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-1.5 flex-wrap pt-1" id="genres-container">
+                        <% detail.tags.forEach((tag, idx) => { 
+                            let tslug = tag.href ? tag.href.replace(/\/+$/, '').split('/').pop() : '';
+                            if (!tslug && tag.name) {
+                                tslug = tag.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+                            }
+                            const isHidden = idx >= maxInitialTags;
+                        %>
+                        <a href="/genres/<%= tslug %>" class="genre-tag-item <%= isHidden ? 'hidden' : '' %> neo-btn px-3 py-1 rounded-full bg-saweria-light border-2 border-saweria-dark text-[11px] font-extrabold text-saweria-dark hover:bg-saweria-yellow transition-colors">
+                            # <%= tag.name %>
+                        </a>
+                        <% }); %>
+
+                        <% if (hasMoreTags) { %>
+                        <button type="button" onclick="toggleMoreGenres()" id="genre-toggle-btn" class="neo-btn px-3 py-1 rounded-full bg-saweria-yellow border-2 border-saweria-dark text-[11px] font-extrabold text-saweria-dark hover:bg-saweria-coral hover:text-white transition-colors flex items-center gap-1">
+                            <span id="genre-toggle-text">+<%= detail.tags.length - maxInitialTags %> Genre Lainnya</span>
+                            <i id="genre-toggle-icon" data-lucide="chevron-down" class="w-3 h-3"></i>
+                        </button>
+                        <% } %>
+                    </div>
+                </div>
+                <% } %>
+
+                <!-- Info Specs Grid -->
+                <% if (detail.info && Object.keys(detail.info).length > 0) { %>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 bg-saweria-bg border-3 border-saweria-dark rounded-2xl p-3.5 text-xs font-bold">
+                    <% Object.keys(detail.info).forEach(k => { %>
+                    <div class="space-y-0.5">
+                        <span class="text-saweria-gray capitalize text-[10px] block font-bold"><%= k %></span>
+                        <p class="font-extrabold text-saweria-dark truncate"><%= detail.info[k] %></p>
+                    </div>
+                    <% }); %>
+                </div>
+                <% } %>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-2 sm:gap-3 pt-2 flex-wrap">
+                    <% if (detail.episodes && detail.episodes.length > 0) { 
+                        let firstEpSlug = detail.episodes[detail.episodes.length - 1].href ? detail.episodes[detail.episodes.length - 1].href.replace(/\/+$/, '').split('/').pop() : '';
+                        let latestEpSlug = detail.episodes[0].href ? detail.episodes[0].href.replace(/\/+$/, '').split('/').pop() : '';
+                    %>
+                    <a href="/watch/<%= firstEpSlug %>" class="neo-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-saweria-yellow border-3 border-saweria-dark text-saweria-dark font-extrabold text-xs sm:text-sm">
+                        <i data-lucide="play-circle" class="w-4 h-4"></i> Episode Pertama
+                    </a>
+                    <a href="/watch/<%= latestEpSlug %>" class="neo-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-saweria-green border-3 border-saweria-dark text-saweria-dark font-extrabold text-xs sm:text-sm">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i> Episode Terbaru
+                    </a>
+                    <% } %>
+
+                    <button onclick="handleBookmarkToggle()" id="detail-bookmark-btn" class="neo-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-saweria-pink border-3 border-saweria-dark text-saweria-dark font-extrabold text-xs sm:text-sm">
+                        <i data-lucide="bookmark" class="w-4 h-4"></i>
+                        <span id="bookmark-text">Simpan Favorit</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Synopsis with Show More -->
+        <% if (detail.synopsis) { 
+            const isLongSynopsis = detail.synopsis.length > 220;
+        %>
+        <div class="border-t-3 border-saweria-dark pt-5 space-y-3">
+            <h3 class="font-extrabold text-base text-saweria-dark flex items-center gap-2">
+                <i data-lucide="align-left" class="w-4 h-4 text-saweria-coral"></i> Sinopsis Donghua
+            </h3>
+            <div class="relative">
+                <div id="synopsis-wrapper" class="<%= isLongSynopsis ? 'line-clamp-3 overflow-hidden' : '' %> transition-all duration-300">
+                    <p class="text-xs sm:text-sm font-semibold text-saweria-dark/90 leading-relaxed text-justify">
+                        <%= detail.synopsis %>
+                    </p>
+                </div>
+            </div>
+
+            <% if (isLongSynopsis) { %>
+            <button type="button" onclick="toggleSynopsis()" id="synopsis-toggle-btn" class="neo-btn px-4 py-1.5 rounded-full bg-saweria-lavender border-2 border-saweria-dark text-xs font-extrabold text-saweria-dark hover:bg-saweria-yellow transition-colors flex items-center gap-1.5 mt-2">
+                <span id="synopsis-toggle-text">Baca Selengkapnya</span>
+                <i id="synopsis-toggle-icon" data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+            </button>
+            <% } %>
+        </div>
+        <% } %>
+    </section>
+
+    <!-- TERAKHIR KALI DILIHAT CARD BANNER -->
+    <div id="last-watched-card" class="hidden neo-card bg-saweria-lavender border-4 border-saweria-dark rounded-3xl p-4 sm:p-5">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-2xl bg-saweria-coral text-white border-2 border-saweria-dark flex items-center justify-center flex-shrink-0 shadow-[2px_2px_0_#1e1e1e]">
+                    <i data-lucide="history" class="w-5 h-5"></i>
+                </div>
+                <div class="min-w-0">
+                    <span class="text-[10px] uppercase font-black tracking-wider text-saweria-dark/70 block">Terakhir Kali Dilihat</span>
+                    <h4 id="last-watched-title" class="font-extrabold text-sm sm:text-base text-saweria-dark truncate">
+                        Episode --
+                    </h4>
+                    <p id="last-watched-time" class="text-[11px] font-bold text-saweria-gray truncate">--</p>
+                </div>
+            </div>
+            <a id="last-watched-link" href="#" class="neo-btn px-4 py-2 rounded-2xl bg-saweria-coral text-white border-2 border-saweria-dark text-xs font-black hover:bg-saweria-yellow hover:text-saweria-dark transition-colors flex items-center gap-1.5 shadow-[2px_2px_0_#1e1e1e] flex-shrink-0">
+                <i data-lucide="play-circle" class="w-4 h-4"></i> Lanjutkan Nonton
+            </a>
+        </div>
+    </div>
+
+    <!-- WATCH PROGRESS TRACKER BANNER FOR SERIES DETAIL -->
+    <section class="neo-card bg-saweria-yellow border-4 border-saweria-dark rounded-3xl p-4 sm:p-5 space-y-3">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="space-y-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <i data-lucide="check-circle-2" class="w-5 h-5 text-saweria-dark"></i>
+                    <h3 class="font-extrabold text-base text-saweria-dark">Kemajuan Menonton Anda</h3>
+                    <span id="detail-progress-badge" class="px-2.5 py-0.5 rounded-full bg-white text-saweria-dark font-black text-xs border-2 border-saweria-dark">
+                        0 / <%= detail.episodes ? detail.episodes.length : 0 %> Episode (0%)
+                    </span>
+                </div>
+                <p class="text-xs font-bold text-saweria-dark/80">
+                    Pantau dan kelola status episode Donghua ini yang tersimpan otomatis di browser Anda.
+                </p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2 flex-wrap">
+                <button type="button" onclick="markAllDetailEpisodes(true)" class="neo-btn px-3.5 py-1.5 rounded-xl bg-saweria-green border-2 border-saweria-dark text-xs font-extrabold text-saweria-dark hover:bg-white transition-colors">
+                    Tandai Semua Selesai
+                </button>
+                <button type="button" onclick="markAllDetailEpisodes(false)" class="neo-btn px-3 py-1.5 rounded-xl bg-white border-2 border-saweria-dark text-xs font-extrabold text-saweria-dark hover:bg-saweria-pink transition-colors">
+                    Reset Progress
+                </button>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-white border-2 border-saweria-dark rounded-full h-4 p-0.5 relative overflow-hidden shadow-inner">
+            <div id="detail-progress-bar" class="bg-saweria-coral h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+    </section>
+
+    <!-- EPISODE LIST SECTION WITH FILTERS & SORTING -->
+    <section class="neo-card bg-white border-4 border-saweria-dark rounded-3xl p-4 sm:p-6 space-y-4">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 pb-3 border-b-3 border-saweria-dark">
+            <div class="flex items-center gap-2">
+                <div class="w-3 h-7 bg-saweria-yellow border-2 border-saweria-dark rounded-md"></div>
+                <h2 class="font-extrabold text-lg sm:text-xl text-saweria-dark">
+                    Daftar Episode (<span id="ep-count-badge"><%= detail.episodes ? detail.episodes.length : 0 %></span>)
+                </h2>
+            </div>
+
+            <!-- Controls (Search + Sort) -->
+            <div class="w-full lg:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                <!-- Search Box -->
+                <div class="relative flex-1 sm:w-64">
+                    <input 
+                        type="text" 
+                        id="ep-filter-input" 
+                        oninput="filterEpisodes(this.value)"
+                        placeholder="Cari nomor episode..." 
+                        class="w-full neo-input bg-saweria-bg text-xs font-bold pl-8 pr-8 py-2 rounded-2xl"
+                    >
+                    <i data-lucide="search" class="w-3.5 h-3.5 text-saweria-dark absolute left-3 top-1/2 -translate-y-1/2"></i>
+                    <button onclick="clearEpFilter()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-saweria-gray hover:text-saweria-dark" id="clear-ep-filter-btn">
+                        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+
+                <!-- Sort Toggle -->
+                <button 
+                    onclick="toggleEpisodeSort()" 
+                    id="ep-sort-btn"
+                    class="neo-btn bg-saweria-light border-2 border-saweria-dark text-saweria-dark text-xs font-extrabold px-3.5 py-2 rounded-2xl flex items-center justify-center gap-1.5"
+                >
+                    <i data-lucide="arrow-up-down" class="w-3.5 h-3.5"></i>
+                    <span id="sort-btn-label">Urutan: Terbaru</span>
+                </button>
+            </div>
+        </div>
+
+        <% if (detail.episodes && detail.episodes.length > 0) { %>
+        <!-- Episode Grid Container -->
+        <div id="episodes-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[420px] overflow-y-auto p-1 pr-2">
+            <% detail.episodes.forEach((ep, idx) => { 
+                let epSlug = ep.href ? ep.href.replace(/\/+$/, '').split('/').pop() : '';
+            %>
+            <a 
+                href="/watch/<%= epSlug %>" 
+                class="ep-item neo-btn bg-saweria-bg hover:bg-saweria-yellow border-2 border-saweria-dark p-3 rounded-2xl flex items-center justify-between gap-2.5 group transition-colors" 
+                data-title="<%= ep.num %> <%= ep.etitle %>"
+                data-index="<%= idx %>"
+                data-ep-slug="<%= epSlug %>"
+                data-ep-num="<%= ep.num %>"
+            >
+                <div class="min-w-0 space-y-0.5">
+                    <div class="flex items-center gap-1.5">
+                        <span class="block text-xs font-extrabold text-saweria-dark group-hover:text-saweria-coral truncate">
+                            <%= ep.etitle || ('Episode ' + ep.num) %>
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <% if (ep.date) { %>
+                        <span class="text-[10px] font-bold text-saweria-gray"><%= ep.date %></span>
+                        <% } %>
+                        <span class="ep-watched-tag hidden text-[9px] bg-saweria-green text-saweria-dark font-black px-1.5 py-0.2 rounded-full border border-saweria-dark">
+                            ✓ Ditonton
+                        </span>
+                    </div>
+                </div>
+                <div class="ep-icon-box w-8 h-8 rounded-xl bg-white border-2 border-saweria-dark flex items-center justify-center flex-shrink-0 group-hover:bg-saweria-coral group-hover:text-white transition-colors">
+                    <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+                </div>
+            </a>
+            <% }); %>
+        </div>
+        <% } else { %>
+        <div class="p-8 text-center space-y-2 bg-saweria-bg border-2 border-saweria-dark rounded-2xl">
+            <i data-lucide="film" class="w-8 h-8 text-saweria-gray mx-auto"></i>
+            <p class="text-xs font-extrabold text-saweria-gray">Belum ada episode tersedia untuk Donghua ini.</p>
+        </div>
+        <% } %>
+    </section>
+
+    <!-- REKOMENDASI GRID (MAKSIMAL 6 ITEM: STUDIO, GENRE, NETWORK) -->
+    <% if (typeof recommendations !== 'undefined' && recommendations && recommendations.length > 0) { %>
+    <section class="neo-card bg-white border-4 border-saweria-dark rounded-3xl p-5 sm:p-6 space-y-4 shadow-[4px_4px_0_#1e1e1e]" data-aos="fade-up">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-3 border-saweria-dark pb-3">
+            <div class="space-y-0.5">
+                <div class="flex items-center gap-2">
+                    <span class="p-1.5 rounded-xl bg-saweria-purple text-white border-2 border-saweria-dark shadow-[1px_1px_0_#1e1e1e]">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    </span>
+                    <h3 class="font-extrabold text-base sm:text-lg text-saweria-dark">Rekomendasi Donghua Terkait</h3>
+                </div>
+                <p class="text-xs font-bold text-saweria-gray">Rekomendasi pilihan berdasarkan Studio, Genre, dan Network yang sama.</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5 sm:gap-4">
+            <% recommendations.forEach((item, idx) => { %>
+            <div class="neo-card bg-white border-3 border-saweria-dark rounded-2xl p-2.5 space-y-2 flex flex-col h-full neo-card-hover group" data-aos="fade-up" data-aos-delay="<%= idx * 50 %>">
+                <div class="relative aspect-[3/4] rounded-xl overflow-hidden border-2 border-saweria-dark bg-saweria-bg flex-shrink-0">
+                    <img src="<%= item.image %>" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="<%= item.title %>">
+                    
+                    <% if (item.badge) { %>
+                    <div class="absolute top-1.5 left-1.5 max-w-[85%]">
+                        <span class="<%= item.badgeBg || 'bg-saweria-coral text-white' %> font-black text-[9px] px-1.5 py-0.5 rounded-full border border-saweria-dark shadow-xs truncate block" title="<%= item.badge %>">
+                            <%= item.badge %>
+                        </span>
+                    </div>
+                    <% } %>
+
+                    <% if (item.type) { %>
+                    <span class="absolute bottom-1.5 right-1.5 bg-saweria-dark text-white font-extrabold text-[9px] px-1.5 py-0.5 rounded-md shadow-xs">
+                        <%= item.type %>
+                    </span>
+                    <% } %>
+                </div>
+
+                <div class="flex-1 flex flex-col justify-between space-y-2">
+                    <a href="/detail/<%= item.slug %>" class="font-extrabold text-xs text-saweria-dark group-hover:text-saweria-coral line-clamp-2 leading-tight" title="<%= item.title %>">
+                        <%= item.title %>
+                    </a>
+
+                    <a href="/detail/<%= item.slug %>" class="neo-btn w-full text-center py-1 rounded-xl bg-saweria-yellow hover:bg-saweria-coral hover:text-white border-2 border-saweria-dark text-[10px] font-black text-saweria-dark block transition-colors shadow-[1px_1px_0_#1e1e1e] truncate">
+                        Lihat Detail
+                    </a>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+    </section>
+    <% } %>
+</div>
+
+<script>
+    const seriesItem = {
+        slug: "<%= slug %>",
+        title: "<%= detail.title %>",
+        image: "<%= detail.thumb %>",
+        status: "<%= detail.info ? (detail.info.status || '') : '' %>"
+    };
+
+    let isNewestFirst = true;
+
+    function updateBookmarkBtnState() {
+        const btn = document.getElementById('detail-bookmark-btn');
+        const text = document.getElementById('bookmark-text');
+        if (isBookmarked(seriesItem.slug)) {
+            btn.classList.remove('bg-saweria-pink');
+            btn.classList.add('bg-saweria-yellow');
+            text.innerText = 'Tersimpan di Favorit';
+        } else {
+            btn.classList.add('bg-saweria-pink');
+            btn.classList.remove('bg-saweria-yellow');
+            text.innerText = 'Simpan Favorit';
+        }
+    }
+
+    function handleBookmarkToggle() {
+        toggleBookmark(seriesItem);
+        updateBookmarkBtnState();
+    }
+
+    function filterEpisodes(query) {
+        const q = query.toLowerCase().trim();
+        const clearBtn = document.getElementById('clear-ep-filter-btn');
+        if (q) {
+            if (clearBtn) clearBtn.classList.remove('hidden');
+        } else {
+            if (clearBtn) clearBtn.classList.add('hidden');
+        }
+
+        const items = document.querySelectorAll('.ep-item');
+        let visibleCount = 0;
+        items.forEach(el => {
+            const txt = el.getAttribute('data-title').toLowerCase();
+            if (!q || txt.includes(q)) {
+                el.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                el.classList.add('hidden');
+            }
+        });
+
+        const badge = document.getElementById('ep-count-badge');
+        if (badge) badge.innerText = visibleCount;
+    }
+
+    function clearEpFilter() {
+        const input = document.getElementById('ep-filter-input');
+        if (input) {
+            input.value = '';
+            filterEpisodes('');
+        }
+    }
+
+    function toggleEpisodeSort() {
+        const grid = document.getElementById('episodes-grid');
+        if (!grid) return;
+        const items = Array.from(grid.querySelectorAll('.ep-item'));
+        
+        isNewestFirst = !isNewestFirst;
+        const label = document.getElementById('sort-btn-label');
+        if (label) {
+            label.innerText = isNewestFirst ? 'Urutan: Terbaru' : 'Urutan: Terlama';
+        }
+
+        items.reverse();
+        items.forEach(item => grid.appendChild(item));
+        showToast('Urutan Episode', isNewestFirst ? 'Menampilkan episode terbaru' : 'Menampilkan episode terlama');
+    }
+
+    const currentDetailSeriesSlug = "<%= slug %>";
+    const totalDetailEpisodes = <%= (detail.episodes) ? detail.episodes.length : 0 %>;
+
+    function renderSeriesProgressUI() {
+        if (!currentDetailSeriesSlug) return;
+        const stats = getSeriesWatchStats(currentDetailSeriesSlug, totalDetailEpisodes);
+
+        const bar = document.getElementById('detail-progress-bar');
+        const badge = document.getElementById('detail-progress-badge');
+
+        if (bar) {
+            bar.style.width = Math.max(stats.percentage, stats.watchedCount > 0 ? 5 : 0) + '%';
+        }
+        if (badge) {
+            badge.innerText = `${stats.watchedCount} / ${stats.totalEpisodes} Episode (${stats.percentage}%)`;
+        }
+
+        // Update Last Watched Banner Info
+        const lastWatched = getLastWatchedForSeries(currentDetailSeriesSlug);
+        const lastCard = document.getElementById('last-watched-card');
+        const lastTitle = document.getElementById('last-watched-title');
+        const lastTime = document.getElementById('last-watched-time');
+        const lastLink = document.getElementById('last-watched-link');
+
+        if (lastWatched && lastCard) {
+            lastCard.classList.remove('hidden');
+            if (lastTitle) {
+                lastTitle.innerText = lastWatched.epNum ? `Episode ${lastWatched.epNum}` : 'Episode Terakhir';
+            }
+            if (lastTime && lastWatched.updatedAt) {
+                const dateObj = new Date(lastWatched.updatedAt);
+                const dateStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                const timeStr = dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                lastTime.innerText = `Terakhir ditonton: ${dateStr} pukul ${timeStr}`;
+            } else if (lastTime) {
+                lastTime.innerText = `Tersimpan dalam sesi & riwayat menonton Anda`;
+            }
+            if (lastLink && lastWatched.epSlug) {
+                lastLink.href = `/watch/${lastWatched.epSlug}`;
+            }
+        } else if (lastCard) {
+            lastCard.classList.add('hidden');
+        }
+
+        // Update tags on episode list
+        document.querySelectorAll('.ep-item').forEach(item => {
+            const epSlug = item.getAttribute('data-ep-slug');
+            const tag = item.querySelector('.ep-watched-tag');
+            if (epSlug && tag) {
+                if (isEpisodeWatched(currentDetailSeriesSlug, epSlug)) {
+                    tag.classList.remove('hidden');
+                } else {
+                    tag.classList.add('hidden');
+                }
+            }
+        });
+    }
+
+    function markAllDetailEpisodes(isWatched) {
+        if (!currentDetailSeriesSlug) return;
+        const items = document.querySelectorAll('.ep-item');
+        items.forEach(item => {
+            const epSlug = item.getAttribute('data-ep-slug');
+            const epNum = item.getAttribute('data-ep-num');
+            if (epSlug) {
+                markEpisodeWatched(currentDetailSeriesSlug, epSlug, epNum, isWatched);
+            }
+        });
+        renderSeriesProgressUI();
+        if (isWatched) {
+            showToast('Progress Menonton', 'Semua episode ditandai Selesai Ditonton!');
+        } else {
+            showToast('Progress Reset', 'Progress menonton series ini telah direset.');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateBookmarkBtnState();
+        renderSeriesProgressUI();
+
+        if (typeof isBookmarked === 'function' && isBookmarked(currentDetailSeriesSlug)) {
+            touchBookmark(currentDetailSeriesSlug, {
+                title: "<%= detail.title %>",
+                image: "<%= detail.image %>",
+                totalEp: <%= (detail.episodes) ? detail.episodes.length : 0 %>
+            });
+        }
+    });
+
+    function toggleMoreGenres() {
+        const hiddenTags = document.querySelectorAll('.genre-tag-item.hidden, .genre-tag-item.expanded');
+        const btnText = document.getElementById('genre-toggle-text');
+        const btnIcon = document.getElementById('genre-toggle-icon');
+        const totalHidden = document.querySelectorAll('.genre-tag-item').length - 6;
+
+        let isExpanded = false;
+        hiddenTags.forEach(el => {
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('expanded');
+                isExpanded = true;
+            } else if (el.classList.contains('expanded')) {
+                el.classList.add('hidden');
+                el.classList.remove('expanded');
+                isExpanded = false;
+            }
+        });
+
+        if (btnText) {
+            btnText.textContent = isExpanded ? 'Sembunyikan' : `+${totalHidden} Genre Lainnya`;
+        }
+        if (btnIcon && typeof lucide !== 'undefined') {
+            btnIcon.setAttribute('data-lucide', isExpanded ? 'chevron-up' : 'chevron-down');
+            lucide.createIcons();
+        }
+    }
+
+    function toggleSynopsis() {
+        const wrapper = document.getElementById('synopsis-wrapper');
+        const btnText = document.getElementById('synopsis-toggle-text');
+        const btnIcon = document.getElementById('synopsis-toggle-icon');
+
+        if (!wrapper) return;
+
+        const isClamped = wrapper.classList.contains('line-clamp-3');
+        if (isClamped) {
+            wrapper.classList.remove('line-clamp-3', 'overflow-hidden');
+            if (btnText) btnText.textContent = 'Sembunyikan';
+            if (btnIcon) btnIcon.setAttribute('data-lucide', 'chevron-up');
+        } else {
+            wrapper.classList.add('line-clamp-3', 'overflow-hidden');
+            if (btnText) btnText.textContent = 'Baca Selengkapnya';
+            if (btnIcon) btnIcon.setAttribute('data-lucide', 'chevron-down');
+        }
+
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }
+</script>
+
+<%- include('partials/footer') %>
+

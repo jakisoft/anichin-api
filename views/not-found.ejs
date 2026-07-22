@@ -1,0 +1,117 @@
+<%- include('partials/header', { title: title, description: description, currentUrl: currentUrl, ogImage: ogImage, ogType: 'website' }) %>
+
+<section class="max-w-4xl mx-auto py-8 sm:py-12 space-y-8" data-aos="zoom-in">
+    <!-- Breadcrumb Path Navigation -->
+    <nav class="flex items-center gap-1.5 sm:gap-2 text-xs font-extrabold text-saweria-dark bg-white border-2 border-saweria-dark px-3.5 sm:px-4 py-2 rounded-2xl shadow-[2px_2px_0_#1e1e1e] w-full max-w-full flex-wrap overflow-hidden leading-normal">
+        <a href="/" class="hover:text-saweria-coral flex items-center gap-1 transition-colors flex-shrink-0">
+            <i data-lucide="home" class="w-3.5 h-3.5"></i> Beranda
+        </a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-saweria-gray flex-shrink-0"></i>
+        <span class="text-saweria-coral flex items-center gap-1 font-black max-w-[180px] sm:max-w-[280px] truncate">
+            <i data-lucide="alert-triangle" class="w-3.5 h-3.5 flex-shrink-0"></i> Tidak Ditemukan
+        </span>
+    </nav>
+
+    <!-- Main Neobrutalist Error Card -->
+    <div class="neo-card bg-white border-4 border-saweria-dark rounded-3xl p-6 sm:p-10 text-saweria-dark text-center space-y-6 relative overflow-hidden">
+        <!-- Accent Top Banner Pattern -->
+        <div class="absolute top-0 left-0 right-0 h-4 bg-saweria-coral border-b-2 border-saweria-dark"></div>
+
+        <!-- Animated Illustration Icon -->
+        <div class="pt-2 flex justify-center">
+            <div class="relative">
+                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-saweria-yellow border-4 border-saweria-dark shadow-[4px_4px_0_#1e1e1e] flex items-center justify-center transform -rotate-3 hover:rotate-0 transition-transform">
+                    <% if (errorType === 'series') { %>
+                        <i data-lucide="tv-off" class="w-12 h-12 text-saweria-dark"></i>
+                    <% } else if (errorType === 'episode') { %>
+                        <i data-lucide="video-off" class="w-12 h-12 text-saweria-dark"></i>
+                    <% } else if (errorType === 'genre') { %>
+                        <i data-lucide="tag-off" class="w-12 h-12 text-saweria-dark"></i>
+                    <% } else if (errorType === 'search') { %>
+                        <i data-lucide="search-x" class="w-12 h-12 text-saweria-dark"></i>
+                    <% } else { %>
+                        <i data-lucide="ghost" class="w-12 h-12 text-saweria-dark"></i>
+                    <% } %>
+                </div>
+                <!-- Mini Badge 404 -->
+                <span class="absolute -top-2 -right-2 bg-saweria-coral text-white font-black text-xs px-3 py-1 rounded-full border-2 border-saweria-dark shadow-[2px_2px_0_#1e1e1e] transform rotate-12">
+                    404 ERROR
+                </span>
+            </div>
+        </div>
+
+        <!-- Heading & Description -->
+        <div class="space-y-3 max-w-xl mx-auto">
+            <h1 class="text-2xl sm:text-3xl font-black text-saweria-dark leading-tight">
+                <% if (errorType === 'series') { %>
+                    Donghua Tidak Ditemukan!
+                <% } else if (errorType === 'episode') { %>
+                    Episode Tidak Tersedia!
+                <% } else if (errorType === 'genre') { %>
+                    Kategori Genre Tidak Ditemukan!
+                <% } else if (errorType === 'search') { %>
+                    Hasil Pencarian Kosong!
+                <% } else { %>
+                    Halaman Tidak Ditemukan!
+                <% } %>
+            </h1>
+            <p class="text-sm sm:text-base font-semibold text-saweria-gray leading-relaxed">
+                <%= message || 'Maaf, halaman atau konten yang Anda cari tidak ditemukan, telah dipindahkan, atau link tidak valid.' %>
+            </p>
+        </div>
+
+        <!-- Inline Quick Search Form -->
+        <div class="max-w-md mx-auto pt-2">
+            <form action="/search" method="GET" class="flex gap-2">
+                <div class="relative flex-1">
+                    <input type="text" name="q" placeholder="Cari judul Donghua lain..." required
+                           class="w-full bg-saweria-light border-3 border-saweria-dark rounded-2xl px-4 py-3 pl-11 text-sm font-bold text-saweria-dark placeholder-saweria-gray focus:outline-none focus:ring-2 focus:ring-saweria-yellow shadow-[2px_2px_0_#1e1e1e]">
+                    <i data-lucide="search" class="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-saweria-gray"></i>
+                </div>
+                <button type="submit" class="neo-btn bg-saweria-yellow text-saweria-dark border-3 border-saweria-dark px-5 py-3 rounded-2xl font-black text-sm flex items-center gap-1 hover:bg-saweria-coral hover:text-white transition-colors">
+                    <span>Cari</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Action Navigation Buttons -->
+        <div class="pt-4 flex flex-wrap items-center justify-center gap-3">
+            <a href="/" class="neo-btn bg-saweria-teal text-saweria-dark border-3 border-saweria-dark px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-2 hover:bg-saweria-yellow transition-colors">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                <span>Kembali ke Beranda</span>
+            </a>
+            <a href="/popular" class="neo-btn bg-saweria-lavender text-saweria-dark border-3 border-saweria-dark px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-2 hover:bg-saweria-yellow transition-colors">
+                <i data-lucide="flame" class="w-4 h-4 text-saweria-coral"></i>
+                <span>Donghua Populer</span>
+            </a>
+            <a href="/genres" class="neo-btn bg-white text-saweria-dark border-3 border-saweria-dark px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-2 hover:bg-saweria-yellow transition-colors">
+                <i data-lucide="tags" class="w-4 h-4"></i>
+                <span>Jelajahi Genre</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Helpful Tips & Quick Links Banner -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="neo-card bg-saweria-yellow/30 border-3 border-saweria-dark rounded-3xl p-5 space-y-2">
+            <h3 class="font-extrabold text-sm text-saweria-dark flex items-center gap-2">
+                <i data-lucide="lightbulb" class="w-4 h-4 text-saweria-coral"></i> Tips Pencarian
+            </h3>
+            <p class="text-xs text-saweria-dark/80 font-medium leading-relaxed">
+                Pastikan ejaan kata kunci benar, atau gunakan nama alternatif seperti singkatan populer (misal: <strong>BTTH</strong>, <strong>Perfect World</strong>, <strong>Soul Land</strong>).
+            </p>
+        </div>
+
+        <div class="neo-card bg-saweria-lavender/40 border-3 border-saweria-dark rounded-3xl p-5 space-y-2">
+            <h3 class="font-extrabold text-sm text-saweria-dark flex items-center gap-2">
+                <i data-lucide="calendar" class="w-4 h-4 text-saweria-dark"></i> Cek Jadwal Rilis
+            </h3>
+            <p class="text-xs text-saweria-dark/80 font-medium leading-relaxed">
+                Episode favorit belum muncul? Cek <a href="/schedule" class="underline font-bold text-saweria-coral hover:text-saweria-dark">Jadwal Rilis Harian</a> untuk mengetahui hari tayang episode terbaru.
+            </p>
+        </div>
+    </div>
+</section>
+
+<%- include('partials/footer') %>
