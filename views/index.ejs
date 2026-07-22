@@ -149,7 +149,7 @@
     </div>
 
     <!-- Swiper Popular Slider -->
-    <div class="swiper popular-swiper pb-4 overflow-visible">
+    <div class="swiper popular-swiper pb-4 overflow-hidden w-full max-w-full">
         <div class="swiper-wrapper">
             <% populars.forEach(item => { 
                 let slug = item.href ? item.href.replace(/\/+$/, '').split('/').pop() : '';
